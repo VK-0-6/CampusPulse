@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPulse - Student Experience & Campus Intelligence</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .hero-section {
+      text-align: center;
+      padding: 3.5rem 1rem 2.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--primary);
+      background-color: var(--primary-light);
+      border-radius: var(--radius-full);
+      margin-bottom: 1.25rem;
+      letter-spacing: 0.5px;
+    }
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+    .hero-desc {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .role-preview-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .role-preview-icon {
+      font-size: 1.75rem;
+    }
+    .role-preview-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .role-preview-desc {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .phase-badge {
+      display: inline-flex;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background-color: var(--bg-subtle);
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Supabase Configuration Warning Banner -->
+  <div id="supabaseConfigBanner" class="config-banner">
+    <div class="config-banner-inner">
+      <span>⚙️ <strong>Configuration Notice:</strong> CampusPulse requires active backend configuration to process requests.</span>
+    </div>
+  </div>
+
+  <!-- Global Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="/" class="brand-badge">
+        <div class="brand-icon" aria-label="CampusPulse">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
+            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CampusPulse</span>
+          <span class="brand-subtitle">Student Experience &amp; Campus Intelligence</span>
+        </div>
+      </a>
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="/login.html" class="btn btn-secondary btn-sm">Sign In</a></li>
+          <li><a href="/register.html" class="btn btn-primary btn-sm">Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Portal Content -->
+  <main class="main-content">
+    <section class="hero-section">
+      <span class="hero-badge">Secure Campus Experience</span>
+      <h1 class="hero-title">CampusPulse</h1>
+      <p class="hero-desc">
+        Student Experience &amp; Campus Intelligence connecting students, faculty, and department administration to foster continuous academic enhancement.
+      </p>
+
+      <div class="hero-actions" id="heroActions">
+        <a href="/register.html" class="btn btn-primary">Create Your Account</a>
+        <a href="/login.html" class="btn btn-secondary">Sign In to Portal</a>
+      </div>
+    </section>
+
+    <!-- System Roles Overview -->
+    <section class="role-grid">
+      <div class="role-preview-card">
+        <div class="role-preview-icon">🎓</div>
+        <div class="role-preview-title">Student</div>
+        <p class="role-preview-desc">
+          Share feedback on classroom experiences, curriculum delivery, and academic resources to drive student community improvements.
+        </p>
+        <span class="phase-badge">Get Started</span>
+      </div>
+
+      <div class="role-preview-card">
+        <div class="role-preview-icon">👩‍🏫</div>
+        <div class="role-preview-title">Faculty</div>
+        <p class="role-preview-desc">
+          Review academic feedback, gain actionable pedagogical insights, and participate in collaborative course quality enhancement.
+        </p>
+        <span class="phase-badge">Get Started</span>
+      </div>
+
+      <div class="role-preview-card">
+        <div class="role-preview-icon">🏛️</div>
+        <div class="role-preview-title">HOD / Department Admin</div>
+        <p class="role-preview-desc">
+          Oversee department-wide feedback metrics, track systemic issues, and coordinate faculty and student initiatives.
+        </p>
+        <span class="phase-badge">Get Started</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p><strong>CampusPulse</strong> &bull; Student Experience &amp; Campus Intelligence</p>
+      <p>&copy; 2026 CampusPulse. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { checkAndRenderConfigBanner } from '/js/utils.js';
+    import { getCurrentSession, getUserProfile, getRoleDashboardUrl, signOutUser } from '/js/auth.js';
+
+    checkAndRenderConfigBanner();
+
+    // Check if user is already authenticated to customize navigation
+    async function initLandingNav() {
+      const session = await getCurrentSession();
+      if (session && session.user) {
+        const profile = await getUserProfile(session.user);
+        const dashboardUrl = getRoleDashboardUrl(profile.role);
+
+        // Update nav links
+        const navLinks = document.getElementById('navLinks');
+        if (navLinks) {
+          navLinks.innerHTML = `
+            <li><span style="font-size:0.875rem; color:var(--text-secondary);">Logged in as <strong>${escapeHtml(profile.fullName)}</strong></span></li>
+            <li><a href="${dashboardUrl}" class="btn btn-primary btn-sm">My Dashboard</a></li>
+            <li><button id="navLogoutBtn" class="btn btn-secondary btn-sm">Log Out</button></li>
+          `;
+          document.getElementById('navLogoutBtn')?.addEventListener('click', signOutUser);
+        }
+
+        // Update hero actions
+        const heroActions = document.getElementById('heroActions');
+        if (heroActions) {
+          heroActions.innerHTML = `
+            <a href="${dashboardUrl}" class="btn btn-primary">Go to ${capitalize(profile.role)} Dashboard</a>
+            <button id="heroLogoutBtn" class="btn btn-secondary">Sign Out</button>
+          `;
+          document.getElementById('heroLogoutBtn')?.addEventListener('click', signOutUser);
+        }
+      }
+    }
+
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str || '';
+      return div.innerHTML;
+    }
+
+    initLandingNav();
+  </script>
+</body>
+</html>

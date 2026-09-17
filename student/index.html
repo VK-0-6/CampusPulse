@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal - CampusPulse</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+
+  <!-- Route Guard Loading Overlay -->
+  <div id="authLoadingOverlay" class="auth-loading-overlay">
+    <div class="auth-spinner-large"></div>
+    <p>Verifying student credentials...</p>
+  </div>
+
+  <!-- Dashboard Top Navbar -->
+  <header class="dashboard-header">
+    <div class="dashboard-nav">
+      <a href="/" class="brand-badge">
+        <div class="brand-icon" aria-label="CampusPulse">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
+            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CampusPulse</span>
+          <span class="brand-subtitle">Student Portal</span>
+        </div>
+      </a>
+
+      <div class="user-profile-badge">
+        <div class="user-details">
+          <span id="navUserName" class="user-name">Loading...</span>
+          <span id="navUserEmail" class="user-email"></span>
+        </div>
+        <span class="role-badge role-badge-student">Student</span>
+        <button id="logoutBtn" class="btn btn-secondary btn-sm" title="Log out of your account">
+          Log Out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Main Content -->
+  <main class="dashboard-container">
+    
+    <!-- Welcome Header Card -->
+    <div class="dashboard-card dashboard-card-hero">
+      <div class="dashboard-title-row">
+        <div>
+          <h1 id="welcomeHeading" class="dashboard-welcome">Welcome, Student</h1>
+          <div class="dashboard-role-line">
+            <span>Role:</span>
+            <strong>Student</strong>
+            <span id="navRollNumber" class="roll-number-badge hidden" style="margin-left:0.5rem;"></span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-bottom:0; font-size:0.9375rem; color:var(--text-secondary);">
+        Enroll in your semester courses using class codes provided by your faculty instructors.
+      </p>
+    </div>
+
+    <!-- Alert / Message Container -->
+    <div id="globalAlert" class="alert hidden" role="alert"></div>
+
+    <!-- Join a Class Section -->
+    <div class="dashboard-card">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>🔑</span> Join a Class
+        </h2>
+      </div>
+
+      <form id="joinClassForm" novalidate>
+        <div class="academic-form-grid join-class-grid">
+          <div class="form-group">
+            <label for="classCodeInput" class="form-label">
+              Enter 6-character class code <span class="required">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="classCodeInput" 
+              name="classCode" 
+              class="form-control input-code" 
+              placeholder="e.g. ABC123" 
+              maxlength="6" 
+              autocomplete="off" 
+              spellcheck="false" 
+              required 
+            />
+            <span id="codeError" class="field-error"></span>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" id="joinBtn" class="btn btn-primary" style="height: 46px; min-width: 140px;">
+              Join Class
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Active Feedback Sessions Section (Phase 3) -->
+    <div class="dashboard-card" style="border-left: 5px solid #10b981;">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>📝</span> Active Class Feedback Sessions
+        </h2>
+        <span id="sessionCountBadge" class="section-badge">0 Active</span>
+      </div>
+      <p style="margin-bottom:1.25rem; font-size:0.875rem; color:var(--text-secondary);">
+        Give your feedback on today's learning topics for your enrolled classes. Feedback is stored to improve teaching and course delivery.
+      </p>
+
+      <div id="studentSessionsGrid" class="classes-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div id="emptyStudentSessionsState" class="empty-state hidden">
+        <div class="empty-state-icon">⏳</div>
+        <div class="empty-state-title">No active feedback sessions right now.</div>
+        <div class="empty-state-desc">
+          When your faculty instructor starts a live feedback session for today's lecture, it will appear here.
+        </div>
+      </div>
+    </div>
+
+    <!-- Faculty Improvement Updates Section (Phase 4) -->
+    <div class="dashboard-card" style="border-left: 5px solid #0284c7;">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>📢</span> Faculty Improvement Updates
+        </h2>
+        <span id="improvementUpdateBadge" class="section-badge">0 Updates</span>
+      </div>
+      <p style="margin-bottom:1.25rem; font-size:0.875rem; color:var(--text-secondary);">
+        See how your faculty instructors have responded to class feedback with concrete teaching adjustments, revised explanations, and extra learning support.
+      </p>
+
+      <div id="improvementUpdatesGrid" class="classes-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div id="emptyImprovementUpdatesState" class="empty-state hidden">
+        <div class="empty-state-icon">💡</div>
+        <div class="empty-state-title">No completed improvement updates yet.</div>
+        <div class="empty-state-desc">
+          When faculty members deliver improvements based on your class feedback, their completed actions will appear here.
+        </div>
+      </div>
+    </div>
+
+    <!-- My Classes Section -->
+    <div class="dashboard-card">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>🎓</span> My Classes
+        </h2>
+        <span id="classCountBadge" class="section-badge">0 Enrolled</span>
+      </div>
+
+      <!-- Classes Grid or Empty State -->
+      <div id="classesGrid" class="classes-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyClassesState" class="empty-state hidden">
+        <div class="empty-state-icon">📖</div>
+        <div class="empty-state-title">You haven't joined any classes yet.</div>
+        <div class="empty-state-desc">
+          Ask your faculty instructor for their 6-character class code and enter it above to join your class.
+        </div>
+      </div>
+    </div>
+
+    <!-- Academic Environment & Infrastructure Section -->
+    <div class="dashboard-card" id="academicEnvironmentSection">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>🏢</span> Academic Environment &amp; Infrastructure
+        </h2>
+        <span class="section-badge">Infrastructure Channel</span>
+      </div>
+      <p style="margin-bottom:1.5rem; font-size:0.875rem; color:var(--text-secondary);">
+        Report physical infrastructure, lab equipment, network, or classroom condition issues directly to department administration. This channel is independent from class feedback.
+      </p>
+
+      <!-- Sibling Panels: Submit Report & Reported Issues -->
+      <div class="academic-issues-layout">
+
+        <!-- Panel 1: Submit Infrastructure Report -->
+        <div class="academic-panel academic-report-card">
+          <div class="card-inner-header">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <h3 class="card-inner-title" style="margin-bottom:0;">
+                <span>⚠️</span> Submit Infrastructure Report
+              </h3>
+              <div class="issue-dept-indicator">
+                <span class="issue-dept-label">Department:</span>
+                <span id="studentDeptBadge" class="read-only-dept-pill">Loading...</span>
+              </div>
+            </div>
+          </div>
+
+          <form id="reportIssueForm" novalidate>
+            <div class="issue-form-fields">
+
+              <!-- Category -->
+              <div class="form-group">
+                <label for="issueCategorySelect" class="form-label">
+                  Issue Category <span class="required">*</span>
+                </label>
+                <select id="issueCategorySelect" class="form-control" required>
+                  <option value="">-- Select Category --</option>
+                  <option value="projector">Projector Issue</option>
+                  <option value="wifi">Wi-Fi / Internet Problem</option>
+                  <option value="lab_computer">Lab Computer Problem</option>
+                  <option value="lab_equipment">Lab Equipment Problem</option>
+                  <option value="classroom_furniture">Classroom Furniture Issue</option>
+                  <option value="electrical">Electrical / Power Issue</option>
+                  <option value="classroom_condition">Classroom Condition / Cleanliness</option>
+                  <option value="other">Other Academic Infrastructure Issue</option>
+                </select>
+              </div>
+
+              <!-- Severity -->
+              <div class="form-group">
+                <label for="issueSeveritySelect" class="form-label">
+                  Severity Level <span class="required">*</span>
+                </label>
+                <select id="issueSeveritySelect" class="form-control" required>
+                  <option value="low">Low (Minor inconvenience)</option>
+                  <option value="medium" selected>Medium (Affects normal study/lab)</option>
+                  <option value="high">High (Urgent / class disrupted)</option>
+                </select>
+              </div>
+
+              <!-- Location Input -->
+              <div class="form-group">
+                <label for="issueLocationInput" class="form-label">
+                  Specific Location <span class="required">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="issueLocationInput" 
+                  class="form-control" 
+                  placeholder="e.g. Room 302, CSE Hardware Lab 2, 2nd Floor Corridor" 
+                  required 
+                />
+              </div>
+
+              <!-- Description Textarea -->
+              <div class="form-group">
+                <label for="issueDescInput" class="form-label">
+                  Description of the Issue <span class="required">*</span>
+                </label>
+                <textarea 
+                  id="issueDescInput" 
+                  class="form-control" 
+                  rows="3" 
+                  placeholder="Describe what is broken, missing, or needs attention..." 
+                  required
+                ></textarea>
+              </div>
+
+              <!-- Anonymous Option & Submit Button -->
+              <div class="issue-form-footer">
+                <div class="issue-anon-box">
+                  <label class="issue-anon-label">
+                    <input type="checkbox" id="issueAnonymousCheck" />
+                    <span>Submit anonymously (Hides your name and email)</span>
+                  </label>
+                </div>
+
+                <div class="issue-form-submit-row">
+                  <button type="submit" id="submitIssueBtn" class="btn btn-primary" style="min-width:160px;">
+                    Submit Issue Report
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <!-- Panel 2: My Reported Issues -->
+        <div class="academic-panel academic-history-card">
+          <div class="card-inner-header">
+            <h3 class="card-inner-title">
+              <span>📋</span> My Reported Issues
+            </h3>
+            <p class="card-inner-desc">
+              Track status and resolution progress for issues you have submitted.
+            </p>
+          </div>
+
+          <div id="studentIssuesGrid" class="student-issues-grid">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <div id="emptyStudentIssuesState" class="empty-state hidden">
+            <div class="empty-state-icon">🛠️</div>
+            <div class="empty-state-title">No issues reported yet.</div>
+            <div class="empty-state-desc">
+              If you encounter any classroom or lab infrastructure problems, submit a report using the form to notify department administration.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Give Feedback Modal (Phase 3) -->
+  <div id="feedbackModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="feedbackModalTitle">
+    <div class="modal-container" style="max-width: 640px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="feedbackModalTitle" style="margin-bottom:0.15rem;">Class Learning Feedback</h3>
+          <p id="feedbackModalSubtitle" style="font-size:0.8125rem; color:var(--text-muted); margin-bottom:0;">Loading...</p>
+        </div>
+        <button type="button" id="closeFeedbackModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="modalAlert" class="alert hidden" role="alert"></div>
+
+        <form id="feedbackForm" novalidate>
+          <input type="hidden" id="modalSessionId" />
+
+          <!-- Question 1: Understanding (1-5) -->
+          <div class="feedback-question-group">
+            <label class="feedback-question-label">
+              1. How well did you understand today's topic? <span class="required">*</span>
+            </label>
+            <div class="rating-btn-group" data-target="ratingUnderstanding">
+              <button type="button" class="rating-btn" data-val="1">1</button>
+              <button type="button" class="rating-btn" data-val="2">2</button>
+              <button type="button" class="rating-btn" data-val="3">3</button>
+              <button type="button" class="rating-btn" data-val="4">4</button>
+              <button type="button" class="rating-btn" data-val="5">5</button>
+            </div>
+            <input type="hidden" id="ratingUnderstanding" required />
+          </div>
+
+          <!-- Question 2: Teaching Clarity (1-5) -->
+          <div class="feedback-question-group">
+            <label class="feedback-question-label">
+              2. How clear was the teaching? <span class="required">*</span>
+            </label>
+            <div class="rating-btn-group" data-target="ratingClarity">
+              <button type="button" class="rating-btn" data-val="1">1</button>
+              <button type="button" class="rating-btn" data-val="2">2</button>
+              <button type="button" class="rating-btn" data-val="3">3</button>
+              <button type="button" class="rating-btn" data-val="4">4</button>
+              <button type="button" class="rating-btn" data-val="5">5</button>
+            </div>
+            <input type="hidden" id="ratingClarity" required />
+          </div>
+
+          <!-- Question 3: Pace -->
+          <div class="feedback-question-group">
+            <label class="feedback-question-label">
+              3. How was the pace of the lecture? <span class="required">*</span>
+            </label>
+            <div class="choice-btn-group" data-target="choicePace">
+              <button type="button" class="choice-btn" data-val="too_slow">Too Slow</button>
+              <button type="button" class="choice-btn" data-val="good">Good</button>
+              <button type="button" class="choice-btn" data-val="too_fast">Too Fast</button>
+            </div>
+            <input type="hidden" id="choicePace" required />
+          </div>
+
+          <!-- Question 4: Difficulty -->
+          <div class="feedback-question-group">
+            <label class="feedback-question-label">
+              4. How difficult was the topic? <span class="required">*</span>
+            </label>
+            <div class="choice-btn-group" data-target="choiceDifficulty">
+              <button type="button" class="choice-btn" data-val="easy">Easy</button>
+              <button type="button" class="choice-btn" data-val="moderate">Moderate</button>
+              <button type="button" class="choice-btn" data-val="difficult">Difficult</button>
+            </div>
+            <input type="hidden" id="choiceDifficulty" required />
+          </div>
+
+          <!-- Question 5: Doubts Addressed -->
+          <div class="feedback-question-group">
+            <label class="feedback-question-label">
+              5. Were your doubts addressed? <span class="required">*</span>
+            </label>
+            <div class="choice-btn-group" data-target="choiceDoubts">
+              <button type="button" class="choice-btn" data-val="yes">Yes</button>
+              <button type="button" class="choice-btn" data-val="partly">Partly</button>
+              <button type="button" class="choice-btn" data-val="no">No</button>
+            </div>
+            <input type="hidden" id="choiceDoubts" required />
+          </div>
+
+          <!-- Question 6: Suggestions / Comments -->
+          <div class="feedback-question-group">
+            <label for="feedbackCommentInput" class="feedback-question-label">
+              6. Suggestions / Specific Doubts (Optional)
+            </label>
+            <textarea 
+              id="feedbackCommentInput" 
+              class="form-control" 
+              rows="3" 
+              placeholder="What specifically could be improved, or which concept needs more explanation?"
+            ></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+            <button type="button" id="cancelFeedbackBtn" class="btn btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" id="submitFeedbackBtn" class="btn btn-primary" style="min-width:160px;">
+              Submit Feedback
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>CampusPulse &bull; Student Portal &copy; 2026</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { requireAuth, signOutUser } from '/js/auth.js';
+    import { showAlert, clearAlert, setButtonLoading } from '/js/utils.js';
+    import { joinClassByCode, getStudentEnrolledClasses, leaveClass, normalizeClassCode } from '/js/classService.js';
+    import { getDepartments } from '/js/academicService.js';
+    import { getActiveFeedbackSessionsForStudent } from '/js/feedbackSessionService.js';
+    import { submitClassFeedback } from '/js/feedbackService.js';
+    import { reportDepartmentIssue, getStudentReportedIssues } from '/js/departmentIssueService.js';
+    import { getStudentImprovementUpdates, IMPROVEMENT_AREAS, ACTION_TYPES } from '/js/improvementActionService.js';
+
+    let currentStudentId = null;
+    let currentStudentDeptId = null;
+
+    // Elements: General & Classes
+    const globalAlert = document.getElementById('globalAlert');
+    const joinClassForm = document.getElementById('joinClassForm');
+    const classCodeInput = document.getElementById('classCodeInput');
+    const codeError = document.getElementById('codeError');
+    const joinBtn = document.getElementById('joinBtn');
+    const classesGrid = document.getElementById('classesGrid');
+    const emptyClassesState = document.getElementById('emptyClassesState');
+    const classCountBadge = document.getElementById('classCountBadge');
+
+    // Elements: Phase 3 Feedback Sessions
+    const studentSessionsGrid = document.getElementById('studentSessionsGrid');
+    const emptyStudentSessionsState = document.getElementById('emptyStudentSessionsState');
+    const sessionCountBadge = document.getElementById('sessionCountBadge');
+
+    // Elements: Phase 4 Faculty Improvement Updates
+    const improvementUpdatesGrid = document.getElementById('improvementUpdatesGrid');
+    const emptyImprovementUpdatesState = document.getElementById('emptyImprovementUpdatesState');
+    const improvementUpdateBadge = document.getElementById('improvementUpdateBadge');
+
+    // Elements: Phase 3 Feedback Modal
+    const feedbackModal = document.getElementById('feedbackModal');
+    const feedbackModalTitle = document.getElementById('feedbackModalTitle');
+    const feedbackModalSubtitle = document.getElementById('feedbackModalSubtitle');
+    const closeFeedbackModalBtn = document.getElementById('closeFeedbackModalBtn');
+    const cancelFeedbackBtn = document.getElementById('cancelFeedbackBtn');
+    const feedbackForm = document.getElementById('feedbackForm');
+    const modalSessionId = document.getElementById('modalSessionId');
+    const modalAlert = document.getElementById('modalAlert');
+    const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+
+    // Elements: Phase 3 Academic Environment Issue Reporting
+    const reportIssueForm = document.getElementById('reportIssueForm');
+    const studentDeptBadge = document.getElementById('studentDeptBadge');
+    const issueCategorySelect = document.getElementById('issueCategorySelect');
+    const issueSeveritySelect = document.getElementById('issueSeveritySelect');
+    const issueLocationInput = document.getElementById('issueLocationInput');
+    const issueDescInput = document.getElementById('issueDescInput');
+    const issueAnonymousCheck = document.getElementById('issueAnonymousCheck');
+    const submitIssueBtn = document.getElementById('submitIssueBtn');
+    const studentIssuesGrid = document.getElementById('studentIssuesGrid');
+    const emptyStudentIssuesState = document.getElementById('emptyStudentIssuesState');
+
+    // Route Guard: enforce student role
+    requireAuth('student').then(async (authData) => {
+      if (!authData) return;
+
+      const { profile } = authData;
+      currentStudentId = profile.id;
+      currentStudentDeptId = profile.departmentId;
+      const welcomeName = profile.fullName || 'Student';
+      const deptName = profile.departmentName || 'Your Department';
+
+      document.getElementById('welcomeHeading').textContent = `Welcome, ${welcomeName}`;
+      document.getElementById('navUserName').textContent = welcomeName;
+      document.getElementById('navUserEmail').textContent = profile.email || '';
+      document.getElementById('logoutBtn').addEventListener('click', signOutUser);
+
+      if (studentDeptBadge) {
+        studentDeptBadge.textContent = deptName;
+      }
+
+      if (profile.rollNumber) {
+        const rollBadge = document.getElementById('navRollNumber');
+        if (rollBadge) {
+          rollBadge.textContent = `Roll: ${profile.rollNumber}`;
+          rollBadge.classList.remove('hidden');
+        }
+      }
+
+      // Load enrolled classes, active sessions, improvement updates, and reported issues
+      await loadEnrolledClasses();
+      await loadActiveFeedbackSessions();
+      await loadStudentImprovementUpdates();
+      await loadReportedIssues();
+    });
+
+    // Auto uppercase input
+    classCodeInput.addEventListener('input', () => {
+      classCodeInput.value = classCodeInput.value.toUpperCase();
+      classCodeInput.classList.remove('is-invalid');
+      codeError.classList.remove('active');
+    });
+
+    // Join Class Form Submission
+    joinClassForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert(globalAlert);
+
+      const rawCode = classCodeInput.value;
+      const normalizedCode = normalizeClassCode(rawCode);
+
+      // Field validation
+      if (!normalizedCode) {
+        classCodeInput.classList.add('is-invalid');
+        codeError.textContent = 'Please enter a 6-character class code.';
+        codeError.classList.add('active');
+        return;
+      }
+
+      if (normalizedCode.length !== 6) {
+        classCodeInput.classList.add('is-invalid');
+        codeError.textContent = 'Invalid class code. Must contain exactly 6 characters.';
+        codeError.classList.add('active');
+        return;
+      }
+
+      if (!currentStudentId) return;
+
+      setButtonLoading(joinBtn, true, 'Joining...', 'Join Class');
+
+      try {
+        const result = await joinClassByCode({
+          classCode: normalizedCode,
+          studentId: currentStudentId
+        });
+
+        showAlert(globalAlert, `Successfully joined ${result.subjectName}!`, 'success');
+        classCodeInput.value = '';
+
+        // Reload enrolled classes
+        await loadEnrolledClasses();
+
+      } catch (err) {
+        const msg = err.message || 'Unable to join class.';
+        showAlert(globalAlert, msg, 'danger');
+      } finally {
+        setButtonLoading(joinBtn, false, 'Joining...', 'Join Class');
+      }
+    });
+
+    // Load Enrolled Classes
+    async function loadEnrolledClasses() {
+      if (!currentStudentId) return;
+
+      try {
+        const classes = await getStudentEnrolledClasses(currentStudentId);
+        renderEnrolledClasses(classes);
+      } catch (err) {
+        console.error('Error loading student classes:', err);
+        showAlert(globalAlert, 'Failed to load your enrolled classes.', 'danger');
+      }
+    }
+
+    function renderEnrolledClasses(classes) {
+      classesGrid.innerHTML = '';
+
+      if (!classes || classes.length === 0) {
+        emptyClassesState.classList.remove('hidden');
+        classCountBadge.textContent = '0 Enrolled';
+        return;
+      }
+
+      emptyClassesState.classList.add('hidden');
+      classCountBadge.textContent = `${classes.length} Enrolled`;
+
+      classes.forEach(cls => {
+        const card = document.createElement('div');
+        card.className = 'class-card';
+
+        const joinDateStr = cls.joinedAt ? new Date(cls.joinedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+        const statusClass = cls.isActive ? 'status-active' : 'status-inactive';
+        const statusText = cls.isActive ? 'Active' : 'Inactive';
+
+        card.innerHTML = `
+          <div class="class-card-header">
+            <h3 class="class-subject-title">${escapeHtml(cls.subjectName)}</h3>
+            <span class="class-subject-code">${escapeHtml(cls.subjectCode)}</span>
+          </div>
+          <div class="class-card-body">
+            <div class="class-meta-row">
+              <span>Semester: <strong>${escapeHtml(String(cls.semesterNumber))}</strong></span>
+              <span class="class-status-pill ${statusClass}">${statusText}</span>
+            </div>
+            <div class="class-meta-row">
+              <span>Faculty:</span>
+              <strong>👨‍🏫 ${escapeHtml(cls.facultyName)}</strong>
+            </div>
+            <div class="class-meta-row">
+              <span>Class Code:</span>
+              <span class="class-code-badge">${escapeHtml(cls.classCode)}</span>
+            </div>
+            <div class="class-meta-row" style="font-size:0.8125rem; color:var(--text-muted);">
+              <span>Enrolled on:</span>
+              <span>${joinDateStr}</span>
+            </div>
+          </div>
+          <div class="class-card-footer class-card-footer-right">
+            <button 
+              type="button" 
+              class="btn btn-secondary btn-sm btn-leave-class" 
+              data-class-id="${cls.classId}" 
+              data-subject="${escapeHtml(cls.subjectName)}"
+              data-code="${escapeHtml(cls.classCode)}"
+              title="Leave this class"
+            >
+              Leave Class
+            </button>
+          </div>
+        `;
+
+        classesGrid.appendChild(card);
+      });
+    }
+
+    // Leave Class Action Handler via Event Delegation
+    classesGrid.addEventListener('click', async (e) => {
+      const btn = e.target.closest('.btn-leave-class');
+      if (!btn) return;
+
+      const classId = btn.dataset.classId;
+      const subjectName = btn.dataset.subject || 'this class';
+      const classCode = btn.dataset.code ? ` (${btn.dataset.code})` : '';
+
+      const confirmMsg = `Are you sure you want to leave ${subjectName}${classCode}?\n\nLeaving removes your enrollment from this class, and you will no longer receive active feedback sessions or updates for it. Any feedback you previously submitted will remain recorded.`;
+
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+
+      if (!currentStudentId || !classId) return;
+
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Leaving...';
+      clearAlert(globalAlert);
+
+      try {
+        await leaveClass({ classId, studentId: currentStudentId });
+        showAlert(globalAlert, `You have successfully left ${subjectName}.`, 'success');
+
+        await Promise.all([
+          loadEnrolledClasses(),
+          loadActiveFeedbackSessions(),
+          loadStudentImprovementUpdates()
+        ]);
+      } catch (err) {
+        console.error('Error leaving class:', err);
+        showAlert(globalAlert, err.message || 'Failed to leave class.', 'danger');
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // =========================================================================
+    // Phase 3: Active Feedback Sessions & Modal Handling
+    // =========================================================================
+
+    async function loadActiveFeedbackSessions() {
+      if (!currentStudentId) return;
+
+      try {
+        const sessions = await getActiveFeedbackSessionsForStudent(currentStudentId);
+        renderStudentSessions(sessions);
+      } catch (err) {
+        console.error('Error loading active feedback sessions:', err);
+        showAlert(globalAlert, 'Failed to load active feedback sessions.', 'danger');
+      }
+    }
+
+    function renderStudentSessions(sessions) {
+      studentSessionsGrid.innerHTML = '';
+
+      if (!sessions || sessions.length === 0) {
+        emptyStudentSessionsState.classList.remove('hidden');
+        sessionCountBadge.textContent = '0 Active';
+        return;
+      }
+
+      emptyStudentSessionsState.classList.add('hidden');
+      sessionCountBadge.textContent = `${sessions.length} Active`;
+
+      sessions.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'session-card';
+
+        const isFollowUp = s.sessionType === 'follow_up';
+        const unitHtml = s.unit ? `<span class="session-unit-badge">Unit ${escapeHtml(s.unit)}</span>` : '';
+        const followUpBadge = isFollowUp ? `<span class="badge-followup" style="margin-left:0.5rem;">🎯 Follow-Up</span>` : '';
+        const headerBg = isFollowUp ? '#eff6ff' : '#ecfdf5';
+
+        const startDateStr = s.startedAt ? new Date(s.startedAt).toLocaleTimeString(undefined, {
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '-';
+
+        const followUpAlertHtml = isFollowUp ? `
+          <div class="followup-alert-box" style="margin-bottom:0.75rem;">
+            <strong>🎯 Follow-Up Feedback Available</strong>
+            <div style="font-size:0.8125rem; margin-top:0.2rem;">
+              Your instructor delivered an improvement action for this topic and wants to hear how it helped your learning!
+            </div>
+          </div>
+        ` : '';
+
+        const submitBtnText = isFollowUp ? '🎯 Give Follow-Up Feedback' : '✏️ Give Feedback';
+        const submittedBadgeText = isFollowUp ? '✓ Follow-Up Submitted' : '✓ Feedback Submitted';
+
+        card.innerHTML = `
+          <div class="class-card-header" style="background-color:${headerBg};">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem;">
+              <div>
+                <h3 class="session-topic-title">${escapeHtml(s.topic)}${unitHtml}${followUpBadge}</h3>
+                <span class="class-subject-code">${escapeHtml(s.subjectName)} (${escapeHtml(s.subjectCode)})</span>
+              </div>
+              <span class="class-status-pill status-active">Live</span>
+            </div>
+          </div>
+          <div class="class-card-body">
+            ${followUpAlertHtml}
+            <div class="class-meta-row">
+              <span>Faculty:</span>
+              <strong>👨‍🏫 ${escapeHtml(s.facultyName)}</strong>
+            </div>
+            <div class="class-meta-row">
+              <span>Class Code:</span>
+              <span class="class-code-badge">${escapeHtml(s.classCode)}</span>
+            </div>
+            <div class="class-meta-row" style="font-size:0.8125rem; color:var(--text-muted);">
+              <span>Session Started:</span>
+              <span>${startDateStr}</span>
+            </div>
+          </div>
+          <div class="class-card-footer">
+            ${s.hasSubmitted ? `
+              <span class="badge-submitted">${submittedBadgeText}</span>
+            ` : `
+              <button 
+                type="button" 
+                class="btn btn-primary btn-sm btn-give-feedback" 
+                data-session-id="${s.id}" 
+                data-topic="${escapeHtml(s.topic)}" 
+                data-subject="${escapeHtml(s.subjectName)}"
+                style="width:100%;"
+              >
+                ${submitBtnText}
+              </button>
+            `}
+          </div>
+        `;
+
+        studentSessionsGrid.appendChild(card);
+      });
+    }
+
+    // =========================================================================
+    // Phase 4: Faculty Improvement Updates for Students
+    // =========================================================================
+
+    async function loadStudentImprovementUpdates() {
+      if (!currentStudentId) return;
+
+      try {
+        const updates = await getStudentImprovementUpdates(currentStudentId);
+        renderStudentImprovementUpdates(updates);
+      } catch (err) {
+        console.error('Error loading improvement updates:', err);
+      }
+    }
+
+    function renderStudentImprovementUpdates(updates) {
+      improvementUpdatesGrid.innerHTML = '';
+
+      if (!updates || updates.length === 0) {
+        emptyImprovementUpdatesState.classList.remove('hidden');
+        improvementUpdateBadge.textContent = '0 Updates';
+        return;
+      }
+
+      emptyImprovementUpdatesState.classList.add('hidden');
+      improvementUpdateBadge.textContent = `${updates.length} Update${updates.length > 1 ? 's' : ''}`;
+
+      updates.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'improvement-update-card';
+
+        const areaMeta = IMPROVEMENT_AREAS[item.area] || { label: item.area, icon: '📌' };
+        const typeMeta = ACTION_TYPES[item.action_type] || { label: item.action_type, icon: '⚡' };
+        const completedDateStr = item.completed_at ? new Date(item.completed_at).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', year: 'numeric'
+        }) : '-';
+
+        const unitHtml = item.unit ? `<span class="session-unit-badge" style="margin-left:0.4rem;">Unit ${escapeHtml(item.unit)}</span>` : '';
+        const semesterText = item.semester_number ? ` • Sem ${escapeHtml(String(item.semester_number))}` : '';
+
+        card.innerHTML = `
+          <div class="improvement-update-header">
+            <div>
+              <div class="improvement-update-topic">${escapeHtml(item.topic)}${unitHtml}</div>
+              <div style="font-size:0.8125rem; color:var(--text-muted); margin-top:0.15rem;">
+                ${escapeHtml(item.subject_name)} (${escapeHtml(item.subject_code)})${semesterText}
+              </div>
+            </div>
+            <span class="badge-action-pill status-completed">✅ Completed</span>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <span class="class-code-badge" style="font-size:0.75rem; background-color:#eff6ff; color:#1d4ed8; border-color:#dbeafe;">
+              ${areaMeta.icon} ${areaMeta.label}
+            </span>
+            <span class="class-code-badge" style="font-size:0.75rem; background-color:#f0fdf4; color:#166534; border-color:#bbf7d0;">
+              ${typeMeta.icon} ${typeMeta.label}
+            </span>
+            <span style="font-size:0.75rem; color:var(--text-muted); margin-left:auto;">
+              Delivered: ${completedDateStr}
+            </span>
+          </div>
+
+          <div class="improvement-update-body">
+            ${escapeHtml(item.description)}
+          </div>
+
+          <div style="font-size:0.78125rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center; margin-top:0.25rem;">
+            <span>👨‍🏫 Faculty: <strong>${escapeHtml(item.faculty_name)}</strong></span>
+            <span>Class: <code>${escapeHtml(item.class_code)}</code></span>
+          </div>
+        `;
+
+        improvementUpdatesGrid.appendChild(card);
+      });
+    }
+
+    // Modal helpers for Button Groups (Ratings & Choices)
+    function setupButtonGroup(containerSelector, hiddenInputId) {
+      const container = document.querySelector(containerSelector);
+      const hiddenInput = document.getElementById(hiddenInputId);
+      if (!container || !hiddenInput) return;
+
+      container.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const val = btn.dataset.val;
+        hiddenInput.value = val;
+
+        container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    }
+
+    setupButtonGroup('.rating-btn-group[data-target="ratingUnderstanding"]', 'ratingUnderstanding');
+    setupButtonGroup('.rating-btn-group[data-target="ratingClarity"]', 'ratingClarity');
+    setupButtonGroup('.choice-btn-group[data-target="choicePace"]', 'choicePace');
+    setupButtonGroup('.choice-btn-group[data-target="choiceDifficulty"]', 'choiceDifficulty');
+    setupButtonGroup('.choice-btn-group[data-target="choiceDoubts"]', 'choiceDoubts');
+
+    function resetFeedbackModalForm() {
+      feedbackForm.reset();
+      clearAlert(modalAlert);
+      modalSessionId.value = '';
+      document.querySelectorAll('.rating-btn, .choice-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('ratingUnderstanding').value = '';
+      document.getElementById('ratingClarity').value = '';
+      document.getElementById('choicePace').value = '';
+      document.getElementById('choiceDifficulty').value = '';
+      document.getElementById('choiceDoubts').value = '';
+    }
+
+    // Open Modal when "Give Feedback" is clicked
+    studentSessionsGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-give-feedback');
+      if (!btn) return;
+
+      resetFeedbackModalForm();
+      modalSessionId.value = btn.dataset.sessionId;
+      feedbackModalSubtitle.textContent = `Topic: "${btn.dataset.topic}" • ${btn.dataset.subject}`;
+      feedbackModal.classList.remove('hidden');
+    });
+
+    // Close Modal listeners
+    closeFeedbackModalBtn.addEventListener('click', () => {
+      feedbackModal.classList.add('hidden');
+    });
+    cancelFeedbackBtn.addEventListener('click', () => {
+      feedbackModal.classList.add('hidden');
+    });
+    window.addEventListener('click', (e) => {
+      if (e.target === feedbackModal) {
+        feedbackModal.classList.add('hidden');
+      }
+    });
+
+    // Feedback Form Submission
+    feedbackForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert(modalAlert);
+
+      const sessionId = modalSessionId.value;
+      const understandingRating = document.getElementById('ratingUnderstanding').value;
+      const teachingClarityRating = document.getElementById('ratingClarity').value;
+      const pace = document.getElementById('choicePace').value;
+      const difficulty = document.getElementById('choiceDifficulty').value;
+      const doubtsAddressed = document.getElementById('choiceDoubts').value;
+      const comment = document.getElementById('feedbackCommentInput').value;
+
+      if (!understandingRating) {
+        showAlert(modalAlert, 'Please rate how well you understood today\'s topic (Question 1).', 'warning');
+        return;
+      }
+
+      if (!teachingClarityRating) {
+        showAlert(modalAlert, 'Please rate the clarity of the teaching (Question 2).', 'warning');
+        return;
+      }
+
+      if (!pace) {
+        showAlert(modalAlert, 'Please select how the pace of the lecture was (Question 3).', 'warning');
+        return;
+      }
+
+      if (!difficulty) {
+        showAlert(modalAlert, 'Please select how difficult the topic was (Question 4).', 'warning');
+        return;
+      }
+
+      if (!doubtsAddressed) {
+        showAlert(modalAlert, 'Please indicate whether your doubts were addressed (Question 5).', 'warning');
+        return;
+      }
+
+      setButtonLoading(submitFeedbackBtn, true, 'Submitting...', 'Submit Feedback');
+
+      try {
+        await submitClassFeedback({
+          sessionId,
+          studentId: currentStudentId,
+          understandingRating,
+          teachingClarityRating,
+          pace,
+          difficulty,
+          doubtsAddressed,
+          comment
+        });
+
+        feedbackModal.classList.add('hidden');
+        showAlert(globalAlert, 'Thank you! Your feedback was submitted successfully.', 'success');
+
+        await loadActiveFeedbackSessions();
+        await loadStudentImprovementUpdates();
+      } catch (err) {
+        showAlert(modalAlert, err.message || 'Failed to submit feedback.', 'danger');
+      } finally {
+        setButtonLoading(submitFeedbackBtn, false, 'Submitting...', 'Submit Feedback');
+      }
+    });
+
+    // =========================================================================
+    // Phase 3: Academic Environment Issue Reporting (Part B)
+    // =========================================================================
+
+    async function loadReportedIssues() {
+      if (!currentStudentId) return;
+
+      try {
+        const issues = await getStudentReportedIssues(currentStudentId);
+        renderReportedIssues(issues);
+      } catch (err) {
+        console.error('Error loading reported issues:', err);
+      }
+    }
+
+    function renderReportedIssues(issues) {
+      studentIssuesGrid.innerHTML = '';
+
+      if (!issues || issues.length === 0) {
+        emptyStudentIssuesState.classList.remove('hidden');
+        return;
+      }
+
+      emptyStudentIssuesState.classList.add('hidden');
+
+      issues.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'issue-card';
+
+        const severityClass = `severity-${item.severity}`;
+        const severityLabel = item.severity.toUpperCase();
+        const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        }) : '-';
+        const anonBadge = item.isAnonymous ? `<span style="font-size:0.75rem; color:#6b7280;">🔒 Anonymous</span>` : '';
+
+        const statusLower = (item.status || 'open').toLowerCase();
+        let statusBadgeClass = 'badge-status-open';
+        let statusLabel = 'Open';
+        if (statusLower === 'resolved') {
+          statusBadgeClass = 'badge-status-resolved';
+          statusLabel = 'Resolved';
+        } else if (statusLower === 'closed') {
+          statusBadgeClass = 'badge-status-closed';
+          statusLabel = 'Closed';
+        } else if (statusLower === 'in_progress') {
+          statusBadgeClass = 'badge-status-open';
+          statusLabel = 'In Progress';
+        } else {
+          statusLabel = item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : 'Open';
+        }
+
+        card.innerHTML = `
+          <div class="issue-card-header">
+            <div>
+              <h4 class="issue-category-title">${escapeHtml(item.categoryLabel)}</h4>
+              <div class="issue-meta-line">
+                <span>📍 ${escapeHtml(item.location)}</span>
+                <span>•</span>
+                <span>${escapeHtml(item.departmentName)}</span>
+              </div>
+            </div>
+            <span class="severity-badge ${severityClass}">${severityLabel}</span>
+          </div>
+          <div class="issue-desc-box">
+            ${escapeHtml(item.description)}
+          </div>
+          <div class="issue-footer">
+            <span class="${statusBadgeClass}">${escapeHtml(statusLabel)}</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              ${anonBadge}
+              <span>${dateStr}</span>
+            </div>
+          </div>
+        `;
+
+        studentIssuesGrid.appendChild(card);
+      });
+    }
+
+    // Issue Report Form Submission
+    reportIssueForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert(globalAlert);
+
+      const category = issueCategorySelect.value;
+      const severity = issueSeveritySelect.value;
+      const location = issueLocationInput.value.trim();
+      const description = issueDescInput.value.trim();
+      const isAnonymous = issueAnonymousCheck.checked;
+
+      if (!category) {
+        showAlert(globalAlert, 'Please select an issue category.', 'warning');
+        issueCategorySelect.focus();
+        return;
+      }
+
+      if (!location) {
+        showAlert(globalAlert, 'Please specify the exact location of the issue.', 'warning');
+        issueLocationInput.focus();
+        return;
+      }
+
+      if (!description) {
+        showAlert(globalAlert, 'Please provide a description of the issue.', 'warning');
+        issueDescInput.focus();
+        return;
+      }
+
+      setButtonLoading(submitIssueBtn, true, 'Submitting...', 'Submit Issue Report');
+
+      try {
+        await reportDepartmentIssue({
+          studentId: currentStudentId,
+          departmentId: currentStudentDeptId,
+          category,
+          location,
+          description,
+          severity,
+          isAnonymous
+        });
+
+        showAlert(globalAlert, 'Your infrastructure issue report has been submitted successfully to administration.', 'success');
+        reportIssueForm.reset();
+        issueSeveritySelect.value = 'medium';
+
+        await loadReportedIssues();
+      } catch (err) {
+        showAlert(globalAlert, err.message || 'Failed to submit issue report.', 'danger');
+      } finally {
+        setButtonLoading(submitIssueBtn, false, 'Submitting...', 'Submit Issue Report');
+      }
+    });
+  </script>
+</body>
+</html>

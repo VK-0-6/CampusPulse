@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Portal - CampusPulse</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+
+  <!-- Route Guard Loading Overlay -->
+  <div id="authLoadingOverlay" class="auth-loading-overlay">
+    <div class="auth-spinner-large"></div>
+    <p>Verifying faculty credentials...</p>
+  </div>
+
+  <!-- Dashboard Top Navbar -->
+  <header class="dashboard-header">
+    <div class="dashboard-nav">
+      <a href="/" class="brand-badge">
+        <div class="brand-icon" aria-label="CampusPulse">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
+            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CampusPulse</span>
+          <span class="brand-subtitle">Faculty Portal</span>
+        </div>
+      </a>
+
+      <div class="user-profile-badge">
+        <div class="user-details">
+          <span id="navUserName" class="user-name">Loading...</span>
+          <span id="navUserEmail" class="user-email"></span>
+        </div>
+        <span class="role-badge role-badge-faculty">Faculty</span>
+        <button id="logoutBtn" class="btn btn-secondary btn-sm" title="Log out of your account">
+          Log Out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Main Content -->
+  <main class="dashboard-container">
+    
+    <!-- Welcome Header Card -->
+    <div class="dashboard-card dashboard-card-hero">
+      <div class="dashboard-title-row">
+        <div>
+          <h1 id="welcomeHeading" class="dashboard-welcome">Welcome, Faculty Member</h1>
+          <div class="dashboard-role-line" style="display:flex; align-items:center; gap:0.5rem;">
+            <span>Role:</span>
+            <strong>Faculty</strong>
+            <span id="facultyDeptBadge" class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; font-size:0.8125rem;">Department</span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-bottom:0; font-size:0.9375rem; color:var(--text-secondary);">
+        Create academic classes, select or add course subjects, generate 6-character enrollment codes, and review enrolled students.
+      </p>
+    </div>
+
+    <!-- Alert / Message Container -->
+    <div id="globalAlert" class="alert hidden" role="alert"></div>
+
+    <!-- Create Class Section -->
+    <div class="dashboard-card">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>➕</span> Create a New Class
+        </h2>
+      </div>
+
+      <!-- Success Notification Card for Created Class -->
+      <div id="classCreatedNotification" class="class-created-card hidden">
+        <div class="class-created-header">
+          <span>🎉</span> Class Created Successfully
+        </div>
+        <div class="class-created-meta">
+          <div>Subject: <strong id="createdSubjectName">-</strong></div>
+          <div>Semester: <strong id="createdSemesterNumber">-</strong></div>
+          <div class="code-display-box">
+            <span>Class Code:</span>
+            <span id="createdClassCode" class="code-display-text">------</span>
+            <button type="button" id="copyCreatedCodeBtn" class="btn btn-secondary btn-sm" title="Copy code to clipboard">
+              📋 Copy
+            </button>
+          </div>
+        </div>
+        <div class="code-share-note">
+          Share this unique 6-character code with your students so they can join this class.
+        </div>
+      </div>
+
+      <form id="createClassForm" novalidate>
+        <div style="display:flex; flex-direction:column; gap:1.25rem;">
+          
+          <div class="academic-form-grid create-class-grid">
+            
+            <!-- Clean Semester Selector (Semester 1 to 8) -->
+            <div class="form-group">
+              <label for="semesterSelect" class="form-label">
+                Select Semester <span class="required">*</span>
+              </label>
+              <select id="semesterSelect" class="form-control" required>
+                <option value="">-- Choose Semester --</option>
+              </select>
+            </div>
+
+            <!-- Subject Selector Area -->
+            <div class="form-group">
+              <div class="subject-mode-header">
+                <label for="subjectSelect" class="form-label" style="margin-bottom:0;">
+                  Subject <span class="required">*</span>
+                </label>
+                <button type="button" id="toggleSubjectModeBtn" class="btn-link-action hidden">
+                  + Add New Subject
+                </button>
+              </div>
+
+              <!-- Existing Subject Dropdown -->
+              <div id="existingSubjectWrap">
+                <select id="subjectSelect" class="form-control" disabled required>
+                  <option value="">-- First choose a semester --</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add New Subject Sub-panel (Shown when faculty clicks "+ Add New Subject" or if no subjects exist) -->
+          <div id="newSubjectPanel" class="new-subject-box hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:0.875rem; color:var(--primary-dark);">Add a New Subject for this Semester</strong>
+              <button type="button" id="cancelNewSubjectBtn" class="btn-link-action" style="color:var(--text-muted);">
+                Cancel (Select Existing)
+              </button>
+            </div>
+            
+            <div class="new-subject-grid">
+              <div class="form-group">
+                <label for="newSubjectName" class="form-label form-label-sm">
+                  Subject Name <span class="required">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="newSubjectName" 
+                  class="form-control" 
+                  placeholder="e.g. Operating Systems" 
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="newSubjectCode" class="form-label form-label-sm">
+                  Subject Code <span class="required">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="newSubjectCode" 
+                  class="form-control" 
+                  placeholder="e.g. CS402" 
+                  style="text-transform:uppercase;" 
+                />
+              </div>
+            </div>
+            
+            <span class="new-subject-hint">
+              ℹ️ If this subject code already exists for this semester, it will be automatically selected without duplication.
+            </span>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="display:flex; justify-content:flex-end; align-items:center; gap:1rem;">
+            <button type="submit" id="createClassBtn" class="btn btn-primary" style="min-width:160px;" disabled>
+              Create Class
+            </button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- My Classes Section -->
+    <div class="dashboard-card" id="myClassesSection">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>📚</span> My Classes
+        </h2>
+        <span id="classCountBadge" class="section-badge">0 Classes</span>
+      </div>
+
+      <!-- Class View Tabs (Active / Archived) -->
+      <div class="class-view-tabs" role="tablist" aria-label="Class status filter">
+        <button type="button" class="class-view-tab active" id="tabActiveClasses" role="tab" aria-selected="true">
+          <span>Active Classes</span>
+          <span class="class-view-tab-badge" id="tabCountActiveClasses">0</span>
+        </button>
+        <button type="button" class="class-view-tab" id="tabArchivedClasses" role="tab" aria-selected="false">
+          <span>Archived Classes</span>
+          <span class="class-view-tab-badge" id="tabCountArchivedClasses">0</span>
+        </button>
+      </div>
+
+      <!-- Classes Grid or Empty State -->
+      <div id="classesGrid" class="classes-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyClassesState" class="empty-state hidden">
+        <div class="empty-state-icon">🏫</div>
+        <div class="empty-state-title">You haven't created any classes yet.</div>
+        <div class="empty-state-desc">
+          Select a semester and subject in the form above to generate your first class and enrollment code.
+        </div>
+      </div>
+    </div>
+
+    <!-- Class Feedback Sessions Section (Phase 3) -->
+    <div class="dashboard-card">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span>💬</span> Class Feedback Sessions
+        </h2>
+        <span id="sessionCountBadge" class="section-badge">0 Sessions</span>
+      </div>
+
+      <!-- Start Feedback Session Form -->
+      <div class="start-session-panel">
+        <div class="start-session-header">
+          <h3 class="start-session-title">
+            <span>🎯</span> Start a Live Feedback Session
+          </h3>
+          <p class="start-session-desc">
+            Select an active class and enter today's learning topic to launch a feedback session for your students.
+          </p>
+        </div>
+        <form id="startSessionForm" class="start-session-form" novalidate>
+          
+          <!-- Row 1: Select Class & Learning Concept / Topic -->
+          <div class="start-session-row start-session-row-1">
+            <div class="form-group">
+              <label for="sessionClassSelect" class="form-label">
+                Select Class <span class="required">*</span>
+              </label>
+              <select id="sessionClassSelect" class="form-control" required>
+                <option value="">-- Choose Class --</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sessionTopicInput" class="form-label">
+                Learning Concept / Topic <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="sessionTopicInput" 
+                class="form-control" 
+                placeholder="e.g. CPU Scheduling Algorithms" 
+                required 
+              />
+            </div>
+          </div>
+
+          <!-- Row 2: Unit (Optional) & Start Feedback Session Action -->
+          <div class="start-session-row start-session-row-2">
+            <div class="form-group start-session-unit-group">
+              <label for="sessionUnitInput" class="form-label">
+                Unit (Optional)
+              </label>
+              <input 
+                type="text" 
+                id="sessionUnitInput" 
+                class="form-control" 
+                placeholder="e.g. 3 or Unit 3" 
+              />
+            </div>
+
+            <div class="form-group start-session-action-group">
+              <button type="submit" id="startSessionBtn" class="btn btn-primary start-session-submit-btn">
+                Start Feedback Session
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Feedback Sessions List -->
+      <h3 style="font-size:1rem; font-weight:700; color:var(--primary-dark); margin-bottom:1rem;">
+        Active & Past Feedback Sessions
+      </h3>
+
+      <div id="sessionsGrid" class="classes-grid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Empty State for Sessions -->
+      <div id="emptySessionsState" class="empty-state hidden">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-title">No feedback sessions created yet.</div>
+        <div class="empty-state-desc">
+          Select one of your active classes above, enter today's learning concept, and start a live feedback session for your students.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Enrolled Students Modal -->
+  <div id="rosterModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rosterModalTitle">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="rosterModalTitle">Enrolled Students</h3>
+        <button type="button" id="closeModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="rosterModalBody">
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading enrolled students...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Participation Modal -->
+  <div id="participationModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="participationModalTitle">
+    <div class="modal-container" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="participationModalTitle" style="margin-bottom:0.25rem;">Feedback Participation</h3>
+          <p id="participationModalSubtitle" style="font-size:0.8125rem; color:var(--text-muted); margin:0;"></p>
+        </div>
+        <button type="button" id="closeParticipationModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="participationModalBody">
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading participation status...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Results Modal (Phase 4) -->
+  <div id="resultsModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="resultsModalTitle">
+    <div class="modal-container" style="max-width: 760px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="resultsModalTitle" style="margin-bottom:0.25rem;">Class Feedback Results</h3>
+          <p id="resultsModalSubtitle" style="font-size:0.8125rem; color:var(--text-muted); margin:0;"></p>
+        </div>
+        <button type="button" id="closeResultsModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="resultsModalBody">
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading feedback results...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Improvement Action Modal (Phase 4) -->
+  <div id="actionModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
+    <div class="modal-container" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="actionModalTitle" style="margin-bottom:0.25rem;">Faculty Improvement Action</h3>
+          <p id="actionModalSubtitle" style="font-size:0.8125rem; color:var(--text-muted); margin:0;"></p>
+        </div>
+        <button type="button" id="closeActionModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="actionModalBody">
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading action details...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Before / After Improvement Comparison Modal (Phase 4) -->
+  <div id="comparisonModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="comparisonModalTitle">
+    <div class="modal-container" style="max-width: 760px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="comparisonModalTitle" style="margin-bottom:0.25rem;">Before & After Improvement Analysis</h3>
+          <p id="comparisonModalSubtitle" style="font-size:0.8125rem; color:var(--text-muted); margin:0;"></p>
+        </div>
+        <button type="button" id="closeComparisonModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="comparisonModalBody">
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Computing improvement comparison...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>CampusPulse &bull; Faculty Portal &copy; 2026</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { requireAuth, signOutUser } from '/js/auth.js';
+    import { showAlert, clearAlert, setButtonLoading } from '/js/utils.js';
+    import { getSemesters, getSubjectsBySemester, getOrCreateSubject } from '/js/academicService.js';
+    import { createClass, getFacultyClasses, getClassEnrolledStudents, toggleClassStatus, deleteClass, archiveClass } from '/js/classService.js';
+    import { createFeedbackSession, getFacultyFeedbackSessions, closeFeedbackSession, getSessionParticipation } from '/js/feedbackSessionService.js';
+    import {
+      getFeedbackSessionResults,
+      createImprovementAction,
+      getActionForSession,
+      getFacultyImprovementActions,
+      updateActionStatus,
+      createFollowUpSession,
+      getImprovementComparison,
+      IMPROVEMENT_AREAS,
+      ACTION_TYPES,
+      ACTION_STATUSES
+    } from '/js/improvementActionService.js';
+
+    let currentFacultyId = null;
+    let currentFacultyDeptId = null;
+    let isNewSubjectMode = false;
+    let currentSemesterSubjects = [];
+    let allFacultySessions = [];
+    let facultyActions = [];
+    let currentClassView = 'active'; // 'active' | 'archived'
+    let allFacultyClasses = [];
+
+    // Elements
+    const globalAlert = document.getElementById('globalAlert');
+    const semesterSelect = document.getElementById('semesterSelect');
+    const subjectSelect = document.getElementById('subjectSelect');
+    const existingSubjectWrap = document.getElementById('existingSubjectWrap');
+    const toggleSubjectModeBtn = document.getElementById('toggleSubjectModeBtn');
+    const newSubjectPanel = document.getElementById('newSubjectPanel');
+    const cancelNewSubjectBtn = document.getElementById('cancelNewSubjectBtn');
+    const newSubjectName = document.getElementById('newSubjectName');
+    const newSubjectCode = document.getElementById('newSubjectCode');
+    const createClassBtn = document.getElementById('createClassBtn');
+    const createClassForm = document.getElementById('createClassForm');
+
+    const classesGrid = document.getElementById('classesGrid');
+    const emptyClassesState = document.getElementById('emptyClassesState');
+    const classCountBadge = document.getElementById('classCountBadge');
+    const tabActiveClasses = document.getElementById('tabActiveClasses');
+    const tabArchivedClasses = document.getElementById('tabArchivedClasses');
+    const tabCountActiveClasses = document.getElementById('tabCountActiveClasses');
+    const tabCountArchivedClasses = document.getElementById('tabCountArchivedClasses');
+
+    const classCreatedNotification = document.getElementById('classCreatedNotification');
+    const createdSubjectName = document.getElementById('createdSubjectName');
+    const createdSemesterNumber = document.getElementById('createdSemesterNumber');
+    const createdClassCode = document.getElementById('createdClassCode');
+    const copyCreatedCodeBtn = document.getElementById('copyCreatedCodeBtn');
+
+    const rosterModal = document.getElementById('rosterModal');
+    const rosterModalTitle = document.getElementById('rosterModalTitle');
+    const rosterModalBody = document.getElementById('rosterModalBody');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    const participationModal = document.getElementById('participationModal');
+    const participationModalTitle = document.getElementById('participationModalTitle');
+    const participationModalSubtitle = document.getElementById('participationModalSubtitle');
+    const participationModalBody = document.getElementById('participationModalBody');
+    const closeParticipationModalBtn = document.getElementById('closeParticipationModalBtn');
+
+    // Phase 3 Elements: Feedback Sessions
+    const sessionCountBadge = document.getElementById('sessionCountBadge');
+    const startSessionForm = document.getElementById('startSessionForm');
+    const sessionClassSelect = document.getElementById('sessionClassSelect');
+    const sessionTopicInput = document.getElementById('sessionTopicInput');
+    const sessionUnitInput = document.getElementById('sessionUnitInput');
+    const startSessionBtn = document.getElementById('startSessionBtn');
+    const sessionsGrid = document.getElementById('sessionsGrid');
+    const emptySessionsState = document.getElementById('emptySessionsState');
+
+    // Phase 4 Elements: Results, Actions, Comparison Modals
+    const resultsModal = document.getElementById('resultsModal');
+    const resultsModalTitle = document.getElementById('resultsModalTitle');
+    const resultsModalSubtitle = document.getElementById('resultsModalSubtitle');
+    const resultsModalBody = document.getElementById('resultsModalBody');
+    const closeResultsModalBtn = document.getElementById('closeResultsModalBtn');
+
+    const actionModal = document.getElementById('actionModal');
+    const actionModalTitle = document.getElementById('actionModalTitle');
+    const actionModalSubtitle = document.getElementById('actionModalSubtitle');
+    const actionModalBody = document.getElementById('actionModalBody');
+    const closeActionModalBtn = document.getElementById('closeActionModalBtn');
+
+    const comparisonModal = document.getElementById('comparisonModal');
+    const comparisonModalTitle = document.getElementById('comparisonModalTitle');
+    const comparisonModalSubtitle = document.getElementById('comparisonModalSubtitle');
+    const comparisonModalBody = document.getElementById('comparisonModalBody');
+    const closeComparisonModalBtn = document.getElementById('closeComparisonModalBtn');
+
+    // Route Guard: enforce faculty role
+    requireAuth('faculty').then(async (authData) => {
+      if (!authData) return;
+
+      const { profile } = authData;
+      currentFacultyId = profile.id;
+      currentFacultyDeptId = profile.departmentId;
+      const welcomeName = profile.fullName || 'Faculty Member';
+
+      document.getElementById('welcomeHeading').textContent = `Welcome, ${welcomeName}`;
+      document.getElementById('navUserName').textContent = welcomeName;
+      document.getElementById('navUserEmail').textContent = profile.email || '';
+      document.getElementById('logoutBtn').addEventListener('click', signOutUser);
+
+      if (profile.departmentName) {
+        const badge = document.getElementById('facultyDeptBadge');
+        if (badge) badge.textContent = `${profile.departmentName} Department`;
+      }
+
+      // Load clean semesters, existing classes, and feedback sessions
+      await loadSemesters();
+      await loadClasses();
+      await loadFacultySessions();
+    });
+
+    // 1. Load clean Semester 1 to 8 without academic-year text
+    async function loadSemesters() {
+      try {
+        const semesters = await getSemesters();
+        semesterSelect.innerHTML = '<option value="">-- Choose Semester --</option>';
+        
+        semesters.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = `Semester ${s.semester_number}`;
+          opt.dataset.number = s.semester_number;
+          semesterSelect.appendChild(opt);
+        });
+      } catch (err) {
+        showAlert(globalAlert, 'Failed to load semester options. Check Supabase connection.', 'warning');
+      }
+    }
+
+    // 2. Semester change handler
+    semesterSelect.addEventListener('change', async () => {
+      const semId = semesterSelect.value;
+      
+      // Reset subject UI
+      isNewSubjectMode = false;
+      newSubjectPanel.classList.add('hidden');
+      existingSubjectWrap.classList.remove('hidden');
+      newSubjectName.value = '';
+      newSubjectCode.value = '';
+
+      if (!semId) {
+        subjectSelect.innerHTML = '<option value="">-- First choose a semester --</option>';
+        subjectSelect.disabled = true;
+        toggleSubjectModeBtn.classList.add('hidden');
+        createClassBtn.disabled = true;
+        return;
+      }
+
+      await loadSubjectsForSemester(semId);
+    });
+
+    // 3. Load subjects for chosen semester
+    async function loadSubjectsForSemester(semId, selectCodeAfterLoad = null) {
+      subjectSelect.innerHTML = '<option value="">Loading subjects...</option>';
+      subjectSelect.disabled = true;
+      toggleSubjectModeBtn.classList.remove('hidden');
+      toggleSubjectModeBtn.textContent = '+ Add New Subject';
+
+      try {
+        currentSemesterSubjects = await getSubjectsBySemester(semId);
+
+        if (!currentSemesterSubjects || currentSemesterSubjects.length === 0) {
+          // No subjects yet: automatically activate Add New Subject panel
+          subjectSelect.innerHTML = '<option value="">No existing subjects found</option>';
+          setSubjectMode(true);
+        } else {
+          renderSubjectOptions(currentSemesterSubjects, selectCodeAfterLoad);
+          setSubjectMode(false);
+        }
+      } catch (err) {
+        subjectSelect.innerHTML = '<option value="">Error loading subjects</option>';
+      }
+    }
+
+    function renderSubjectOptions(subjects, preSelectCode = null) {
+      subjectSelect.innerHTML = '<option value="">-- Select existing subject --</option>';
+      let foundMatch = false;
+
+      subjects.forEach(sub => {
+        const opt = document.createElement('option');
+        opt.value = sub.id;
+        opt.textContent = `${sub.name} (${sub.code})`;
+        if (preSelectCode && sub.code.toUpperCase() === preSelectCode.toUpperCase()) {
+          opt.selected = true;
+          foundMatch = true;
+        }
+        subjectSelect.appendChild(opt);
+      });
+
+      // Special option to add new subject directly from dropdown
+      const newOpt = document.createElement('option');
+      newOpt.value = '__ADD_NEW__';
+      newOpt.textContent = '+ Add New Subject...';
+      newOpt.style.fontWeight = 'bold';
+      newOpt.style.color = 'var(--primary)';
+      subjectSelect.appendChild(newOpt);
+
+      subjectSelect.disabled = false;
+      validateFormReadiness();
+    }
+
+    // Toggle between "Select Existing" and "+ Add New Subject"
+    function setSubjectMode(newMode) {
+      isNewSubjectMode = newMode;
+      if (isNewSubjectMode) {
+        newSubjectPanel.classList.remove('hidden');
+        existingSubjectWrap.classList.add('hidden');
+        toggleSubjectModeBtn.textContent = 'Choose Existing';
+        newSubjectName.focus();
+      } else {
+        newSubjectPanel.classList.add('hidden');
+        existingSubjectWrap.classList.remove('hidden');
+        toggleSubjectModeBtn.textContent = '+ Add New Subject';
+      }
+      validateFormReadiness();
+    }
+
+    toggleSubjectModeBtn.addEventListener('click', () => {
+      setSubjectMode(!isNewSubjectMode);
+    });
+
+    cancelNewSubjectBtn.addEventListener('click', () => {
+      setSubjectMode(false);
+      if (currentSemesterSubjects.length === 0) {
+        subjectSelect.value = '';
+      }
+    });
+
+    subjectSelect.addEventListener('change', () => {
+      if (subjectSelect.value === '__ADD_NEW__') {
+        subjectSelect.value = '';
+        setSubjectMode(true);
+      } else {
+        validateFormReadiness();
+      }
+    });
+
+    newSubjectName.addEventListener('input', validateFormReadiness);
+    newSubjectCode.addEventListener('input', () => {
+      newSubjectCode.value = newSubjectCode.value.toUpperCase();
+      validateFormReadiness();
+    });
+
+    function validateFormReadiness() {
+      const hasSem = Boolean(semesterSelect.value);
+      if (!hasSem) {
+        createClassBtn.disabled = true;
+        return;
+      }
+
+      if (isNewSubjectMode) {
+        const hasName = Boolean(newSubjectName.value.trim());
+        const hasCode = Boolean(newSubjectCode.value.trim());
+        createClassBtn.disabled = !(hasName && hasCode);
+      } else {
+        createClassBtn.disabled = !(subjectSelect.value && subjectSelect.value !== '__ADD_NEW__');
+      }
+    }
+
+    // 4. Create Class Submission
+    createClassForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert(globalAlert);
+      classCreatedNotification.classList.add('hidden');
+
+      const semesterId = semesterSelect.value;
+      if (!semesterId || !currentFacultyId) return;
+
+      setButtonLoading(createClassBtn, true, 'Creating Class...', 'Create Class');
+
+      try {
+        let targetSubjectId = null;
+
+        if (isNewSubjectMode) {
+          const subName = newSubjectName.value.trim();
+          const subCode = newSubjectCode.value.trim().toUpperCase();
+
+          if (!subName || !subCode) {
+            showAlert(globalAlert, 'Please enter both Subject Name and Subject Code.', 'danger');
+            setButtonLoading(createClassBtn, false, 'Creating Class...', 'Create Class');
+            return;
+          }
+
+          // Create or retrieve existing subject
+          const subject = await getOrCreateSubject({
+            name: subName,
+            code: subCode,
+            semesterId: semesterId
+          });
+
+          targetSubjectId = subject.id;
+        } else {
+          targetSubjectId = subjectSelect.value;
+        }
+
+        if (!targetSubjectId) {
+          showAlert(globalAlert, 'Please select or add a valid subject.', 'danger');
+          setButtonLoading(createClassBtn, false, 'Creating Class...', 'Create Class');
+          return;
+        }
+
+        // Create the class with auto-generated 6-character code
+        const newClass = await createClass({
+          subjectId: targetSubjectId,
+          facultyId: currentFacultyId,
+          departmentId: currentFacultyDeptId
+        });
+
+        // Show highlight card
+        const sub = newClass.subjects;
+        createdSubjectName.textContent = `${sub?.name} (${sub?.code})`;
+        createdSemesterNumber.textContent = sub?.semesters?.semester_number || 'N/A';
+        createdClassCode.textContent = newClass.class_code;
+        classCreatedNotification.classList.remove('hidden');
+
+        // Reload subjects for this semester so new subject is listed in dropdown
+        await loadSubjectsForSemester(semesterId, sub?.code);
+
+        // Reset new subject inputs
+        newSubjectName.value = '';
+        newSubjectCode.value = '';
+        setSubjectMode(false);
+
+        // Reload faculty classes
+        await loadClasses();
+
+        // Scroll to notification
+        classCreatedNotification.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      } catch (err) {
+        showAlert(globalAlert, err.message || 'Could not create class.', 'danger');
+      } finally {
+        setButtonLoading(createClassBtn, false, 'Creating Class...', 'Create Class');
+      }
+    });
+
+    // Copy created code helper
+    copyCreatedCodeBtn.addEventListener('click', () => {
+      const code = createdClassCode.textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        copyCreatedCodeBtn.textContent = '✅ Copied!';
+        setTimeout(() => {
+          copyCreatedCodeBtn.textContent = '📋 Copy';
+        }, 2000);
+      });
+    });
+
+    // 5. Load Faculty Classes
+    async function loadClasses() {
+      if (!currentFacultyId) return;
+
+      try {
+        const classes = await getFacultyClasses(currentFacultyId);
+        allFacultyClasses = classes || [];
+        renderClassesGrid();
+        renderClassOptionsForSessionModal(allFacultyClasses);
+      } catch (err) {
+        console.error('Error loading classes:', err);
+        showAlert(globalAlert, 'Failed to load your classes list.', 'danger');
+      }
+    }
+
+    function setClassView(view) {
+      if (currentClassView === view) return;
+      currentClassView = view;
+      if (view === 'active') {
+        tabActiveClasses.classList.add('active');
+        tabActiveClasses.setAttribute('aria-selected', 'true');
+        tabArchivedClasses.classList.remove('active');
+        tabArchivedClasses.setAttribute('aria-selected', 'false');
+      } else {
+        tabArchivedClasses.classList.add('active');
+        tabArchivedClasses.setAttribute('aria-selected', 'true');
+        tabActiveClasses.classList.remove('active');
+        tabActiveClasses.setAttribute('aria-selected', 'false');
+      }
+      renderClassesGrid();
+    }
+
+    if (tabActiveClasses && tabArchivedClasses) {
+      tabActiveClasses.addEventListener('click', () => setClassView('active'));
+      tabArchivedClasses.addEventListener('click', () => setClassView('archived'));
+    }
+
+    function renderClassesGrid() {
+      classesGrid.innerHTML = '';
+
+      const totalClasses = allFacultyClasses.length;
+      const activeClasses = allFacultyClasses.filter(c => c.is_active === true);
+      const archivedClasses = allFacultyClasses.filter(c => !c.is_active);
+
+      // Update badge counts
+      if (tabCountActiveClasses) tabCountActiveClasses.textContent = activeClasses.length;
+      if (tabCountArchivedClasses) tabCountArchivedClasses.textContent = archivedClasses.length;
+      classCountBadge.textContent = `${totalClasses} Class${totalClasses !== 1 ? 'es' : ''}`;
+
+      // If user has no classes whatsoever
+      if (totalClasses === 0) {
+        emptyClassesState.classList.remove('hidden');
+        return;
+      }
+      emptyClassesState.classList.add('hidden');
+
+      const displayedClasses = currentClassView === 'active' ? activeClasses : archivedClasses;
+
+      if (displayedClasses.length === 0) {
+        const emptyTabNotice = document.createElement('div');
+        emptyTabNotice.className = 'empty-state';
+        emptyTabNotice.style.gridColumn = '1 / -1';
+        emptyTabNotice.style.padding = '2rem 1rem';
+        if (currentClassView === 'active') {
+          emptyTabNotice.innerHTML = `
+            <div class="empty-state-icon">📂</div>
+            <div class="empty-state-title">No active classes</div>
+            <div class="empty-state-desc">All your classes are currently archived. You can reactivate them from the Archived Classes tab above.</div>
+          `;
+        } else {
+          emptyTabNotice.innerHTML = `
+            <div class="empty-state-icon">🗃️</div>
+            <div class="empty-state-title">No archived classes</div>
+            <div class="empty-state-desc">Classes with historical feedback sessions can be archived when they are no longer actively taught.</div>
+          `;
+        }
+        classesGrid.appendChild(emptyTabNotice);
+        return;
+      }
+
+      displayedClasses.forEach(cls => {
+        const card = document.createElement('div');
+        card.className = 'class-card';
+
+        const sub = cls.subjects;
+        const sem = sub?.semesters;
+        const studentCount = cls.enrolledCount || 0;
+        const sessionCount = cls.sessionCount || 0;
+        const statusClass = cls.is_active ? 'status-active' : 'status-inactive';
+        const statusText = cls.is_active ? 'Active' : 'Archived';
+
+        let actionButtonHtml = '';
+        if (cls.is_active) {
+          if (sessionCount === 0) {
+            actionButtonHtml = `
+              <button type="button" class="btn btn-sm btn-delete-class" data-class-id="${cls.id}" data-subject="${escapeHtml(sub?.name || 'Class')}" title="Permanently delete unused class">
+                Delete Class
+              </button>
+            `;
+          } else {
+            actionButtonHtml = `
+              <button type="button" class="btn btn-sm btn-secondary btn-archive-class" data-class-id="${cls.id}" data-subject="${escapeHtml(sub?.name || 'Class')}" title="Archive class to preserve feedback history">
+                Archive Class
+              </button>
+            `;
+          }
+        } else {
+          actionButtonHtml = `
+            <button type="button" class="btn btn-sm btn-outline btn-activate-class" data-class-id="${cls.id}" data-subject="${escapeHtml(sub?.name || 'Class')}" title="Reactivate this class for students">
+              Activate Class
+            </button>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="class-card-header">
+            <h3 class="class-subject-title">${escapeHtml(sub?.name || 'Subject')}</h3>
+            <span class="class-subject-code">${escapeHtml(sub?.code || '')}</span>
+          </div>
+          <div class="class-card-body">
+            <div class="class-meta-row">
+              <span>Semester: <strong>Semester ${sem ? sem.semester_number : 'N/A'}</strong></span>
+              <span class="class-status-pill ${statusClass}">${statusText}</span>
+            </div>
+            <div class="class-meta-row">
+              <span>Code:</span>
+              <span class="class-code-badge">
+                <span>${escapeHtml(cls.class_code)}</span>
+                <button type="button" class="btn-copy-mini" data-code="${escapeHtml(cls.class_code)}" title="Copy code" style="background:none; border:none; cursor:pointer; font-size:0.875rem;">📋</button>
+              </span>
+            </div>
+            <div class="class-meta-row">
+              <span>Enrolled Students:</span>
+              <strong>👥 ${studentCount}</strong>
+            </div>
+            <div class="class-meta-row">
+              <span>Feedback Sessions:</span>
+              <strong>💬 ${sessionCount}</strong>
+            </div>
+          </div>
+          <div class="class-card-footer">
+            <button type="button" class="btn btn-secondary btn-sm btn-view-roster" data-class-id="${cls.id}" data-subject="${escapeHtml(sub?.name || 'Class')}" data-code="${escapeHtml(cls.class_code)}">
+              View Students
+            </button>
+            ${actionButtonHtml}
+          </div>
+        `;
+
+        classesGrid.appendChild(card);
+      });
+
+      // Bind copy buttons
+      classesGrid.querySelectorAll('.btn-copy-mini').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const code = btn.getAttribute('data-code');
+          navigator.clipboard.writeText(code).then(() => {
+            const original = btn.textContent;
+            btn.textContent = '✅';
+            setTimeout(() => { btn.textContent = original; }, 1500);
+          });
+        });
+      });
+
+      // Bind roster buttons
+      classesGrid.querySelectorAll('.btn-view-roster').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const classId = btn.getAttribute('data-class-id');
+          const subject = btn.getAttribute('data-subject');
+          const code = btn.getAttribute('data-code');
+          openRosterModal(classId, subject, code);
+        });
+      });
+
+      // Bind delete class buttons (Only for 0-session active classes)
+      classesGrid.querySelectorAll('.btn-delete-class').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const classId = btn.getAttribute('data-class-id');
+          const subject = btn.getAttribute('data-subject') || 'this class';
+
+          const confirmed = window.confirm(
+            `Delete "${subject}" permanently?\n\nThis class has no feedback sessions or historical teaching records. Students enrolled in it will also be removed from this class.\n\nThis action cannot be undone.`
+          );
+          if (!confirmed) return;
+
+          btn.disabled = true;
+          const originalText = btn.textContent;
+          btn.textContent = 'Deleting...';
+
+          try {
+            await deleteClass({ classId, facultyId: currentFacultyId });
+            showAlert(globalAlert, `Class "${subject}" has been permanently deleted.`, 'success');
+            await loadClasses();
+          } catch (err) {
+            showAlert(globalAlert, err.message || 'Failed to delete class.', 'danger');
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }
+        });
+      });
+
+      // Bind archive class buttons (For >=1 session active classes)
+      classesGrid.querySelectorAll('.btn-archive-class').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const classId = btn.getAttribute('data-class-id');
+          const subject = btn.getAttribute('data-subject') || 'this class';
+
+          const confirmed = window.confirm(
+            `Archive "${subject}"?\n\nThis class contains feedback history and cannot be permanently deleted. Archiving it ensures students can no longer join and no new feedback sessions can be started, while all existing history remains preserved.`
+          );
+          if (!confirmed) return;
+
+          btn.disabled = true;
+          const originalText = btn.textContent;
+          btn.textContent = 'Archiving...';
+
+          try {
+            await archiveClass(classId);
+            showAlert(globalAlert, `Class "${subject}" has been archived.`, 'success');
+            await loadClasses();
+          } catch (err) {
+            showAlert(globalAlert, err.message || 'Failed to archive class.', 'danger');
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }
+        });
+      });
+
+      // Bind activate class buttons (For archived classes)
+      classesGrid.querySelectorAll('.btn-activate-class').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const classId = btn.getAttribute('data-class-id');
+          const subject = btn.getAttribute('data-subject') || 'this class';
+
+          btn.disabled = true;
+          const originalText = btn.textContent;
+          btn.textContent = 'Activating...';
+
+          try {
+            await toggleClassStatus(classId, true);
+            showAlert(globalAlert, `Class "${subject}" is now active.`, 'success');
+            await loadClasses();
+          } catch (err) {
+            showAlert(globalAlert, err.message || 'Failed to activate class.', 'danger');
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }
+        });
+      });
+    }
+
+    // 6. Open Enrolled Students Modal
+    async function openRosterModal(classId, subjectName, classCode) {
+      rosterModalTitle.textContent = `Enrolled Students — ${subjectName} (${classCode})`;
+      rosterModalBody.innerHTML = `
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading enrolled students...</p>
+        </div>
+      `;
+      rosterModal.classList.remove('hidden');
+
+      try {
+        const enrollments = await getClassEnrolledStudents(classId);
+
+        if (!enrollments || enrollments.length === 0) {
+          rosterModalBody.innerHTML = `
+            <div class="empty-state" style="padding:2rem 1rem;">
+              <div class="empty-state-icon">👥</div>
+              <div class="empty-state-title">No students enrolled yet</div>
+              <div class="empty-state-desc">
+                Share the code <strong>${classCode}</strong> with your students to allow them to join this class.
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        let tableHtml = `
+          <div class="table-responsive">
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Roll Number</th>
+                  <th>Student Name</th>
+                  <th>Email</th>
+                  <th>Joined Date</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        enrollments.forEach((item, index) => {
+          const student = item.profiles;
+          const dateStr = item.joined_at ? new Date(item.joined_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+          const rollNum = student?.roll_number || '-';
+          tableHtml += `
+            <tr>
+              <td>${index + 1}</td>
+              <td><span class="roll-number-badge">${escapeHtml(rollNum)}</span></td>
+              <td><strong>${escapeHtml(student?.full_name || 'Student')}</strong></td>
+              <td>${escapeHtml(student?.email || '-')}</td>
+              <td>${dateStr}</td>
+            </tr>
+          `;
+        });
+
+        tableHtml += '</tbody></table></div>';
+        rosterModalBody.innerHTML = tableHtml;
+
+      } catch (err) {
+        rosterModalBody.innerHTML = `
+          <div class="alert alert-danger">
+            Failed to load student roster: ${escapeHtml(err.message)}
+          </div>
+        `;
+      }
+    }
+
+    // Close Modal
+    closeModalBtn.addEventListener('click', () => {
+      rosterModal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === rosterModal) {
+        rosterModal.classList.add('hidden');
+      }
+    });
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // =========================================================================
+    // Phase 3: Feedback Sessions Management
+    // =========================================================================
+
+    function renderClassOptionsForSessionModal(classes) {
+      sessionClassSelect.innerHTML = '<option value="">-- Choose Class --</option>';
+      const activeClasses = (classes || []).filter(c => c.is_active === true);
+
+      if (activeClasses.length === 0) {
+        sessionClassSelect.innerHTML = '<option value="">-- No active classes available --</option>';
+        sessionClassSelect.disabled = true;
+        startSessionBtn.disabled = true;
+        return;
+      }
+
+      sessionClassSelect.disabled = false;
+      startSessionBtn.disabled = false;
+
+      activeClasses.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        const subName = c.subjects?.name || 'Class';
+        const subCode = c.subjects?.code ? ` (${c.subjects.code})` : '';
+        const semNum = c.subjects?.semesters?.semester_number ? ` - Sem ${c.subjects.semesters.semester_number}` : '';
+        opt.textContent = `${subName}${subCode}${semNum} [${c.class_code}]`;
+        sessionClassSelect.appendChild(opt);
+      });
+    }
+
+    const populateSessionClassSelect = renderClassOptionsForSessionModal;
+
+    async function loadFacultySessions() {
+      if (!currentFacultyId) return;
+
+      try {
+        const [sessions, actions] = await Promise.all([
+          getFacultyFeedbackSessions(currentFacultyId),
+          getFacultyImprovementActions(currentFacultyId)
+        ]);
+        allFacultySessions = sessions || [];
+        facultyActions = actions || [];
+        renderSessionsGrid(allFacultySessions, facultyActions);
+      } catch (err) {
+        console.error('Error loading feedback sessions:', err);
+        showAlert(globalAlert, 'Failed to load feedback sessions.', 'danger');
+      }
+    }
+
+    function renderSessionsGrid(sessions, actions) {
+      sessionsGrid.innerHTML = '';
+
+      if (!sessions || sessions.length === 0) {
+        emptySessionsState.classList.remove('hidden');
+        sessionCountBadge.textContent = '0 Sessions';
+        return;
+      }
+
+      emptySessionsState.classList.add('hidden');
+      sessionCountBadge.textContent = `${sessions.length} Session${sessions.length > 1 ? 's' : ''}`;
+
+      const actionMap = new Map();
+      (actions || []).forEach(a => actionMap.set(a.session_id, a));
+
+      sessions.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'session-card';
+
+        const isActive = s.status === 'active';
+        const isFollowUp = s.sessionType === 'follow_up';
+        const statusClass = isActive ? 'status-active' : 'status-inactive';
+        const statusText = isActive ? 'Active' : 'Closed';
+        const startDateStr = s.startedAt ? new Date(s.startedAt).toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '-';
+        const unitHtml = s.unit ? `<span class="session-unit-badge">Unit ${escapeHtml(s.unit)}</span>` : '';
+        const followUpBadge = isFollowUp ? `<span class="badge-followup" style="margin-left:0.5rem;">🎯 Follow-Up</span>` : '';
+
+        const action = actionMap.get(s.id);
+        const actionStatusMeta = action ? (ACTION_STATUSES[action.status] || { label: action.status, badge: '⚡' }) : null;
+
+        let actionStatusHtml = '';
+        if (action) {
+          actionStatusHtml = `
+            <div style="margin-top:0.35rem;">
+              <span class="badge-action-pill status-${action.status}">
+                ${actionStatusMeta.badge} ${actionStatusMeta.label}
+              </span>
+            </div>
+          `;
+        }
+
+        // Build footer action buttons
+        let footerButtonsHtml = '';
+
+        if (isActive) {
+          footerButtonsHtml = `
+            <div class="session-active-actions">
+              <button 
+                type="button" 
+                class="btn btn-secondary btn-sm btn-view-participation" 
+                data-session-id="${s.id}" 
+                data-class-id="${s.classId}"
+                data-topic="${escapeHtml(s.topic)}"
+                data-unit="${escapeHtml(s.unit || '')}"
+                data-subject="${escapeHtml(s.subjectName)}"
+                data-code="${escapeHtml(s.classCode)}"
+              >
+                👥 Participation
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-secondary btn-sm btn-close-session" 
+                data-session-id="${s.id}" 
+                data-topic="${escapeHtml(s.topic)}"
+                style="color:#b91c1c; border-color:#fecaca;"
+              >
+                ⏹️ Close Session
+              </button>
+            </div>
+          `;
+        } else {
+          // Closed session - Structured with Primary action & Secondary actions group
+          let secondaryActionsHtml = `
+            <button 
+              type="button" 
+              class="btn btn-secondary btn-sm btn-view-participation" 
+              data-session-id="${s.id}" 
+              data-class-id="${s.classId}"
+              data-topic="${escapeHtml(s.topic)}"
+              data-unit="${escapeHtml(s.unit || '')}"
+              data-subject="${escapeHtml(s.subjectName)}"
+              data-code="${escapeHtml(s.classCode)}"
+            >
+              👥 Participation
+            </button>
+          `;
+
+          if (!isFollowUp) {
+            if (!action) {
+              secondaryActionsHtml += `
+                <button 
+                  type="button" 
+                  class="btn btn-secondary btn-sm btn-create-action" 
+                  data-session-id="${s.id}"
+                >
+                  ⚡ Plan Action
+                </button>
+              `;
+            } else {
+              secondaryActionsHtml += `
+                <button 
+                  type="button" 
+                  class="btn btn-secondary btn-sm btn-view-action" 
+                  data-session-id="${s.id}" 
+                  data-action-id="${action.id}"
+                >
+                  📋 View Action
+                </button>
+              `;
+
+              if (action.status === 'completed') {
+                if (action.follow_up_session_id) {
+                  const followUpSess = allFacultySessions.find(sess => sess.id === action.follow_up_session_id);
+                  if (followUpSess && followUpSess.status === 'closed') {
+                    secondaryActionsHtml += `
+                      <button 
+                        type="button" 
+                        class="btn btn-secondary btn-sm btn-view-comparison" 
+                        data-session-id="${s.id}" 
+                        data-followup-id="${action.follow_up_session_id}" 
+                        data-action-id="${action.id}"
+                      >
+                        📈 Compare
+                      </button>
+                    `;
+                  } else {
+                    secondaryActionsHtml += `
+                      <span class="badge-followup" style="font-size:0.75rem;">🎯 Follow-Up Active</span>
+                    `;
+                  }
+                } else {
+                  secondaryActionsHtml += `
+                    <button 
+                      type="button" 
+                      class="btn btn-secondary btn-sm btn-create-followup" 
+                      data-action-id="${action.id}" 
+                      data-session-id="${s.id}"
+                    >
+                      🎯 Follow-Up
+                    </button>
+                  `;
+                }
+              }
+            }
+          }
+
+          footerButtonsHtml = `
+            <div class="session-closed-actions">
+              <div class="session-primary-action">
+                <button 
+                  type="button" 
+                  class="btn btn-primary btn-sm session-btn-results btn-view-results" 
+                  data-session-id="${s.id}"
+                >
+                  📊 Results
+                </button>
+              </div>
+              <div class="session-secondary-actions">
+                ${secondaryActionsHtml}
+              </div>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="class-card-header" style="background-color:${isActive ? '#f0fdf4' : '#f8fafc'};">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem;">
+              <div>
+                <h3 class="session-topic-title">${escapeHtml(s.topic)}${unitHtml}${followUpBadge}</h3>
+                <span class="class-subject-code">${escapeHtml(s.subjectName)} (${escapeHtml(s.subjectCode)})</span>
+                ${actionStatusHtml}
+              </div>
+              <span class="class-status-pill ${statusClass}">${statusText}</span>
+            </div>
+          </div>
+          <div class="class-card-body">
+            <div class="class-meta-row">
+              <span>Semester: <strong>Semester ${escapeHtml(String(s.semesterNumber))}</strong></span>
+              <span class="class-code-badge">${escapeHtml(s.classCode)}</span>
+            </div>
+            <div class="class-meta-row">
+              <span>Feedback Responses:</span>
+              <span class="response-count-badge">📝 ${s.responseCount} response${s.responseCount === 1 ? '' : 's'}</span>
+            </div>
+            <div class="class-meta-row" style="font-size:0.8125rem; color:var(--text-muted);">
+              <span>Started:</span>
+              <span>${startDateStr}</span>
+            </div>
+          </div>
+          <div class="class-card-footer session-card-footer">
+            ${footerButtonsHtml}
+          </div>
+        `;
+
+        sessionsGrid.appendChild(card);
+      });
+    }
+
+    // Start Feedback Session Form Submission
+    startSessionForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert(globalAlert);
+
+      const classId = sessionClassSelect.value;
+      const topic = sessionTopicInput.value.trim();
+      const unit = sessionUnitInput.value.trim();
+
+      if (!classId) {
+        showAlert(globalAlert, 'Please select a class for the feedback session.', 'warning');
+        sessionClassSelect.focus();
+        return;
+      }
+
+      if (!topic) {
+        showAlert(globalAlert, 'Please enter today\'s Learning Concept or Topic.', 'warning');
+        sessionTopicInput.focus();
+        return;
+      }
+
+      setButtonLoading(startSessionBtn, true, 'Starting...', 'Start Feedback Session');
+
+      try {
+        await createFeedbackSession({
+          classId,
+          facultyId: currentFacultyId,
+          topic,
+          unit
+        });
+
+        showAlert(globalAlert, `Feedback session started for "${topic}"! Students can now submit feedback.`, 'success');
+        sessionTopicInput.value = '';
+        sessionUnitInput.value = '';
+
+        await loadFacultySessions();
+      } catch (err) {
+        showAlert(globalAlert, err.message || 'Could not start feedback session.', 'danger');
+      } finally {
+        setButtonLoading(startSessionBtn, false, 'Starting...', 'Start Feedback Session');
+      }
+    });
+
+    // Sessions Grid Click Delegation
+    sessionsGrid.addEventListener('click', async (e) => {
+      // 1. View Participation
+      const partBtn = e.target.closest('.btn-view-participation');
+      if (partBtn) {
+        const sessionId = partBtn.dataset.sessionId;
+        const classId = partBtn.dataset.classId;
+        const topic = partBtn.dataset.topic;
+        const unit = partBtn.dataset.unit;
+        const subject = partBtn.dataset.subject;
+        const code = partBtn.dataset.code;
+        openParticipationModal(sessionId, classId, topic, unit, subject, code);
+        return;
+      }
+
+      // 2. Close Session
+      const closeBtn = e.target.closest('.btn-close-session');
+      if (closeBtn) {
+        const sessionId = closeBtn.dataset.sessionId;
+        const topic = closeBtn.dataset.topic;
+
+        if (!confirm(`Are you sure you want to close the feedback session for "${topic}"? No further student submissions will be accepted.`)) {
+          return;
+        }
+
+        setButtonLoading(closeBtn, true, 'Closing...', 'Close Session');
+
+        try {
+          await closeFeedbackSession(sessionId, currentFacultyId);
+          showAlert(globalAlert, `Feedback session for "${topic}" has been closed.`, 'info');
+          await loadFacultySessions();
+        } catch (err) {
+          showAlert(globalAlert, err.message || 'Failed to close feedback session.', 'danger');
+          setButtonLoading(closeBtn, false, 'Closing...', 'Close Session');
+        }
+        return;
+      }
+
+      // 3. View Results (Phase 4)
+      const resultsBtn = e.target.closest('.btn-view-results');
+      if (resultsBtn) {
+        const sessionId = resultsBtn.dataset.sessionId;
+        openResultsModal(sessionId);
+        return;
+      }
+
+      // 4. Create Improvement Action (Phase 4)
+      const createActionBtn = e.target.closest('.btn-create-action');
+      if (createActionBtn) {
+        const sessionId = createActionBtn.dataset.sessionId;
+        openActionModal(sessionId, null);
+        return;
+      }
+
+      // 5. View Improvement Action (Phase 4)
+      const viewActionBtn = e.target.closest('.btn-view-action');
+      if (viewActionBtn) {
+        const sessionId = viewActionBtn.dataset.sessionId;
+        const actionId = viewActionBtn.dataset.actionId;
+        openActionModal(sessionId, actionId);
+        return;
+      }
+
+      // 6. Create Follow-Up Session (Phase 4)
+      const followUpBtn = e.target.closest('.btn-create-followup');
+      if (followUpBtn) {
+        const actionId = followUpBtn.dataset.actionId;
+        const sessionId = followUpBtn.dataset.sessionId;
+        handleCreateFollowUp(actionId, sessionId);
+        return;
+      }
+
+      // 7. View Before/After Comparison (Phase 4)
+      const compBtn = e.target.closest('.btn-view-comparison');
+      if (compBtn) {
+        const sessionId = compBtn.dataset.sessionId;
+        const followUpId = compBtn.dataset.followupId;
+        const actionId = compBtn.dataset.actionId;
+        openComparisonModal(sessionId, followUpId, actionId);
+        return;
+      }
+    });
+
+    // =========================================================================
+    // Participation Modal Logic
+    // =========================================================================
+
+    async function openParticipationModal(sessionId, classId, topic, unit, subjectName, classCode) {
+      participationModalTitle.textContent = 'Feedback Participation';
+      const unitText = unit ? ` (Unit ${unit})` : '';
+      participationModalSubtitle.textContent = `${subjectName} [${classCode}] — ${topic}${unitText}`;
+      participationModalBody.innerHTML = `
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading participation status...</p>
+        </div>
+      `;
+      participationModal.classList.remove('hidden');
+
+      try {
+        const result = await getSessionParticipation(sessionId, classId);
+        const { enrolledCount, submittedCount, students } = result;
+
+        if (enrolledCount === 0) {
+          participationModalBody.innerHTML = `
+            <div class="empty-state" style="padding:2rem 1rem;">
+              <div class="empty-state-icon">👥</div>
+              <div class="empty-state-title">No students enrolled</div>
+              <div class="empty-state-desc">
+                No students have enrolled in this class yet. Share the class code <strong>${escapeHtml(classCode)}</strong> with students.
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        const pendingCount = enrolledCount - submittedCount;
+        const pct = Math.round((submittedCount / enrolledCount) * 100);
+
+        let contentHtml = `
+          <div class="participation-summary-bar">
+            <span class="participation-stat" style="color:var(--text-primary);">
+              👥 Enrolled: <strong>${enrolledCount}</strong>
+            </span>
+            <span class="participation-stat" style="color:#059669;">
+              ✅ Submitted: <strong>${submittedCount}</strong>
+            </span>
+            <span class="participation-stat" style="color:#d97706;">
+              ⏳ Pending: <strong>${pendingCount}</strong>
+            </span>
+            <span class="participation-stat" style="color:var(--primary);">
+              📊 Completion: <strong>${pct}%</strong>
+            </span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Roll Number</th>
+                  <th>Student Name</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        students.forEach((st, index) => {
+          const statusBadge = st.hasSubmitted
+            ? '<span class="badge-submitted">✅ Submitted</span>'
+            : '<span class="badge-not-submitted">⏳ Not Submitted</span>';
+
+          contentHtml += `
+            <tr>
+              <td>${index + 1}</td>
+              <td><span class="roll-number-badge">${escapeHtml(st.rollNumber)}</span></td>
+              <td><strong>${escapeHtml(st.fullName)}</strong></td>
+              <td>${escapeHtml(st.email || '-')}</td>
+              <td>${statusBadge}</td>
+            </tr>
+          `;
+        });
+
+        contentHtml += `
+              </tbody>
+            </table>
+          </div>
+          <div class="participation-privacy-notice">
+            <span>🔒 <strong>Student Privacy Protected:</strong> Individual responses, ratings, and comments are confidential and never displayed alongside student identities.</span>
+          </div>
+        `;
+
+        participationModalBody.innerHTML = contentHtml;
+      } catch (err) {
+        participationModalBody.innerHTML = `
+          <div class="alert alert-danger">
+            Failed to load participation status: ${escapeHtml(err.message)}
+          </div>
+        `;
+      }
+    }
+
+    closeParticipationModalBtn.addEventListener('click', () => {
+      participationModal.classList.add('hidden');
+    });
+
+    // =========================================================================
+    // Phase 4: Feedback Results Modal
+    // =========================================================================
+
+    async function openResultsModal(sessionId) {
+      const s = allFacultySessions.find(sess => sess.id === sessionId);
+      if (!s) return;
+
+      const unitText = s.unit ? ` (Unit ${s.unit})` : '';
+      resultsModalSubtitle.textContent = `${s.subjectName} [${s.classCode}] — ${s.topic}${unitText}`;
+      resultsModalBody.innerHTML = `
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading feedback results...</p>
+        </div>
+      `;
+      resultsModal.classList.remove('hidden');
+
+      try {
+        const results = await getFeedbackSessionResults(sessionId);
+        const { totalResponses, metrics, distributions, comments, sentimentSummary, classificationSummary, severitySummary } = results;
+
+
+
+        if (totalResponses === 0) {
+          resultsModalBody.innerHTML = `
+            <div class="empty-state" style="padding:2.5rem 1rem;">
+              <div class="empty-state-icon">📝</div>
+              <div class="empty-state-title">No Feedback Submissions Yet</div>
+              <div class="empty-state-desc">
+                No students submitted feedback for this session before it was closed.
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        function renderDistBar(label, count, total) {
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          return `
+            <div class="distribution-bar-row">
+              <span class="distribution-bar-label">${label}</span>
+              <div class="distribution-bar-track">
+                <div class="distribution-bar-fill" style="width:${pct}%;"></div>
+              </div>
+              <span class="distribution-bar-count">${count} (${pct}%)</span>
+            </div>
+          `;
+        }
+
+        const action = facultyActions.find(a => a.session_id === sessionId);
+        let actionCtaHtml = '';
+        if (s.sessionType !== 'follow_up') {
+          if (!action) {
+            actionCtaHtml = `
+              <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+                <button type="button" class="btn btn-primary" id="resultsModalPlanActionBtn">
+                  ⚡ Plan Improvement Action
+                </button>
+              </div>
+            `;
+          } else {
+            actionCtaHtml = `
+              <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+                <button type="button" class="btn btn-secondary" id="resultsModalViewActionBtn">
+                  📋 View Improvement Action (${ACTION_STATUSES[action.status]?.label || action.status})
+                </button>
+              </div>
+            `;
+          }
+        }
+
+        let commentsListHtml = '';
+        if (!comments || comments.length === 0) {
+          commentsListHtml = `
+            <div style="padding:0.75rem; color:var(--text-muted); font-size:0.8125rem; font-style:italic;">
+              No written comments were submitted for this session.
+            </div>
+          `;
+        } else {
+          commentsListHtml = comments.map(c => `
+            <div class="anonymous-comment-item">
+              "${escapeHtml(c)}"
+            </div>
+          `).join('');
+        }
+
+        // AI Sentiment Summary (Phase 5)
+        let sentimentSummaryHtml = '';
+        if (sentimentSummary && sentimentSummary.hasAnalysis) {
+          const isLimitedNotice = sentimentSummary.isLimited
+            ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem; display:flex; align-items:center; gap:0.25rem;">
+                 <span>⚠️</span>
+                 <em>Result is based on limited feedback (${sentimentSummary.total} comment${sentimentSummary.total === 1 ? '' : 's'}).</em>
+               </div>`
+            : '';
+
+          sentimentSummaryHtml = `
+            <div style="background:var(--surface-muted, #f8fafc); border:1px solid var(--border, #e2e8f0); border-radius:var(--radius-md, 8px); padding:1rem; margin-bottom:1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <div style="font-weight:600; font-size:0.875rem; color:var(--text-primary); display:flex; align-items:center; gap:0.375rem;">
+                  <span>🤖</span>
+                  <span>AI Sentiment Summary</span>
+                </div>
+                <span style="font-size:0.75rem; background:rgba(37,99,235,0.1); color:var(--primary, #2563eb); padding:0.125rem 0.5rem; border-radius:9999px; font-weight:500;">
+                  Anonymous Feedback
+                </span>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.75rem; margin-bottom:0.75rem;">
+                <div style="background:#fff; border:1px solid #d1fae5; border-radius:6px; padding:0.625rem; text-align:center;">
+                  <div style="font-size:0.75rem; font-weight:600; color:#059669; text-transform:uppercase; letter-spacing:0.025em; margin-bottom:0.125rem;">Positive</div>
+                  <div style="font-size:1.25rem; font-weight:700; color:#065f46;">${sentimentSummary.positive}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:0.625rem; text-align:center;">
+                  <div style="font-size:0.75rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.025em; margin-bottom:0.125rem;">Neutral</div>
+                  <div style="font-size:1.25rem; font-weight:700; color:#334155;">${sentimentSummary.neutral}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #fee2e2; border-radius:6px; padding:0.625rem; text-align:center;">
+                  <div style="font-size:0.75rem; font-weight:600; color:#dc2626; text-transform:uppercase; letter-spacing:0.025em; margin-bottom:0.125rem;">Negative</div>
+                  <div style="font-size:1.25rem; font-weight:700; color:#991b1b;">${sentimentSummary.negative}</div>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8125rem; color:var(--text-secondary, #475569); border-top:1px solid var(--border, #e2e8f0); padding-top:0.625rem;">
+                <div>
+                  Overall sentiment: <strong style="color:var(--text-primary);">${escapeHtml(sentimentSummary.overallSentiment)}</strong>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">
+                  Analyzed: ${sentimentSummary.total} comment${sentimentSummary.total === 1 ? '' : 's'}
+                </div>
+              </div>
+
+              ${isLimitedNotice}
+            </div>
+          `;
+        }
+
+        // AI Classification Summary (Phase 5)
+        let classificationSummaryHtml = '';
+        if (classificationSummary && classificationSummary.hasClassifications) {
+          const cCounts = classificationSummary.counts || {};
+          classificationSummaryHtml = `
+            <div style="background:var(--surface-muted, #f8fafc); border:1px solid var(--border, #e2e8f0); border-radius:var(--radius-md, 8px); padding:1rem; margin-bottom:1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <div style="font-weight:600; font-size:0.875rem; color:var(--text-primary); display:flex; align-items:center; gap:0.375rem;">
+                  <span>🏷️</span>
+                  <span>AI Classification Summary</span>
+                </div>
+                <span style="font-size:0.75rem; background:rgba(37,99,235,0.1); color:var(--primary, #2563eb); padding:0.125rem 0.5rem; border-radius:9999px; font-weight:500;">
+                  Categorized: ${classificationSummary.total}
+                </span>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:0.5rem;">
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Understanding</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.understanding || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Teaching Clarity</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.teaching_clarity || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Pace</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.pace || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Difficulty</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.difficulty || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Doubt Resolution</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.doubt_resolution || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Student Suggestion</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.student_suggestion || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Positive Feedback</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.positive_feedback || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border, #e2e8f0); border-radius:6px; padding:0.5rem 0.625rem;">
+                  <div style="font-size:0.6875rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Other</div>
+                  <div style="font-size:1.125rem; font-weight:700; color:var(--text-primary);">${cCounts.other || 0}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // AI Severity Summary (Phase 5)
+        let severitySummaryHtml = '';
+        if (severitySummary && severitySummary.hasSeverities) {
+          const sCounts = severitySummary.counts || {};
+          const isLimitedSevNotice = severitySummary.isLimited
+            ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem; display:flex; align-items:center; gap:0.25rem;">
+                 <span>⚠️</span>
+                 <em>Result is based on limited feedback (${severitySummary.total} comment${severitySummary.total === 1 ? '' : 's'}).</em>
+               </div>`
+            : '';
+
+          severitySummaryHtml = `
+            <div style="background:var(--surface-muted, #f8fafc); border:1px solid var(--border, #e2e8f0); border-radius:var(--radius-md, 8px); padding:1rem; margin-bottom:1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <div style="font-weight:600; font-size:0.875rem; color:var(--text-primary); display:flex; align-items:center; gap:0.375rem;">
+                  <span>⚠️</span>
+                  <span>AI Severity Summary</span>
+                </div>
+                <span style="font-size:0.75rem; background:rgba(37,99,235,0.1); color:var(--primary, #2563eb); padding:0.125rem 0.5rem; border-radius:9999px; font-weight:500;">
+                  Predicted: ${severitySummary.total}
+                </span>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.75rem;">
+                <div style="background:#fff; border:1px solid #d1fae5; border-radius:6px; padding:0.625rem; text-align:center;">
+                  <div style="font-size:0.75rem; font-weight:600; color:#059669; text-transform:uppercase; letter-spacing:0.025em; margin-bottom:0.125rem;">Low</div>
+                  <div style="font-size:1.25rem; font-weight:700; color:#065f46;">${sCounts.low || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #fef3c7; border-radius:6px; padding:0.625rem; text-align:center;">
+                  <div style="font-size:0.75rem; font-weight:600; color:#d97706; text-transform:uppercase; letter-spacing:0.025em; margin-bottom:0.125rem;">Medium</div>
+                  <div style="font-size:1.25rem; font-weight:700; color:#92400e;">${sCounts.medium || 0}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #fee2e2; border-radius:6px; padding:0.625rem; text-align:center;">
+                  <div style="font-size:0.75rem; font-weight:600; color:#dc2626; text-transform:uppercase; letter-spacing:0.025em; margin-bottom:0.125rem;">High</div>
+                  <div style="font-size:1.25rem; font-weight:700; color:#991b1b;">${sCounts.high || 0}</div>
+                </div>
+              </div>
+
+              ${isLimitedSevNotice}
+            </div>
+          `;
+        }
+
+        resultsModalBody.innerHTML = `
+
+
+          <!-- Key Metric Cards Grid -->
+          <div class="results-metric-grid">
+            <div class="results-metric-card">
+              <div class="results-metric-value">${totalResponses}</div>
+              <div class="results-metric-label">Submissions</div>
+            </div>
+            <div class="results-metric-card">
+              <div class="results-metric-value" style="color:#059669;">${metrics.understanding.avg.toFixed(1)}<span style="font-size:1rem; font-weight:500; color:var(--text-muted);">/5</span></div>
+              <div class="results-metric-label">Understanding</div>
+            </div>
+            <div class="results-metric-card">
+              <div class="results-metric-value" style="color:var(--primary);">${metrics.clarity.avg.toFixed(1)}<span style="font-size:1rem; font-weight:500; color:var(--text-muted);">/5</span></div>
+              <div class="results-metric-label">Teaching Clarity</div>
+            </div>
+            <div class="results-metric-card">
+              <div class="results-metric-value" style="color:#d97706;">${metrics.difficulty.avg.toFixed(1)}<span style="font-size:1rem; font-weight:500; color:var(--text-muted);">/3</span></div>
+              <div class="results-metric-label">Difficulty</div>
+            </div>
+            <div class="results-metric-card">
+              <div class="results-metric-value" style="color:#2563eb;">${metrics.doubtsAddressed.positivePct}%</div>
+              <div class="results-metric-label">Doubts Addressed</div>
+            </div>
+          </div>
+
+          <!-- Distribution Breakdown -->
+          <div class="modal-grid-2col" style="margin-bottom:1.25rem;">
+            
+            <!-- Pace Distribution -->
+            <div class="distribution-group">
+              <div class="distribution-group-title">Lecture Pace</div>
+              ${renderDistBar('Too Slow', distributions.pace.too_slow, totalResponses)}
+              ${renderDistBar('Good Pace', distributions.pace.good, totalResponses)}
+              ${renderDistBar('Too Fast', distributions.pace.too_fast, totalResponses)}
+            </div>
+
+            <!-- Difficulty Distribution -->
+            <div class="distribution-group">
+              <div class="distribution-group-title">Perceived Difficulty</div>
+              ${renderDistBar('Easy', distributions.difficulty.easy, totalResponses)}
+              ${renderDistBar('Moderate', distributions.difficulty.moderate, totalResponses)}
+              ${renderDistBar('Difficult', distributions.difficulty.difficult, totalResponses)}
+            </div>
+
+          </div>
+
+          <div class="modal-grid-2col" style="margin-bottom:1.5rem;">
+            
+            <!-- Doubts Addressed Distribution -->
+            <div class="distribution-group">
+              <div class="distribution-group-title">Doubts Addressed</div>
+              ${renderDistBar('Yes (Fully)', distributions.doubts.yes, totalResponses)}
+              ${renderDistBar('Partly', distributions.doubts.partly, totalResponses)}
+              ${renderDistBar('No', distributions.doubts.no, totalResponses)}
+            </div>
+
+            <!-- Teaching Clarity Breakdown (1 to 5) -->
+            <div class="distribution-group">
+              <div class="distribution-group-title">Clarity Rating Breakdown (1-5)</div>
+              ${renderDistBar('5 - Very Clear', distributions.clarity['5'], totalResponses)}
+              ${renderDistBar('4 - Clear', distributions.clarity['4'], totalResponses)}
+              ${renderDistBar('3 - Moderate', distributions.clarity['3'], totalResponses)}
+              ${renderDistBar('1-2 - Confusing', (distributions.clarity['1'] + distributions.clarity['2']), totalResponses)}
+            </div>
+
+          </div>
+
+          ${sentimentSummaryHtml}
+
+          ${classificationSummaryHtml}
+
+          ${severitySummaryHtml}
+
+          <!-- Anonymous Student Comments -->
+
+
+          <div style="margin-bottom:1rem;">
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <strong style="font-size:0.875rem; color:var(--text-primary);">Anonymous Student Comments (${comments.length})</strong>
+              <span style="font-size:0.75rem; color:var(--text-muted);">🔒 Identity Protected</span>
+            </div>
+            <div class="anonymous-comments-box">
+              ${commentsListHtml}
+            </div>
+          </div>
+
+          <div class="participation-privacy-notice">
+            <span>🔒 <strong>Student Anonymity Preserved:</strong> All responses and comments are aggregated. Ratings are never linked to individual student identities.</span>
+          </div>
+
+          ${actionCtaHtml}
+        `;
+
+        // Wire CTA buttons in results modal
+        const planActionBtn = document.getElementById('resultsModalPlanActionBtn');
+        if (planActionBtn) {
+          planActionBtn.addEventListener('click', () => {
+            resultsModal.classList.add('hidden');
+            openActionModal(sessionId, null);
+          });
+        }
+
+        const viewActionBtn = document.getElementById('resultsModalViewActionBtn');
+        if (viewActionBtn) {
+          viewActionBtn.addEventListener('click', () => {
+            resultsModal.classList.add('hidden');
+            openActionModal(sessionId, action.id);
+          });
+        }
+
+      } catch (err) {
+        resultsModalBody.innerHTML = `
+          <div class="alert alert-danger">
+            Failed to load feedback results: ${escapeHtml(err.message)}
+          </div>
+        `;
+      }
+    }
+
+    closeResultsModalBtn.addEventListener('click', () => {
+      resultsModal.classList.add('hidden');
+    });
+
+    // =========================================================================
+    // Phase 4: Improvement Action Modal (Create & View/Progress)
+    // =========================================================================
+
+    async function openActionModal(sessionId, actionId = null) {
+      const s = allFacultySessions.find(sess => sess.id === sessionId);
+      if (!s) return;
+
+      const unitText = s.unit ? ` (Unit ${s.unit})` : '';
+      actionModalSubtitle.textContent = `${s.subjectName} [${s.classCode}] — ${s.topic}${unitText}`;
+      actionModalBody.innerHTML = `
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Loading action details...</p>
+        </div>
+      `;
+      actionModal.classList.remove('hidden');
+
+      try {
+        let action = null;
+        if (actionId) {
+          action = facultyActions.find(a => a.id === actionId);
+        } else {
+          action = await getActionForSession(sessionId);
+        }
+
+        if (!action) {
+          // Render CREATE ACTION form
+          actionModalTitle.textContent = 'Plan Faculty Improvement Action';
+          
+          const areaOptions = Object.entries(IMPROVEMENT_AREAS)
+            .map(([k, v]) => `<option value="${k}">${v.icon} ${v.label}</option>`)
+            .join('');
+
+          const typeOptions = Object.entries(ACTION_TYPES)
+            .map(([k, v]) => `<option value="${k}">${v.icon} ${v.label}</option>`)
+            .join('');
+
+          actionModalBody.innerHTML = `
+            <form id="createActionForm" novalidate>
+              <div style="display:flex; flex-direction:column; gap:1rem;">
+                
+                <div class="academic-form-grid" style="grid-template-columns: 1fr 1fr; gap:1rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="actionAreaSelect">
+                      Improvement Area <span class="required">*</span>
+                    </label>
+                    <select id="actionAreaSelect" class="form-control" required>
+                      <option value="">-- Select Area --</option>
+                      ${areaOptions}
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="actionTypeSelect">
+                      Action Type <span class="required">*</span>
+                    </label>
+                    <select id="actionTypeSelect" class="form-control" required>
+                      <option value="">-- Select Action Type --</option>
+                      ${typeOptions}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="actionTargetDateInput">
+                    Target Completion Date (Optional)
+                  </label>
+                  <input 
+                    type="date" 
+                    id="actionTargetDateInput" 
+                    class="form-control" 
+                    min="${new Date().toISOString().split('T')[0]}" 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="actionDescInput">
+                    Action Description <span class="required">*</span>
+                    <span style="font-weight:normal; font-size:0.75rem; color:var(--text-muted);">(Visible to enrolled students once marked completed)</span>
+                  </label>
+                  <textarea 
+                    id="actionDescInput" 
+                    class="form-control" 
+                    rows="3" 
+                    placeholder="Describe your planned pedagogical improvement (e.g. Conduct a 30-minute tutorial with step-by-step CPU scheduling examples and interactive Gantt charts)..."
+                    required
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="problemDescInput">
+                    Problem Description / Faculty Reflection (Optional)
+                    <span style="font-weight:normal; font-size:0.75rem; color:var(--text-muted);">(Strictly private to faculty — never shown to students)</span>
+                  </label>
+                  <textarea 
+                    id="problemDescInput" 
+                    class="form-control" 
+                    rows="2" 
+                    placeholder="Private faculty reflection notes on specific difficulties or concepts students struggled with..."
+                  ></textarea>
+                </div>
+
+                <div id="actionModalAlert" class="alert hidden" role="alert"></div>
+
+                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:0.5rem;">
+                  <button type="button" class="btn btn-secondary" id="cancelCreateActionBtn">Cancel</button>
+                  <button type="submit" id="saveActionBtn" class="btn btn-primary" style="min-width:180px;">
+                    Create Improvement Action
+                  </button>
+                </div>
+
+              </div>
+            </form>
+          `;
+
+          const createActionForm = document.getElementById('createActionForm');
+          const cancelCreateActionBtn = document.getElementById('cancelCreateActionBtn');
+          const saveActionBtn = document.getElementById('saveActionBtn');
+          const actionModalAlert = document.getElementById('actionModalAlert');
+
+          cancelCreateActionBtn.addEventListener('click', () => {
+            actionModal.classList.add('hidden');
+          });
+
+          createActionForm.addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+            clearAlert(actionModalAlert);
+
+            const area = document.getElementById('actionAreaSelect').value;
+            const actionType = document.getElementById('actionTypeSelect').value;
+            const description = document.getElementById('actionDescInput').value.trim();
+            const problemDescription = document.getElementById('problemDescInput').value.trim();
+            const targetDate = document.getElementById('actionTargetDateInput').value || null;
+
+            if (!area) {
+              showAlert(actionModalAlert, 'Please select an improvement area.', 'warning');
+              return;
+            }
+            if (!actionType) {
+              showAlert(actionModalAlert, 'Please select an action type.', 'warning');
+              return;
+            }
+            if (!description) {
+              showAlert(actionModalAlert, 'Please describe your planned improvement action.', 'warning');
+              return;
+            }
+
+            setButtonLoading(saveActionBtn, true, 'Saving...', 'Create Improvement Action');
+
+            try {
+              const newAct = await createImprovementAction({
+                sessionId,
+                facultyId: currentFacultyId,
+                classId: s.classId,
+                area,
+                actionType,
+                description,
+                problemDescription,
+                targetDate
+              });
+
+              showAlert(globalAlert, 'Improvement action created successfully!', 'success');
+              actionModal.classList.add('hidden');
+              await loadFacultySessions();
+            } catch (err) {
+              showAlert(actionModalAlert, err.message || 'Failed to create action.', 'danger');
+              setButtonLoading(saveActionBtn, false, 'Saving...', 'Create Improvement Action');
+            }
+          });
+
+        } else {
+          // Render VIEW & PROGRESS ACTION
+          actionModalTitle.textContent = 'Faculty Improvement Action Details';
+
+          const areaMeta = IMPROVEMENT_AREAS[action.area] || { label: action.area, icon: '📌' };
+          const typeMeta = ACTION_TYPES[action.action_type] || { label: action.action_type, icon: '⚡' };
+          const statusMeta = ACTION_STATUSES[action.status] || { label: action.status, badge: '⚡' };
+
+          const createdDateStr = action.created_at ? new Date(action.created_at).toLocaleDateString(undefined, {
+            month: 'short', day: 'numeric', year: 'numeric'
+          }) : '-';
+          const targetDateStr = action.target_date ? new Date(action.target_date).toLocaleDateString(undefined, {
+            month: 'short', day: 'numeric', year: 'numeric'
+          }) : 'Not specified';
+          const completedDateStr = action.completed_at ? new Date(action.completed_at).toLocaleDateString(undefined, {
+            month: 'short', day: 'numeric', year: 'numeric'
+          }) : '-';
+
+          // Status Stepper Buttons
+          let statusControlHtml = '';
+          if (action.status === 'planned') {
+            statusControlHtml = `
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; background-color:#f8fafc; padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div>
+                  <strong style="font-size:0.875rem; color:var(--text-primary);">Update Action Progress:</strong>
+                  <div style="font-size:0.75rem; color:var(--text-secondary);">Move to In Progress when underway, or mark Completed once delivered.</div>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                  <button type="button" class="btn btn-secondary btn-sm btn-set-status" data-action-id="${action.id}" data-new-status="in_progress">
+                    ▶️ In Progress
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm btn-set-status" data-action-id="${action.id}" data-new-status="completed">
+                    ✅ Mark Completed
+                  </button>
+                </div>
+              </div>
+            `;
+          } else if (action.status === 'in_progress') {
+            statusControlHtml = `
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; background-color:#f8fafc; padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div>
+                  <strong style="font-size:0.875rem; color:var(--text-primary);">Action In Progress</strong>
+                  <div style="font-size:0.75rem; color:var(--text-secondary);">Mark Completed once your teaching adjustment has been delivered to students.</div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm btn-set-status" data-action-id="${action.id}" data-new-status="completed">
+                  ✅ Mark Completed
+                </button>
+              </div>
+            `;
+          } else if (action.status === 'completed') {
+            let followUpStatusHtml = '';
+            if (action.follow_up_session_id) {
+              const followUpSess = allFacultySessions.find(sess => sess.id === action.follow_up_session_id);
+              if (followUpSess && followUpSess.status === 'closed') {
+                followUpStatusHtml = `
+                  <div class="followup-alert-box" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                      <strong>🎯 Follow-Up Feedback Closed</strong>
+                      <div style="font-size:0.8125rem;">Student responses are ready for Before/After improvement analysis.</div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" id="viewComparisonFromActionBtn">
+                      📈 View Improvement
+                    </button>
+                  </div>
+                `;
+              } else {
+                followUpStatusHtml = `
+                  <div class="followup-alert-box">
+                    <strong>🎯 Follow-Up Feedback Session Active</strong>
+                    <div style="font-size:0.8125rem;">Students are currently submitting follow-up feedback. Once closed, Before/After comparison will be available.</div>
+                  </div>
+                `;
+              }
+            } else {
+              followUpStatusHtml = `
+                <div class="followup-alert-box" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                  <div>
+                    <strong>🎯 Close the Feedback Loop: Follow-Up Feedback</strong>
+                    <div style="font-size:0.8125rem;">Start a follow-up feedback session for students to assess the impact of this improvement.</div>
+                  </div>
+                  <button type="button" class="btn btn-primary btn-sm" id="createFollowUpFromActionBtn">
+                    🎯 Create Follow-Up Session
+                  </button>
+                </div>
+              `;
+            }
+
+            statusControlHtml = `
+              <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background-color:#f0fdf4; border:1px solid #86efac; border-radius:var(--radius-md); padding:0.75rem 1rem; color:#166534; font-size:0.875rem;">
+                  ✅ <strong>Action Completed on ${completedDateStr}</strong> — This improvement is now displayed in the Student Portal for enrolled students.
+                </div>
+                ${followUpStatusHtml}
+              </div>
+            `;
+          }
+
+          actionModalBody.innerHTML = `
+            <div style="display:flex; flex-direction:column; gap:1.25rem;">
+              
+              <!-- Header Meta Info -->
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; background-color:#f8fafc; padding:0.875rem 1rem; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div>
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Status</span>
+                  <div style="margin-top:0.15rem;">
+                    <span class="badge-action-pill status-${action.status}">${statusMeta.badge} ${statusMeta.label}</span>
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Area</span>
+                  <div style="font-size:0.875rem; font-weight:600; color:var(--text-primary); margin-top:0.15rem;">
+                    ${areaMeta.icon} ${areaMeta.label}
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Action Type</span>
+                  <div style="font-size:0.875rem; font-weight:600; color:var(--text-primary); margin-top:0.15rem;">
+                    ${typeMeta.icon} ${typeMeta.label}
+                  </div>
+                </div>
+                <div>
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Target Date</span>
+                  <div style="font-size:0.875rem; color:var(--text-secondary); margin-top:0.15rem;">
+                    ${targetDateStr}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Description (Student-Facing) -->
+              <div>
+                <strong style="font-size:0.875rem; color:var(--primary-dark);">Pedagogical Improvement Description:</strong>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.4rem;">
+                  (Visible to enrolled students once completed)
+                </div>
+                <div style="background-color:#ffffff; border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.85rem 1rem; font-size:0.875rem; color:var(--text-secondary); line-height:1.5;">
+                  ${escapeHtml(action.description)}
+                </div>
+              </div>
+
+              <!-- Problem Description (Private Faculty Reflection) -->
+              ${action.problem_description ? `
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                    <strong style="font-size:0.875rem; color:var(--text-primary);">Faculty Private Reflection / Problem Analysis:</strong>
+                    <span style="font-size:0.75rem; color:var(--text-muted);">🔒 Private to Faculty</span>
+                  </div>
+                  <div style="background-color:#f8fafc; border:1px dashed var(--border-color); border-radius:var(--radius-sm); padding:0.85rem 1rem; font-size:0.8125rem; color:var(--text-muted); line-height:1.45;">
+                    ${escapeHtml(action.problem_description)}
+                  </div>
+                </div>
+              ` : ''}
+
+              <!-- Status Control Stepper -->
+              ${statusControlHtml}
+
+              <div id="actionModalAlert" class="alert hidden" role="alert"></div>
+
+            </div>
+          `;
+
+          // Wire Status Update Buttons
+          const statusButtons = actionModalBody.querySelectorAll('.btn-set-status');
+          statusButtons.forEach(btn => {
+            btn.addEventListener('click', async () => {
+              const actId = btn.dataset.actionId;
+              const newStatus = btn.dataset.newStatus;
+              setButtonLoading(btn, true, 'Updating...', btn.textContent);
+
+              try {
+                await updateActionStatus(actId, newStatus, currentFacultyId);
+                showAlert(globalAlert, `Action status updated to "${newStatus.replace('_', ' ')}"!`, 'success');
+                actionModal.classList.add('hidden');
+                await loadFacultySessions();
+              } catch (err) {
+                const actionModalAlert = document.getElementById('actionModalAlert');
+                showAlert(actionModalAlert, err.message || 'Failed to update action status.', 'danger');
+                setButtonLoading(btn, false, 'Updating...', btn.textContent);
+              }
+            });
+          });
+
+          // Wire Follow-Up & Comparison buttons inside Action Modal
+          const createFollowUpBtn = document.getElementById('createFollowUpFromActionBtn');
+          if (createFollowUpBtn) {
+            createFollowUpBtn.addEventListener('click', () => {
+              actionModal.classList.add('hidden');
+              handleCreateFollowUp(action.id, sessionId);
+            });
+          }
+
+          const viewComparisonBtn = document.getElementById('viewComparisonFromActionBtn');
+          if (viewComparisonBtn) {
+            viewComparisonBtn.addEventListener('click', () => {
+              actionModal.classList.add('hidden');
+              openComparisonModal(sessionId, action.follow_up_session_id, action.id);
+            });
+          }
+        }
+
+      } catch (err) {
+        actionModalBody.innerHTML = `
+          <div class="alert alert-danger">
+            Failed to load action details: ${escapeHtml(err.message)}
+          </div>
+        `;
+      }
+    }
+
+    closeActionModalBtn.addEventListener('click', () => {
+      actionModal.classList.add('hidden');
+    });
+
+    // =========================================================================
+    // Phase 4: Follow-Up Session Creation
+    // =========================================================================
+
+    async function handleCreateFollowUp(actionId, sessionId) {
+      const s = allFacultySessions.find(sess => sess.id === sessionId);
+      const topicName = s ? s.topic : 'this topic';
+
+      if (!confirm(`Create a follow-up feedback session for "${topicName}"?\n\nStudents will be invited to give feedback to evaluate the impact of your completed improvement action.`)) {
+        return;
+      }
+
+      try {
+        await createFollowUpSession(actionId, currentFacultyId);
+        showAlert(globalAlert, `Follow-up feedback session started for "${topicName}"! Students can now submit follow-up feedback.`, 'success');
+        await loadFacultySessions();
+      } catch (err) {
+        showAlert(globalAlert, err.message || 'Failed to create follow-up feedback session.', 'danger');
+      }
+    }
+
+    // =========================================================================
+    // Phase 4: Before & After Improvement Comparison Modal
+    // =========================================================================
+
+    async function openComparisonModal(originalSessionId, followUpSessionId, actionId) {
+      const origSession = allFacultySessions.find(sess => sess.id === originalSessionId);
+      const followUpSession = allFacultySessions.find(sess => sess.id === followUpSessionId);
+      const action = facultyActions.find(a => a.id === actionId);
+
+      const topicText = origSession ? origSession.topic : 'Topic';
+      const subjectText = origSession ? origSession.subjectName : '';
+      const codeText = origSession ? origSession.classCode : '';
+
+      comparisonModalSubtitle.textContent = `${subjectText} [${codeText}] — Before & After Comparison: ${topicText}`;
+      comparisonModalBody.innerHTML = `
+        <div class="text-center" style="padding:2rem;">
+          <div class="spinner" style="border-top-color:var(--primary); width:1.5rem; height:1.5rem;"></div>
+          <p class="mt-1" style="font-size:0.875rem;">Computing improvement comparison...</p>
+        </div>
+      `;
+      comparisonModal.classList.remove('hidden');
+
+      try {
+        const comp = await getImprovementComparison(originalSessionId, followUpSessionId);
+
+        let bannerHtml = '';
+        if (comp.overallStatus === 'improved') {
+          bannerHtml = `
+            <div class="comparison-banner banner-success">
+              <div>
+                <strong>🎉 Positive Improvement Observed!</strong>
+                <div style="font-size:0.8125rem; margin-top:0.2rem;">
+                  Student understanding and clarity increased significantly following your pedagogical action.
+                </div>
+              </div>
+              <span class="comparison-diff-badge diff-positive">Improved</span>
+            </div>
+          `;
+        } else if (comp.overallStatus === 'neutral') {
+          bannerHtml = `
+            <div class="comparison-banner banner-warning">
+              <div>
+                <strong>📊 Moderate / Steady Results</strong>
+                <div style="font-size:0.8125rem; margin-top:0.2rem;">
+                  Student ratings remained steady across the initial and follow-up sessions.
+                </div>
+              </div>
+              <span class="comparison-diff-badge diff-neutral">Steady</span>
+            </div>
+          `;
+        } else {
+          bannerHtml = `
+            <div class="comparison-banner banner-danger">
+              <div>
+                <strong>⚠️ Needs Attention</strong>
+                <div style="font-size:0.8125rem; margin-top:0.2rem;">
+                  Certain follow-up metrics did not improve as expected. Further teaching adjustments may be warranted.
+                </div>
+              </div>
+              <span class="comparison-diff-badge diff-negative">Needs Attention</span>
+            </div>
+          `;
+        }
+
+        function renderDiffBadge(metric) {
+          const badgeClass = metric.improved 
+            ? 'diff-positive' 
+            : (metric.diff === 0 ? 'diff-neutral' : 'diff-negative');
+          return `<span class="comparison-diff-badge ${badgeClass}">${metric.diffFormatted}</span>`;
+        }
+
+        const areaMeta = action ? (IMPROVEMENT_AREAS[action.area] || { label: action.area, icon: '📌' }) : { label: 'General', icon: '📌' };
+        const typeMeta = action ? (ACTION_TYPES[action.action_type] || { label: action.action_type, icon: '⚡' }) : { label: 'Adjustment', icon: '⚡' };
+
+        comparisonModalBody.innerHTML = `
+          ${bannerHtml}
+
+          <!-- Improvement Action Context -->
+          ${action ? `
+            <div style="background-color:#f8fafc; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.875rem 1rem; margin-bottom:1.25rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Improvement Action Delivered</span>
+                <span class="badge-action-pill status-completed">Completed</span>
+              </div>
+              <div style="font-size:0.875rem; font-weight:700; color:var(--primary-dark); margin-bottom:0.25rem;">
+                ${areaMeta.icon} ${areaMeta.label} — ${typeMeta.icon} ${typeMeta.label}
+              </div>
+              <div style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.4;">
+                ${escapeHtml(action.description)}
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Before / After Metrics Comparison Table -->
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Evaluation Metric</th>
+                <th>Before (Original)</th>
+                <th>After (Follow-Up)</th>
+                <th>Improvement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Concept Understanding</strong> <span style="font-size:0.75rem; color:var(--text-muted);">(1-5 scale)</span></td>
+                <td>${comp.understanding.before.toFixed(1)} / 5.0</td>
+                <td><strong>${comp.understanding.after.toFixed(1)} / 5.0</strong></td>
+                <td>${renderDiffBadge(comp.understanding)}</td>
+              </tr>
+              <tr>
+                <td><strong>Teaching Clarity</strong> <span style="font-size:0.75rem; color:var(--text-muted);">(1-5 scale)</span></td>
+                <td>${comp.clarity.before.toFixed(1)} / 5.0</td>
+                <td><strong>${comp.clarity.after.toFixed(1)} / 5.0</strong></td>
+                <td>${renderDiffBadge(comp.clarity)}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Perceived Difficulty</strong> 
+                  <span style="font-size:0.75rem; color:var(--text-muted);">(1-3 scale; lower is better)</span>
+                </td>
+                <td>${comp.difficulty.before.toFixed(1)} / 3.0</td>
+                <td><strong>${comp.difficulty.after.toFixed(1)} / 3.0</strong></td>
+                <td>${renderDiffBadge(comp.difficulty)}</td>
+              </tr>
+              <tr>
+                <td><strong>Doubts Addressed Rate</strong></td>
+                <td>${comp.doubtsAddressed.beforePct}%</td>
+                <td><strong>${comp.doubtsAddressed.afterPct}%</strong></td>
+                <td>${renderDiffBadge(comp.doubtsAddressed)}</td>
+              </tr>
+              <tr style="background-color:#f8fafc;">
+                <td>Feedback Submissions</td>
+                <td>${comp.responses.before} responses</td>
+                <td><strong>${comp.responses.after} responses</strong></td>
+                <td><span style="font-size:0.8125rem; color:var(--text-muted);">${comp.responses.after - comp.responses.before >= 0 ? '+' : ''}${comp.responses.after - comp.responses.before}</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="participation-privacy-notice">
+            <span>🔒 <strong>Student Privacy Protected:</strong> Comparison metrics are computed in aggregate. Individual student submissions remain completely anonymous.</span>
+          </div>
+        `;
+      } catch (err) {
+        comparisonModalBody.innerHTML = `
+          <div class="alert alert-danger">
+            Failed to load improvement comparison: ${escapeHtml(err.message)}
+          </div>
+        `;
+      }
+    }
+
+    closeComparisonModalBtn.addEventListener('click', () => {
+      comparisonModal.classList.add('hidden');
+    });
+
+    // Global Modal Dismissal on Outside Click
+    window.addEventListener('click', (e) => {
+      if (e.target === rosterModal) rosterModal.classList.add('hidden');
+      if (e.target === participationModal) participationModal.classList.add('hidden');
+      if (e.target === resultsModal) resultsModal.classList.add('hidden');
+      if (e.target === actionModal) actionModal.classList.add('hidden');
+      if (e.target === comparisonModal) comparisonModal.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

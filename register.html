@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - CampusPulse</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+
+  <!-- Supabase Configuration Warning Banner -->
+  <div id="supabaseConfigBanner" class="config-banner">
+    <div class="config-banner-inner">
+      <span>⚙️ <strong>Configuration Notice:</strong> CampusPulse requires active backend configuration to process registration requests.</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="/" class="brand-badge">
+        <div class="brand-icon" aria-label="CampusPulse">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
+            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CampusPulse</span>
+          <span class="brand-subtitle">Student Experience &amp; Campus Intelligence</span>
+        </div>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/" class="btn btn-secondary btn-sm">Home</a></li>
+          <li><a href="/login.html" class="btn btn-secondary btn-sm">Sign In</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Register Main -->
+  <main class="auth-container">
+    <div class="auth-card auth-card-wide">
+      <div class="auth-header">
+        <h1>Create an Account</h1>
+        <p>Join the community improvement feedback network</p>
+      </div>
+
+      <!-- Alert Notification Area -->
+      <div id="alertBox" class="alert hidden" role="alert"></div>
+
+      <!-- Registration Form -->
+      <form id="registerForm" novalidate>
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="fullName" class="form-label">
+            Full Name <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="fullName" 
+            name="fullName" 
+            class="form-control" 
+            placeholder="Dr. Jane Doe / Alex Smith" 
+            autocomplete="name" 
+            required 
+          />
+          <span id="nameError" class="field-error"></span>
+        </div>
+
+        <!-- Email Address -->
+        <div class="form-group">
+          <label for="email" class="form-label">
+            Email Address <span class="required">*</span>
+          </label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-control" 
+            placeholder="user@college.edu" 
+            autocomplete="email" 
+            required 
+          />
+          <span id="emailError" class="field-error"></span>
+        </div>
+
+        <!-- Role Selection -->
+        <div class="form-group">
+          <label class="form-label">
+            Select Your Role <span class="required">*</span>
+          </label>
+          <div class="role-options" role="radiogroup" aria-label="Select your role">
+            <label class="role-card selected" id="roleLabelStudent">
+              <input type="radio" name="role" value="student" checked />
+              <span class="role-title">Student</span>
+              <span class="role-desc">Enrolled student</span>
+            </label>
+
+            <label class="role-card" id="roleLabelFaculty">
+              <input type="radio" name="role" value="faculty" />
+              <span class="role-title">Faculty</span>
+              <span class="role-desc">Teaching staff</span>
+            </label>
+
+            <label class="role-card" id="roleLabelHod">
+              <input type="radio" name="role" value="hod" />
+              <span class="role-title">HOD</span>
+              <span class="role-desc">Dept Admin</span>
+            </label>
+          </div>
+          <span id="roleError" class="field-error"></span>
+        </div>
+
+        <!-- Department (Required for All Roles) -->
+        <div class="form-group" id="departmentGroup">
+          <label for="departmentSelect" class="form-label">
+            Department <span class="required">*</span>
+          </label>
+          <select id="departmentSelect" name="department" class="form-control" required>
+            <option value="">-- Choose Your Department --</option>
+          </select>
+          <span class="field-hint">Select your affiliated academic department.</span>
+          <span id="departmentError" class="field-error"></span>
+        </div>
+
+        <!-- Roll Number (Required for Students) -->
+        <div class="form-group" id="rollNumberGroup">
+          <label for="rollNumber" class="form-label">
+            Roll Number <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="rollNumber" 
+            name="rollNumber" 
+            class="form-control" 
+            placeholder="e.g. 24331A0767" 
+            autocomplete="off" 
+            spellcheck="false" 
+            style="text-transform:uppercase;" 
+          />
+          <span class="field-hint">College roll number (e.g. 24331A0767).</span>
+          <span id="rollNumberError" class="field-error"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password" class="form-label">
+            Password <span class="required">*</span>
+          </label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-control" 
+            placeholder="At least 6 characters" 
+            autocomplete="new-password" 
+            required 
+          />
+          <span class="field-hint">Must contain at least 6 characters.</span>
+          <span id="passwordError" class="field-error"></span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">
+            Confirm Password <span class="required">*</span>
+          </label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="confirmPassword" 
+            class="form-control" 
+            placeholder="Re-enter your password" 
+            autocomplete="new-password" 
+            required 
+          />
+          <span id="confirmPasswordError" class="field-error"></span>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-auth">
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/login.html">Sign In</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>CampusPulse &bull; Student Experience &amp; Campus Intelligence &copy; 2026</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { checkAndRenderConfigBanner, showAlert, clearAlert, setButtonLoading, isValidEmail, isValidPassword, getFriendlyErrorMessage } from '/js/utils.js';
+    import { signUpUser, redirectIfAuthenticated, getRoleDashboardUrl } from '/js/auth.js';
+    import { getDepartments } from '/js/academicService.js';
+
+    // Show config warning if .env is missing/placeholder
+    checkAndRenderConfigBanner();
+
+    // Redirect to dashboard if already authenticated
+    redirectIfAuthenticated();
+
+    const form = document.getElementById('registerForm');
+    const nameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const deptSelect = document.getElementById('departmentSelect');
+    const deptError = document.getElementById('departmentError');
+    const rollNumberGroup = document.getElementById('rollNumberGroup');
+    const rollNumberInput = document.getElementById('rollNumber');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const rollNumberError = document.getElementById('rollNumberError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+    // Populate departments catalog dynamically
+    (async function initDepartments() {
+      try {
+        const depts = await getDepartments();
+        depts.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d.id;
+          opt.textContent = d.name;
+          deptSelect.appendChild(opt);
+        });
+      } catch (err) {
+        console.warn('Failed to load departments in register:', err);
+      }
+    })();
+
+    // Handle role card selection UI
+    const roleCards = document.querySelectorAll('.role-card');
+    roleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        roleCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) {
+          radio.checked = true;
+          if (radio.value === 'student') {
+            rollNumberGroup.classList.remove('hidden');
+          } else {
+            rollNumberGroup.classList.add('hidden');
+            rollNumberInput.classList.remove('is-invalid');
+            rollNumberError.classList.remove('active');
+          }
+        }
+      });
+    });
+
+    // Auto uppercase roll number
+    rollNumberInput.addEventListener('input', () => {
+      rollNumberInput.value = rollNumberInput.value.toUpperCase();
+    });
+
+    // Clear field errors on input
+    [nameInput, emailInput, rollNumberInput, passwordInput, confirmPasswordInput, deptSelect].forEach(input => {
+      const evt = input === deptSelect ? 'change' : 'input';
+      input.addEventListener(evt, () => {
+        input.classList.remove('is-invalid');
+        const err = input.parentElement.querySelector('.field-error');
+        if (err) err.classList.remove('active');
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert(alertBox);
+
+      const fullName = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const rollNumber = rollNumberInput.value.trim().toUpperCase();
+      const departmentId = deptSelect.value;
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      const roleRadio = document.querySelector('input[name="role"]:checked');
+      const role = roleRadio ? roleRadio.value : '';
+
+      let hasError = false;
+
+      // Validate Full Name
+      if (!fullName) {
+        nameInput.classList.add('is-invalid');
+        nameError.textContent = 'Please enter your full name.';
+        nameError.classList.add('active');
+        hasError = true;
+      } else if (fullName.length < 2) {
+        nameInput.classList.add('is-invalid');
+        nameError.textContent = 'Full name must be at least 2 characters.';
+        nameError.classList.add('active');
+        hasError = true;
+      }
+
+      // Validate Email
+      if (!email) {
+        emailInput.classList.add('is-invalid');
+        emailError.textContent = 'Please enter your email address.';
+        emailError.classList.add('active');
+        hasError = true;
+      } else if (!isValidEmail(email)) {
+        emailInput.classList.add('is-invalid');
+        emailError.textContent = 'Please enter a valid email address format.';
+        emailError.classList.add('active');
+        hasError = true;
+      }
+
+      // Validate Role Selection
+      if (!role) {
+        showAlert(alertBox, 'Please select a valid role (Student, Faculty, or HOD).', 'danger');
+        hasError = true;
+      }
+
+      // Validate Department Selection (Required for ALL roles)
+      if (!departmentId) {
+        deptSelect.classList.add('is-invalid');
+        deptError.textContent = 'Please select your department.';
+        deptError.classList.add('active');
+        hasError = true;
+      }
+
+      // Validate Roll Number if role is Student
+      if (role === 'student') {
+        if (!rollNumber) {
+          rollNumberInput.classList.add('is-invalid');
+          rollNumberError.textContent = 'Please enter your roll number (e.g. 24331A0767).';
+          rollNumberError.classList.add('active');
+          hasError = true;
+        } else if (!/^[A-Z0-9]{5,20}$/.test(rollNumber)) {
+          rollNumberInput.classList.add('is-invalid');
+          rollNumberError.textContent = 'Roll number must contain 5-20 alphanumeric characters (e.g. 24331A0767).';
+          rollNumberError.classList.add('active');
+          hasError = true;
+        }
+      }
+
+      // Validate Password
+      if (!password) {
+        passwordInput.classList.add('is-invalid');
+        passwordError.textContent = 'Please enter a password.';
+        passwordError.classList.add('active');
+        hasError = true;
+      } else if (!isValidPassword(password)) {
+        passwordInput.classList.add('is-invalid');
+        passwordError.textContent = 'Password must be at least 6 characters long.';
+        passwordError.classList.add('active');
+        hasError = true;
+      }
+
+      // Validate Confirm Password
+      if (!confirmPassword) {
+        confirmPasswordInput.classList.add('is-invalid');
+        confirmPasswordError.textContent = 'Please confirm your password.';
+        confirmPasswordError.classList.add('active');
+        hasError = true;
+      } else if (password !== confirmPassword) {
+        confirmPasswordInput.classList.add('is-invalid');
+        confirmPasswordError.textContent = 'Passwords do not match.';
+        confirmPasswordError.classList.add('active');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      setButtonLoading(submitBtn, true, 'Creating Account...', 'Create Account');
+
+      try {
+        const result = await signUpUser({
+          fullName,
+          email,
+          password,
+          role,
+          rollNumber: role === 'student' ? rollNumber : null,
+          departmentId
+        });
+
+        if (result.needsEmailConfirmation) {
+          showAlert(
+            alertBox, 
+            'Account registered successfully! A confirmation link has been sent to your email. Please verify your email before logging in.', 
+            'success'
+          );
+          form.reset();
+          setButtonLoading(submitBtn, false, 'Creating Account...', 'Create Account');
+        } else {
+          // Direct login / session active
+          showAlert(alertBox, 'Account created successfully! Redirecting to your dashboard...', 'success');
+          const targetUrl = getRoleDashboardUrl(result.role);
+          setTimeout(() => {
+            window.location.replace(targetUrl);
+          }, 800);
+        }
+
+      } catch (err) {
+        setButtonLoading(submitBtn, false, 'Creating Account...', 'Create Account');
+        const friendlyMsg = getFriendlyErrorMessage(err);
+        showAlert(alertBox, friendlyMsg, 'danger');
+
+        if (friendlyMsg.toLowerCase().includes('roll number')) {
+          rollNumberInput.classList.add('is-invalid');
+          rollNumberError.textContent = friendlyMsg;
+          rollNumberError.classList.add('active');
+          rollNumberInput.focus();
+        } else if (friendlyMsg.toLowerCase().includes('hod') || friendlyMsg.toLowerCase().includes('department')) {
+          deptSelect.classList.add('is-invalid');
+          deptError.textContent = friendlyMsg;
+          deptError.classList.add('active');
+          deptSelect.focus();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

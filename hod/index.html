@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Department Intelligence - CampusPulse</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/hod.css" />
+</head>
+<body>
+
+  <!-- Route Guard Loading Overlay -->
+  <div id="authLoadingOverlay" class="auth-loading-overlay">
+    <div class="auth-spinner-large"></div>
+    <p>Verifying department credentials &amp; loading intelligence...</p>
+  </div>
+
+  <!-- Dashboard Top Navbar -->
+  <header class="dashboard-header">
+    <div class="dashboard-nav">
+      <a href="/" class="brand-badge">
+        <div class="brand-icon" aria-label="CampusPulse">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
+            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CampusPulse</span>
+          <span class="brand-subtitle">Department Intelligence</span>
+        </div>
+      </a>
+
+      <div class="user-profile-badge">
+        <div class="user-details">
+          <span id="navUserName" class="user-name">Loading...</span>
+          <span id="navUserEmail" class="user-email"></span>
+        </div>
+        <span class="role-badge role-badge-hod">HOD / Admin</span>
+        <button id="logoutBtn" class="btn btn-secondary btn-sm" title="Log out of your account">
+          Log Out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Main Content -->
+  <main class="dashboard-container">
+
+    <!-- Hero / Welcome Section -->
+    <div class="dashboard-card dashboard-card-hero" style="border-left-color: #6b21a8;">
+      <div class="dashboard-title-row">
+        <div>
+          <h1 id="welcomeHeading" class="dashboard-welcome">Department Intelligence</h1>
+          <div class="dashboard-role-line" style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <span>Departmental Decision Support Portal &bull; Multi-Signal Campus Analytics</span>
+            <span id="hodDeptBadge" class="badge" style="background:#f3e8ff; color:#6b21a8; font-weight:700; padding:0.2rem 0.6rem; border-radius:4px; font-size:0.8125rem;">Department</span>
+          </div>
+        </div>
+        <button id="refreshBtn" class="btn btn-secondary btn-sm" style="display:flex; align-items:center; gap:0.35rem;">
+          <span>🔄</span> Refresh Data
+        </button>
+      </div>
+      <p style="margin-bottom:0; font-size:0.875rem; color:var(--text-secondary); margin-top:0.5rem;">
+        Synthesizes student reports, severity levels, recurring defect patterns, priority rankings, and early warning growth trajectories into actionable institutional insights.
+      </p>
+    </div>
+
+    <!-- Alert Banner -->
+    <div id="globalAlert" class="alert hidden" role="alert"></div>
+
+    <!-- 1. Top Summary Metric Cards -->
+    <section class="hod-section">
+      <div class="hod-metrics-grid">
+        <div class="hod-metric-card metric-open">
+          <span class="hod-metric-label">Open Issues</span>
+          <span id="metricOpenCount" class="hod-metric-value">0</span>
+          <span class="hod-metric-subtext">Active defect groups</span>
+        </div>
+
+        <div class="hod-metric-card metric-high-priority">
+          <span class="hod-metric-label">High Priority</span>
+          <span id="metricHighPriorityCount" class="hod-metric-value">0</span>
+          <span class="hod-metric-subtext">Urgent institutional impact</span>
+        </div>
+
+        <div class="hod-metric-card metric-recurring">
+          <span class="hod-metric-label">Recurring Issues</span>
+          <span id="metricRecurringCount" class="hod-metric-value">0</span>
+          <span class="hod-metric-subtext">Repeated issues across dates</span>
+        </div>
+
+        <div class="hod-metric-card metric-emerging">
+          <span class="hod-metric-label">Emerging / Alert</span>
+          <span id="metricEmergingCount" class="hod-metric-value">0</span>
+          <span class="hod-metric-subtext">Accelerating growth signals</span>
+        </div>
+
+        <div class="hod-metric-card metric-resolved">
+          <span class="hod-metric-label">Resolved</span>
+          <span id="metricResolvedCount" class="hod-metric-value">0</span>
+          <span class="hod-metric-subtext">Completed resolutions</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Department Intelligence Workspace (Unified Approach A) -->
+    <section class="hod-section hod-workspace-section">
+      <div class="dashboard-card hod-workspace-card">
+        
+        <!-- Workspace Header -->
+        <div class="hod-workspace-header">
+          <div>
+            <h2 class="hod-workspace-title">
+              <span>📋</span> Department Intelligence Workspace
+            </h2>
+            <p class="hod-workspace-desc">
+              Unified analytical workspace for reviewing, filtering, and resolving department issue groups.
+            </p>
+          </div>
+
+          <div class="hod-workspace-header-actions">
+            <span id="totalFilterCountBadge" class="section-badge">0 Groups</span>
+            <button type="button" id="conceptGuideBtn" class="concept-guide-btn" aria-expanded="false" aria-controls="conceptGuideDrawer">
+              <span>ℹ️</span> Concept Guide
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Concept Guide -->
+        <div id="conceptGuideDrawer" class="concept-guide-drawer hidden">
+          <div class="concept-guide-content">
+            <div class="concept-guide-header">
+              <div class="concept-guide-heading">
+                <span class="concept-guide-icon">💡</span>
+                <strong>Analytical Distinction: Priority vs. Early Warning</strong>
+              </div>
+              <button type="button" id="closeConceptGuideBtn" class="concept-guide-close" aria-label="Close guide">&times;</button>
+            </div>
+            <div class="concept-guide-body">
+              <div class="concept-guide-item">
+                <span class="concept-guide-term">🔥 Priority:</span>
+                <span>Answers <em>"How important is this problem right now?"</em> Evaluates current severity, cumulative report impact, recurrence history, and recency of submissions.</span>
+              </div>
+              <div class="concept-guide-item">
+                <span class="concept-guide-term">⚠️ Early Warning:</span>
+                <span>Answers <em>"Is this problem showing signs of accelerating or escalating?"</em> Compares recent 7-day report volume and growth rate against the previous 7-day window.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytical View Tabs -->
+        <div class="hod-view-tabs" role="tablist" aria-label="Issue Group Analytical Views">
+          <button type="button" class="hod-view-tab active" data-view="all" role="tab" aria-selected="true">
+            <span class="hod-view-tab-icon">📋</span>
+            <span>All Issues</span>
+            <span id="tabCountAll" class="hod-view-tab-badge">0</span>
+          </button>
+          <button type="button" class="hod-view-tab" data-view="priority" role="tab" aria-selected="false">
+            <span class="hod-view-tab-icon">🔥</span>
+            <span>High Priority</span>
+            <span id="tabCountPriority" class="hod-view-tab-badge">0</span>
+          </button>
+          <button type="button" class="hod-view-tab" data-view="warning" role="tab" aria-selected="false">
+            <span class="hod-view-tab-icon">⚠️</span>
+            <span>Early Warning</span>
+            <span id="tabCountWarning" class="hod-view-tab-badge">0</span>
+          </button>
+          <button type="button" class="hod-view-tab" data-view="recurring" role="tab" aria-selected="false">
+            <span class="hod-view-tab-icon">🔁</span>
+            <span>Recurring</span>
+            <span id="tabCountRecurring" class="hod-view-tab-badge">0</span>
+          </button>
+        </div>
+
+        <!-- Filter Toolbar -->
+        <div class="hod-toolbar">
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="filterSearchInput" class="form-label" style="font-size:0.75rem;">Search</label>
+            <input 
+              type="text" 
+              id="filterSearchInput" 
+              class="form-control" 
+              placeholder="Search title, summary, location..." 
+            />
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="filterStatusSelect" class="form-label" style="font-size:0.75rem;">Status</label>
+            <select id="filterStatusSelect" class="form-control">
+              <option value="all">All Statuses</option>
+              <option value="open">Open</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="filterCategorySelect" class="form-label" style="font-size:0.75rem;">Category</label>
+            <select id="filterCategorySelect" class="form-control">
+              <option value="all">All Categories</option>
+              <option value="projector">Projector &amp; AV</option>
+              <option value="wifi">Wi-Fi &amp; Internet</option>
+              <option value="lab_computer">Lab Computers</option>
+              <option value="lab_equipment">Lab Equipment</option>
+              <option value="classroom_furniture">Furniture &amp; Desks</option>
+              <option value="electrical">Electrical &amp; Fans</option>
+              <option value="classroom_condition">Room Condition</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="hod-table-wrap">
+          <table class="hod-table">
+            <thead>
+              <tr>
+                <th>Issue Group</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Early Warning</th>
+                <th>Reports &amp; Recurrence</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="completeGroupsTableBody">
+              <tr>
+                <td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-muted);">
+                  Loading issue groups...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Issue Group Detail Modal -->
+  <div id="detailModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalGroupTitle">
+    <div class="modal-container hod-modal-container">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalGroupTitle" style="font-size:1.15rem; font-weight:700; color:var(--primary-dark); margin-bottom:0.25rem;">
+            Issue Group Details
+          </h3>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <span id="modalGroupCategoryBadge" class="hod-issue-meta-pill">Category</span>
+            <span id="modalGroupLocation" style="font-size:0.8125rem; color:var(--text-muted);">Location</span>
+          </div>
+        </div>
+        <button type="button" id="closeDetailModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-body" id="modalDetailBody">
+
+        <!-- Header Overview & Status Updater -->
+        <div class="hod-detail-hero">
+          <div class="hod-detail-title-row">
+            <div>
+              <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">AI-Synthesized Summary</span>
+              <p id="modalGroupSummary" style="font-size:0.9375rem; color:var(--text-primary); margin:0.35rem 0 0 0; line-height:1.45;">
+                Summary text...
+              </p>
+            </div>
+
+            <!-- Status Control -->
+            <div class="hod-detail-status-box">
+              <label for="modalStatusSelect" style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">Status:</label>
+              <select id="modalStatusSelect" class="hod-detail-status-select">
+                <option value="open">Open</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+              </select>
+              <button id="saveStatusBtn" class="btn btn-primary btn-sm" style="padding:0.2rem 0.5rem; font-size:0.75rem;">
+                Save
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:1rem; font-size:0.75rem; color:var(--text-muted); border-top:1px solid #e2e8f0; padding-top:0.5rem; margin-top:0.5rem;">
+            <span>Reports: <strong id="modalReportCount">0</strong></span>
+            <span>Created: <strong id="modalCreatedAt">-</strong></span>
+            <span>Last Updated: <strong id="modalUpdatedAt">-</strong></span>
+          </div>
+        </div>
+
+        <!-- 3 Intelligence Panels -->
+        <h4 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px; margin-bottom:0.75rem;">
+          Analytical Intelligence Signals
+        </h4>
+        <div class="hod-intelligence-grid">
+
+          <!-- 1. Priority Panel -->
+          <div class="hod-intel-card">
+            <div class="hod-intel-card-header">
+              <span class="hod-intel-card-title">Priority</span>
+              <span id="modalPriorityBadge" class="badge-priority-low">LOW — 0</span>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>Severity Impact:</span>
+              <strong id="modalFactorSeverity">Low (25)</strong>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>Student Report Volume:</span>
+              <strong id="modalFactorImpact">20</strong>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>Recurrence Factor:</span>
+              <strong id="modalFactorRecurrence">0</strong>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>Recency:</span>
+              <strong id="modalFactorRecency">100 (&le;3d)</strong>
+            </div>
+          </div>
+
+          <!-- 2. Early Warning Panel -->
+          <div class="hod-intel-card">
+            <div class="hod-intel-card-header">
+              <span class="hod-intel-card-title">Early Warning</span>
+              <span id="modalWarningBadge" class="badge-warning-normal">NORMAL</span>
+            </div>
+            <div id="modalWarningDetailsContainer">
+              <div class="hod-intel-factor-row">
+                <span>Recent 7-Day Count:</span>
+                <strong id="modalRecentCount">0</strong>
+              </div>
+              <div class="hod-intel-factor-row">
+                <span>Previous 7-Day Count:</span>
+                <strong id="modalPreviousCount">0</strong>
+              </div>
+              <div class="hod-intel-factor-row">
+                <span>Growth Rate:</span>
+                <strong id="modalGrowthRate">0%</strong>
+              </div>
+              <div class="hod-intel-factor-row">
+                <span>Group Age:</span>
+                <strong id="modalGroupAge">0 days</strong>
+              </div>
+            </div>
+            <div id="modalInsufficientDataNotice" class="insufficient-data-box hidden">
+              🔒 <strong>Insufficient Data:</strong> Early warnings appear when enough recent activity is available to identify a developing trend.
+            </div>
+          </div>
+
+          <!-- 3. Recurrence Panel -->
+          <div class="hod-intel-card">
+            <div class="hod-intel-card-header">
+              <span class="hod-intel-card-title">Recurrence</span>
+              <span id="modalRecurrenceBadge" class="badge-recurring">NOT RECURRING</span>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>Distinct Dates:</span>
+              <strong id="modalDistinctDates">0</strong>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>Recurrence Rate:</span>
+              <strong id="modalRecurrenceRate">0 / week</strong>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>First Report:</span>
+              <strong id="modalFirstReport">-</strong>
+            </div>
+            <div class="hod-intel-factor-row">
+              <span>Latest Report:</span>
+              <strong id="modalLatestReport">-</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Chronological Report Timeline -->
+        <div class="hod-timeline-wrap">
+          <h4 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px; margin-bottom:0.75rem;">
+            Report Submission Timeline
+          </h4>
+          <div id="modalTimelineNodes" class="hod-timeline-nodes">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Original Reports List -->
+        <h4 style="font-size:0.875rem; font-weight:700; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px; margin-bottom:0.75rem;">
+          Original Student Department Reports (<span id="modalReportsMemberCount">0</span>)
+        </h4>
+        <div class="hod-table-wrap">
+          <table class="hod-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Severity</th>
+                <th>Student Identity</th>
+              </tr>
+            </thead>
+            <tbody id="modalReportsTableBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>CampusPulse &bull; Department Intelligence &copy; 2026</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { requireAuth, signOutUser } from '/js/auth.js';
+    import { showAlert, clearAlert, escapeHtml } from '/js/utils.js';
+    import {
+      fetchHODDashboardData,
+      computeSummaryCounts,
+      getPriorityIssues,
+      getEarlyWarningIssues,
+      getRecurringIssues,
+      filterIssueGroups,
+      updateIssueGroupStatus,
+      buildReportTimeline,
+      formatCategory,
+      formatPriorityBadge,
+      formatWarningBadge,
+      formatStatusBadge,
+      formatStudentIdentity
+    } from '/js/hodService.js';
+
+    // State
+    let allGroups = [];
+    let currentSelectedGroup = null;
+
+    // DOM Elements
+    const globalAlert = document.getElementById('globalAlert');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const welcomeHeading = document.getElementById('welcomeHeading');
+    const navUserName = document.getElementById('navUserName');
+    const navUserEmail = document.getElementById('navUserEmail');
+
+    // Metrics
+    const metricOpenCount = document.getElementById('metricOpenCount');
+    const metricHighPriorityCount = document.getElementById('metricHighPriorityCount');
+    const metricRecurringCount = document.getElementById('metricRecurringCount');
+    const metricEmergingCount = document.getElementById('metricEmergingCount');
+    const metricResolvedCount = document.getElementById('metricResolvedCount');
+
+    // Workspace Elements & View Tabs
+    const conceptGuideBtn = document.getElementById('conceptGuideBtn');
+    const conceptGuideDrawer = document.getElementById('conceptGuideDrawer');
+    const closeConceptGuideBtn = document.getElementById('closeConceptGuideBtn');
+    const viewTabs = document.querySelectorAll('.hod-view-tab');
+    const tabCountAll = document.getElementById('tabCountAll');
+    const tabCountPriority = document.getElementById('tabCountPriority');
+    const tabCountWarning = document.getElementById('tabCountWarning');
+    const tabCountRecurring = document.getElementById('tabCountRecurring');
+
+    // Filter toolbar & table
+    const filterSearchInput = document.getElementById('filterSearchInput');
+    const filterStatusSelect = document.getElementById('filterStatusSelect');
+    const filterCategorySelect = document.getElementById('filterCategorySelect');
+    const totalFilterCountBadge = document.getElementById('totalFilterCountBadge');
+    const completeGroupsTableBody = document.getElementById('completeGroupsTableBody');
+
+    // Active analytical view state
+    let currentActiveView = 'all'; // 'all' | 'priority' | 'warning' | 'recurring'
+
+    // Detail Modal
+    const detailModal = document.getElementById('detailModal');
+    const closeDetailModalBtn = document.getElementById('closeDetailModalBtn');
+    const modalGroupTitle = document.getElementById('modalGroupTitle');
+    const modalGroupCategoryBadge = document.getElementById('modalGroupCategoryBadge');
+    const modalGroupLocation = document.getElementById('modalGroupLocation');
+    const modalGroupSummary = document.getElementById('modalGroupSummary');
+    const modalStatusSelect = document.getElementById('modalStatusSelect');
+    const saveStatusBtn = document.getElementById('saveStatusBtn');
+    const modalReportCount = document.getElementById('modalReportCount');
+    const modalCreatedAt = document.getElementById('modalCreatedAt');
+    const modalUpdatedAt = document.getElementById('modalUpdatedAt');
+
+    const modalPriorityBadge = document.getElementById('modalPriorityBadge');
+    const modalFactorSeverity = document.getElementById('modalFactorSeverity');
+    const modalFactorImpact = document.getElementById('modalFactorImpact');
+    const modalFactorRecurrence = document.getElementById('modalFactorRecurrence');
+    const modalFactorRecency = document.getElementById('modalFactorRecency');
+
+    const modalWarningBadge = document.getElementById('modalWarningBadge');
+    const modalWarningDetailsContainer = document.getElementById('modalWarningDetailsContainer');
+    const modalInsufficientDataNotice = document.getElementById('modalInsufficientDataNotice');
+    const modalRecentCount = document.getElementById('modalRecentCount');
+    const modalPreviousCount = document.getElementById('modalPreviousCount');
+    const modalGrowthRate = document.getElementById('modalGrowthRate');
+    const modalGroupAge = document.getElementById('modalGroupAge');
+
+    const modalRecurrenceBadge = document.getElementById('modalRecurrenceBadge');
+    const modalDistinctDates = document.getElementById('modalDistinctDates');
+    const modalRecurrenceRate = document.getElementById('modalRecurrenceRate');
+    const modalFirstReport = document.getElementById('modalFirstReport');
+    const modalLatestReport = document.getElementById('modalLatestReport');
+
+    const modalTimelineNodes = document.getElementById('modalTimelineNodes');
+    const modalReportsMemberCount = document.getElementById('modalReportsMemberCount');
+    const modalReportsTableBody = document.getElementById('modalReportsTableBody');
+
+    // 1. Route Guard Verification
+    requireAuth('hod').then(async (authData) => {
+      if (!authData) return;
+
+      const { profile } = authData;
+      const welcomeName = profile.fullName || 'Department Head';
+      const initialDeptName = profile.departmentName;
+      welcomeHeading.textContent = `Welcome, ${welcomeName}`;
+      navUserName.textContent = welcomeName;
+      navUserEmail.textContent = profile.email || '';
+
+      if (initialDeptName) {
+        const badge = document.getElementById('hodDeptBadge');
+        if (badge) badge.textContent = `${initialDeptName} Department`;
+      }
+
+      logoutBtn.addEventListener('click', signOutUser);
+      refreshBtn.addEventListener('click', loadDashboardData);
+
+      // Concept Guide Drawer Toggle
+      if (conceptGuideBtn && conceptGuideDrawer) {
+        conceptGuideBtn.addEventListener('click', () => {
+          const isHidden = conceptGuideDrawer.classList.toggle('hidden');
+          conceptGuideBtn.setAttribute('aria-expanded', !isHidden);
+          conceptGuideBtn.classList.toggle('active', !isHidden);
+        });
+      }
+      if (closeConceptGuideBtn && conceptGuideDrawer) {
+        closeConceptGuideBtn.addEventListener('click', () => {
+          conceptGuideDrawer.classList.add('hidden');
+          if (conceptGuideBtn) {
+            conceptGuideBtn.setAttribute('aria-expanded', 'false');
+            conceptGuideBtn.classList.remove('active');
+          }
+        });
+      }
+
+      // View Tabs Selection
+      viewTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const view = tab.getAttribute('data-view');
+          if (!view || view === currentActiveView) return;
+
+          currentActiveView = view;
+          viewTabs.forEach(t => {
+            const isActive = t === tab;
+            t.classList.toggle('active', isActive);
+            t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+
+          renderFilteredTable();
+        });
+      });
+
+      // Attach Filter Event Listeners
+      filterSearchInput.addEventListener('input', renderFilteredTable);
+      filterStatusSelect.addEventListener('change', renderFilteredTable);
+      filterCategorySelect.addEventListener('change', renderFilteredTable);
+
+      // Modal Dismissal
+      closeDetailModalBtn.addEventListener('click', () => detailModal.classList.add('hidden'));
+      window.addEventListener('click', (e) => {
+        if (e.target === detailModal) detailModal.classList.add('hidden');
+      });
+
+      // Save Status Handler
+      saveStatusBtn.addEventListener('click', handleStatusSave);
+
+      // Load initial data
+      await loadDashboardData();
+    });
+
+    // 2. Load Dashboard Data
+    async function loadDashboardData() {
+      clearAlert(globalAlert);
+      refreshBtn.disabled = true;
+      refreshBtn.textContent = 'Refreshing...';
+
+      try {
+        const { success, groups, departmentName, error } = await fetchHODDashboardData();
+        if (!success) {
+          showAlert(globalAlert, `Failed to load dashboard data: ${error || 'Unknown error'}`, 'danger');
+          return;
+        }
+
+        if (departmentName) {
+          const badge = document.getElementById('hodDeptBadge');
+          if (badge) badge.textContent = `${departmentName} Department`;
+        }
+
+        allGroups = groups || [];
+
+        // Update Summary Metrics
+        renderSummaryMetrics();
+
+        // Update View Tab Counts
+        updateViewTabCounts();
+
+        // Render Filtered Table
+        renderFilteredTable();
+
+      } catch (err) {
+        showAlert(globalAlert, `Error refreshing intelligence: ${err.message}`, 'danger');
+      } finally {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = '<span>🔄</span> Refresh Data';
+      }
+    }
+
+    // 3. Render Summary Metrics
+    function renderSummaryMetrics() {
+      const counts = computeSummaryCounts(allGroups);
+      metricOpenCount.textContent = counts.openIssues;
+      metricHighPriorityCount.textContent = counts.highPriority;
+      metricRecurringCount.textContent = counts.recurringIssues;
+      metricEmergingCount.textContent = counts.emergingAlert;
+      metricResolvedCount.textContent = counts.resolvedIssues;
+    }
+
+    // 4. Update View Tab Counts
+    function updateViewTabCounts() {
+      if (tabCountAll) tabCountAll.textContent = (allGroups || []).length;
+      if (tabCountPriority) tabCountPriority.textContent = getPriorityIssues(allGroups).length;
+      if (tabCountWarning) tabCountWarning.textContent = getEarlyWarningIssues(allGroups).length;
+      if (tabCountRecurring) tabCountRecurring.textContent = getRecurringIssues(allGroups).length;
+    }
+
+    // 5. Render Filtered Complete Table with Analytical View Tabs
+    function renderFilteredTable() {
+      // 1. Determine base list according to active analytical view tab
+      let baseList = allGroups || [];
+      if (currentActiveView === 'priority') {
+        baseList = getPriorityIssues(allGroups);
+      } else if (currentActiveView === 'warning') {
+        baseList = getEarlyWarningIssues(allGroups);
+      } else if (currentActiveView === 'recurring') {
+        baseList = getRecurringIssues(allGroups);
+      }
+
+      // 2. Apply toolbar filters (search, status, category)
+      const filtered = filterIssueGroups(baseList, {
+        search: filterSearchInput.value,
+        status: filterStatusSelect.value,
+        category: filterCategorySelect.value
+      });
+
+      totalFilterCountBadge.textContent = `${filtered.length} Group${filtered.length === 1 ? '' : 's'}`;
+
+      // 3. Contextual Empty States
+      if (filtered.length === 0) {
+        let emptyMsg = 'No issue groups match the selected filters.';
+        if (!allGroups || allGroups.length === 0) {
+          emptyMsg = 'No issue groups reported for this department yet.';
+        } else if (currentActiveView === 'priority') {
+          emptyMsg = 'No open high priority issues found matching the selected filters.';
+        } else if (currentActiveView === 'warning') {
+          emptyMsg = 'No early warning issues found matching the selected filters.';
+        } else if (currentActiveView === 'recurring') {
+          emptyMsg = 'No recurring issues found matching the selected filters.';
+        }
+
+        completeGroupsTableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center" style="padding:3rem 1.5rem; color:var(--text-muted);">
+              <div style="font-size:1.5rem; margin-bottom:0.5rem;">📋</div>
+              <p style="margin:0; font-size:0.875rem;">${escapeHtml(emptyMsg)}</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      completeGroupsTableBody.innerHTML = filtered.map(group => {
+        const sBadge = formatStatusBadge(group.status);
+        const pBadge = formatPriorityBadge(group.priority?.priority_level, group.priority?.priority_score);
+        const wBadge = formatWarningBadge(group.early_warning?.warning_level, group.early_warning?.early_warning_score);
+        const isRec = group.recurrence?.is_recurring === true;
+
+        return `
+          <tr>
+            <td>
+              <strong style="color:var(--primary-dark); font-size:0.9375rem;">${escapeHtml(group.title)}</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
+                ${escapeHtml(formatCategory(group.category))}
+              </div>
+            </td>
+            <td>
+              <span style="font-size:0.8125rem;">${escapeHtml(group.location || 'Not Specified')}</span>
+            </td>
+            <td>
+              <span class="${sBadge.cssClass}">${escapeHtml(sBadge.label)}</span>
+            </td>
+            <td>
+              <span class="${pBadge.cssClass}">${escapeHtml(pBadge.label)}</span>
+            </td>
+            <td>
+              <span class="${wBadge.cssClass}">${escapeHtml(wBadge.label)}</span>
+            </td>
+            <td>
+              <span style="font-weight:600;">${group.issue_count} reports</span>
+              ${isRec ? `<span class="badge-recurring" style="margin-left:0.35rem; font-size:0.7rem; padding:0.1rem 0.4rem;">Recurring</span>` : ''}
+            </td>
+            <td style="text-align:right;">
+              <button class="btn btn-secondary btn-sm" onclick="window.viewGroupDetails('${group.id}')">
+                View Details
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 8. Open Issue Group Details Modal
+    window.viewGroupDetails = function(groupId) {
+      const group = allGroups.find(g => g.id === groupId);
+      if (!group) return;
+
+      currentSelectedGroup = group;
+
+      modalGroupTitle.textContent = group.title;
+      modalGroupCategoryBadge.textContent = `📂 ${formatCategory(group.category)}`;
+      modalGroupLocation.textContent = group.location ? `📍 ${group.location}` : '📍 Unspecified location';
+      modalGroupSummary.textContent = group.summary || 'Multiple student reports aggregated into this group.';
+      modalReportCount.textContent = group.issue_count;
+      modalCreatedAt.textContent = group.created_at ? new Date(group.created_at).toLocaleDateString() : '-';
+      modalUpdatedAt.textContent = group.updated_at ? new Date(group.updated_at).toLocaleDateString() : '-';
+
+      // Status selector
+      modalStatusSelect.value = (group.status || 'open').toLowerCase();
+
+      // Priority panel
+      const p = group.priority;
+      const pBadge = formatPriorityBadge(p?.priority_level, p?.priority_score);
+      modalPriorityBadge.className = pBadge.cssClass;
+      modalPriorityBadge.textContent = pBadge.label;
+      modalFactorSeverity.textContent = `${(p?.max_severity || 'low').toUpperCase()} (${p?.severity_score ?? 25})`;
+      modalFactorImpact.textContent = `${p?.impact_score ?? 20} (${p?.report_count ?? group.issue_count} reports)`;
+      modalFactorRecurrence.textContent = `${p?.recurrence_score ?? 0} (${group.recurrence?.is_recurring ? 'Yes' : 'No'})`;
+      modalFactorRecency.textContent = `${p?.recency_score ?? 100} (${p?.days_since_latest ?? 0}d ago)`;
+
+      // Early Warning panel
+      const w = group.early_warning;
+      const wBadge = formatWarningBadge(w?.warning_level, w?.early_warning_score);
+      modalWarningBadge.className = wBadge.cssClass;
+      modalWarningBadge.textContent = wBadge.label;
+
+      if (w?.has_sufficient_data === false || (w?.warning_level || '').toLowerCase() === 'insufficient data') {
+        modalWarningDetailsContainer.classList.add('hidden');
+        modalInsufficientDataNotice.classList.remove('hidden');
+      } else {
+        modalWarningDetailsContainer.classList.remove('hidden');
+        modalInsufficientDataNotice.classList.add('hidden');
+        modalRecentCount.textContent = w?.recent_7_day_count ?? 0;
+        modalPreviousCount.textContent = w?.previous_7_day_count ?? 0;
+        const gRate = w?.growth_rate ?? 0;
+        modalGrowthRate.textContent = gRate > 0 ? `+${Math.round(gRate * 100)}%` : `${Math.round(gRate * 100)}%`;
+        modalGroupAge.textContent = `${w?.group_age_days ?? 0} days`;
+      }
+
+      // Recurrence panel
+      const r = group.recurrence;
+      const isRec = r?.is_recurring === true;
+      modalRecurrenceBadge.className = isRec ? 'badge-recurring' : 'hod-issue-meta-pill';
+      modalRecurrenceBadge.textContent = isRec ? 'RECURRING' : 'NOT RECURRING';
+      modalDistinctDates.textContent = `${r?.distinct_report_dates ?? 0} dates`;
+      modalRecurrenceRate.textContent = `${r?.recurrence_rate ?? 0} / week`;
+      modalFirstReport.textContent = r?.first_report_at ? new Date(r.first_report_at).toLocaleDateString() : '-';
+      modalLatestReport.textContent = r?.latest_report_at ? new Date(r.latest_report_at).toLocaleDateString() : '-';
+
+      // Report Timeline
+      const timelineData = buildReportTimeline(group.reports || []);
+      if (timelineData.length === 0) {
+        modalTimelineNodes.innerHTML = `<p style="font-size:0.8125rem; color:var(--text-muted); margin:0;">No timeline activity recorded.</p>`;
+      } else {
+        modalTimelineNodes.innerHTML = timelineData.map(node => `
+          <div class="hod-timeline-node">
+            <strong style="min-width:110px; font-size:0.8125rem;">${escapeHtml(node.dateLabel)}</strong>
+            <div class="hod-timeline-dots" title="${node.count} report(s) on this date">
+              ${Array(node.count).fill('<span class="hod-timeline-dot"></span>').join('')}
+            </div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">${node.count} report${node.count > 1 ? 's' : ''}</span>
+          </div>
+        `).join('');
+      }
+
+      // Original Student Reports
+      modalReportsMemberCount.textContent = (group.reports || []).length;
+      if (!group.reports || group.reports.length === 0) {
+        modalReportsTableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center" style="padding:1.5rem; color:var(--text-muted);">
+              No individual reports attached to this issue group.
+            </td>
+          </tr>
+        `;
+      } else {
+        modalReportsTableBody.innerHTML = group.reports.map(rep => {
+          const dateStr = rep.created_at ? new Date(rep.created_at).toLocaleDateString() : '-';
+          const isAnon = rep.is_anonymous === true;
+          const identityText = formatStudentIdentity(isAnon);
+          const sev = (rep.severity || 'low').toLowerCase();
+
+          let sevClass = 'badge-priority-low';
+          if (sev === 'high') sevClass = 'badge-priority-high';
+          else if (sev === 'medium') sevClass = 'badge-priority-medium';
+
+          return `
+            <tr>
+              <td style="font-size:0.8125rem; white-space:nowrap;">${escapeHtml(dateStr)}</td>
+              <td style="font-size:0.8125rem;">${escapeHtml(formatCategory(rep.category))}</td>
+              <td style="font-size:0.8125rem;">${escapeHtml(rep.location || '-')}</td>
+              <td style="font-size:0.8125rem; max-width:280px; line-height:1.4;">${escapeHtml(rep.description || '')}</td>
+              <td><span class="${sevClass}" style="font-size:0.7rem; padding:0.15rem 0.45rem;">${escapeHtml(sev.toUpperCase())}</span></td>
+              <td>
+                <span class="student-anonymity-badge ${isAnon ? 'is-anonymous' : ''}">
+                  ${isAnon ? '🔒' : '👤'} ${escapeHtml(identityText)}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      detailModal.classList.remove('hidden');
+    };
+
+    // 9. Handle Status Save
+    async function handleStatusSave() {
+      if (!currentSelectedGroup) return;
+
+      const newStatus = modalStatusSelect.value;
+      saveStatusBtn.disabled = true;
+      saveStatusBtn.textContent = 'Saving...';
+
+      try {
+        const { success, error } = await updateIssueGroupStatus(currentSelectedGroup.id, newStatus);
+        if (!success) {
+          alert(`Failed to update status: ${error || 'Unknown error'}`);
+          return;
+        }
+
+        // Update local state
+        currentSelectedGroup.status = newStatus;
+        currentSelectedGroup.updated_at = new Date().toISOString();
+
+        // Refresh lists
+        renderSummaryMetrics();
+        updateViewTabCounts();
+        renderFilteredTable();
+
+        alert(`Issue group status updated to "${newStatus.toUpperCase()}".`);
+      } catch (err) {
+        alert(`Error updating status: ${err.message}`);
+      } finally {
+        saveStatusBtn.disabled = false;
+        saveStatusBtn.textContent = 'Save';
+      }
+    }
+  </script>
+</body>
+</html>
