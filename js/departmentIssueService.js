@@ -114,16 +114,18 @@ export async function reportDepartmentIssue({
       console.warn('[DepartmentIssueService] Background severity prediction error:', err);
     });
 
-    // Phase 6.1: Trigger asynchronous and non-blocking candidate similarity analysis
-    triggerSimilarityForIssue({
-      id: data.id,
-      category: data.category,
-      location: data.location,
-      description: data.description,
-      departmentId: data.department_id || departmentId
-    }).catch(err => {
-      console.warn('[DepartmentIssueService] Background similarity analysis error:', err);
-    });
+    // Phase 6.1: Await similarity analysis & issue grouping before resolving
+    try {
+      await triggerSimilarityForIssue({
+        id: data.id,
+        category: data.category,
+        location: data.location,
+        description: data.description,
+        departmentId: data.department_id || departmentId
+      });
+    } catch (simErr) {
+      console.warn('[DepartmentIssueService] Similarity and grouping error:', simErr?.message || simErr);
+    }
   }
 
   return {
