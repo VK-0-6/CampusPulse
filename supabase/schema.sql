@@ -2592,7 +2592,8 @@ RETURNS TABLE (
     id UUID,
     category TEXT,
     location TEXT,
-    description TEXT
+    description TEXT,
+    department_id UUID
 )
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -2604,7 +2605,7 @@ BEGIN
     END IF;
 
     RETURN QUERY
-    SELECT di.id, di.category, di.location, di.description
+    SELECT di.id, di.category, di.location, di.description, di.department_id
     FROM public.department_issues di
     WHERE di.id <> p_issue_id
       AND di.status = 'open'

@@ -9,7 +9,7 @@ import { classifyIssueDescription } from './classificationService.js';
 import { predictIssueSeverity } from './severityService.js';
 import { compareIssues } from './similarityService.js';
 import { classifyIssueRelationship } from './relationshipService.js';
-import { attachOrCreateGroupOnDuplicate } from './groupService.js';
+import { attachOrCreateGroupOnDuplicate, ensureStandaloneGroup } from './groupService.js';
 
 
 export const ISSUE_CATEGORIES = {
@@ -253,7 +253,27 @@ export async function triggerSimilarityForIssue(newIssue) {
       }
     }
 
-    if (!candidates || candidates.length === 0) {
+    // Ensure all candidates explicitly have department_id populated
+    candidates = (candidates || []).map(c => ({
+      ...c,
+      department_id: c.department_id || deptId,
+      departmentId: c.department_id || deptId
+    }));
+
+    if (candidates.length === 0) {
+      // Phase 6.3: Standalone issue with no existing candidates to compare
+      try {
+        await ensureStandaloneGroup({
+          id: newIssue.id,
+          category: newIssue.category,
+          location: newIssue.location || '',
+          description: newIssue.description,
+          department_id: deptId,
+          departmentId: deptId
+        });
+      } catch (grpErr) {
+        console.warn('[DepartmentIssueService] Standalone grouping failed:', grpErr.message);
+      }
       return [];
     }
 
@@ -275,42 +295,47 @@ export async function triggerSimilarityForIssue(newIssue) {
           }
         });
 
-        // Phase 6.2: If issues are similar, chain duplicate vs related classification asynchronously
+        // Phase 6.2: If issues are similar, chain duplicate vs related classification
         if (simResult && simResult.similar) {
-          classifyIssueRelationship({
-            issueIdA: newIssue.id,
-            issueIdB: candidate.id,
-            issueA: {
-              category: newIssue.category,
-              location: newIssue.location || '',
-              description: newIssue.description
-            },
-            issueB: {
-              category: candidate.category,
-              location: candidate.location || '',
-              description: candidate.description
-            },
-            similarityScore: simResult.similarity_score,
-            isSimilar: true
-          }).then(relResult => {
-            // Phase 6.3: If confirmed as duplicate, group issues asynchronously
+          try {
+            const relResult = await classifyIssueRelationship({
+              issueIdA: newIssue.id,
+              issueIdB: candidate.id,
+              issueA: {
+                category: newIssue.category,
+                location: newIssue.location || '',
+                description: newIssue.description
+              },
+              issueB: {
+                category: candidate.category,
+                location: candidate.location || '',
+                description: candidate.description
+              },
+              similarityScore: simResult.similarity_score,
+              isSimilar: true
+            });
+
+            // Phase 6.3: If confirmed as duplicate, group issues
             if (relResult && relResult.relationship === 'duplicate') {
-              attachOrCreateGroupOnDuplicate({
+              await attachOrCreateGroupOnDuplicate({
                 newIssue: {
                   id: newIssue.id,
                   category: newIssue.category,
                   location: newIssue.location || '',
                   description: newIssue.description,
-                  departmentId: newIssue.departmentId || newIssue.department_id
+                  departmentId: deptId,
+                  department_id: deptId
                 },
-                duplicateCandidate: candidate
-              }).catch(groupErr => {
-                console.warn(`[DepartmentIssueService] Grouping failed for candidate ${candidate.id}:`, groupErr.message);
+                duplicateCandidate: {
+                  ...candidate,
+                  departmentId: candidate.department_id || candidate.departmentId || deptId,
+                  department_id: candidate.department_id || candidate.departmentId || deptId
+                }
               });
             }
-          }).catch(relErr => {
-            console.warn(`[DepartmentIssueService] Relationship analysis failed for candidate ${candidate.id}:`, relErr.message);
-          });
+          } catch (relErr) {
+            console.warn(`[DepartmentIssueService] Relationship analysis / grouping failed for candidate ${candidate.id}:`, relErr.message);
+          }
         }
 
         return simResult;
@@ -320,7 +345,26 @@ export async function triggerSimilarityForIssue(newIssue) {
       }
     });
 
-    return await Promise.all(comparisonPromises);
+    const results = await Promise.all(comparisonPromises);
+
+    // Phase 6.3: Standalone fallback
+    // If the issue was not attached to any duplicate group, ensure it has a standalone group
+    // Note: ensureStandaloneGroup internally checks getActiveGroupForIssue(issue.id) and returns
+    // the existing group if it was already grouped, ensuring no duplicate groups are created.
+    try {
+      await ensureStandaloneGroup({
+        id: newIssue.id,
+        category: newIssue.category,
+        location: newIssue.location || '',
+        description: newIssue.description,
+        department_id: deptId,
+        departmentId: deptId
+      });
+    } catch (grpErr) {
+      console.warn('[DepartmentIssueService] Standalone fallback grouping failed:', grpErr.message);
+    }
+
+    return results;
   } catch (err) {
     console.warn('[DepartmentIssueService] Background similarity trigger failed:', err.message);
     return [];

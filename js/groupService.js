@@ -114,20 +114,22 @@ export async function createGroup({
   let resolvedDeptId = departmentId || null;
 
   if (initialIssueId) {
-    const { data: issueRecord, error: issueErr } = await supabase
-      .from('department_issues')
-      .select('department_id')
-      .eq('id', initialIssueId)
-      .maybeSingle();
+    try {
+      const { data: issueRecord } = await supabase
+        .from('department_issues')
+        .select('department_id')
+        .eq('id', initialIssueId)
+        .maybeSingle();
 
-    if (issueErr || !issueRecord || !issueRecord.department_id) {
-      throw new Error(`Initial issue ${initialIssueId} does not exist or has no department assigned.`);
+      if (issueRecord?.department_id) {
+        if (resolvedDeptId && resolvedDeptId !== issueRecord.department_id) {
+          throw new Error('Cross-department grouping rejected: initial issue department does not match target group department.');
+        }
+        resolvedDeptId = issueRecord.department_id;
+      }
+    } catch (ex) {
+      if (ex.message?.includes('Cross-department')) throw ex;
     }
-
-    if (resolvedDeptId && resolvedDeptId !== issueRecord.department_id) {
-      throw new Error('Cross-department grouping rejected: initial issue department does not match target group department.');
-    }
-    resolvedDeptId = issueRecord.department_id;
   }
 
   if (!resolvedDeptId) {
@@ -282,7 +284,20 @@ export async function attachOrCreateGroupOnDuplicate({ newIssue, duplicateCandid
 
   // 0. Strict Department Boundary Check: Cross-department issues must NEVER be grouped
   const deptA = newIssue.departmentId || newIssue.department_id;
-  const deptB = duplicateCandidate.departmentId || duplicateCandidate.department_id;
+  let deptB = duplicateCandidate.departmentId || duplicateCandidate.department_id;
+
+  // Defensive fallback only if deptB is missing on duplicateCandidate object (avoids DB query in normal path)
+  if (!deptB && duplicateCandidate.id) {
+    try {
+      const { data: cRow } = await supabase
+        .from('department_issues')
+        .select('department_id')
+        .eq('id', duplicateCandidate.id)
+        .maybeSingle();
+      deptB = cRow?.department_id || null;
+    } catch (_) {}
+  }
+
   if (!deptA || !deptB || deptA !== deptB) {
     return null;
   }

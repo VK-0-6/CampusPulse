@@ -4,10 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Portal - CampusPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/student.css" />
 </head>
-<body>
+<body class="portal-student">
 
   <!-- Route Guard Loading Overlay -->
   <div id="authLoadingOverlay" class="auth-loading-overlay">
@@ -18,18 +23,30 @@
   <!-- Dashboard Top Navbar -->
   <header class="dashboard-header">
     <div class="dashboard-nav">
-      <a href="/" class="brand-badge">
-        <div class="brand-icon" aria-label="CampusPulse">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
-            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button type="button" id="sidebarToggleBtn" class="dashboard-sidebar-toggle" aria-label="Toggle navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
-        </div>
-        <div class="brand-text">
-          <span class="brand-title">CampusPulse</span>
-          <span class="brand-subtitle">Student Portal</span>
-        </div>
-      </a>
+        </button>
+        <a href="/" class="brand-badge" aria-label="CampusPulse Home">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+              <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+              <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+              <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+              <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">CampusPulse</span>
+            <span class="brand-subtitle">Student Portal</span>
+          </div>
+        </a>
+      </div>
 
       <div class="user-profile-badge">
         <div class="user-details">
@@ -44,36 +61,134 @@
     </div>
   </header>
 
-  <!-- Dashboard Main Content -->
-  <main class="dashboard-container">
-    
-    <!-- Welcome Header Card -->
-    <div class="dashboard-card dashboard-card-hero">
-      <div class="dashboard-title-row">
-        <div>
-          <h1 id="welcomeHeading" class="dashboard-welcome">Welcome, Student</h1>
-          <div class="dashboard-role-line">
-            <span>Role:</span>
-            <strong>Student</strong>
-            <span id="navRollNumber" class="roll-number-badge hidden" style="margin-left:0.5rem;"></span>
-          </div>
+  <!-- Dashboard App Shell -->
+  <div class="dashboard-app-shell">
+    <!-- Off-canvas / persistent Sidebar -->
+    <aside class="dashboard-sidebar" id="dashboardSidebar" aria-label="Student Portal Navigation">
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Navigation</span>
+        <a href="#welcomeHeading" class="sidebar-nav-item active">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="#joinClassSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          <span>Join Class</span>
+        </a>
+        <a href="#feedbackSessionsSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Active Feedback</span>
+        </a>
+        <a href="#improvementUpdatesSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Improvement Updates</span>
+        </a>
+        <a href="#classesSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>My Classes</span>
+        </a>
+        <a href="#academicEnvironmentSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Campus Issues</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-status-pill">
+          <span class="sidebar-status-dot"></span>
+          <span>Student Workspace · Active</span>
         </div>
       </div>
-      <p style="margin-bottom:0; font-size:0.9375rem; color:var(--text-secondary);">
-        Enroll in your semester courses using class codes provided by your faculty instructors.
-      </p>
+    </aside>
+
+    <!-- Sidebar Backdrop for mobile -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Dashboard Main Content -->
+    <main class="dashboard-container">
+    
+    <!-- Welcome Header & Quick Actions -->
+    <div class="dashboard-card student-hero">
+      <div class="student-hero-top">
+        <div class="student-hero-content">
+          <div class="student-hero-meta">
+            <span class="student-role-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              Student Workspace
+            </span>
+            <span id="navRollNumber" class="student-roll-badge hidden"></span>
+          </div>
+          <h1 id="welcomeHeading" class="student-welcome-title">Welcome, Student</h1>
+          <p class="student-hero-desc">
+            Stay connected with your courses, provide real-time lecture feedback, report campus infrastructure issues, and view completed faculty improvements.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Action Jump Cards -->
+      <div class="student-quick-actions" aria-label="Student Quick Actions">
+        <a href="#joinClassSection" class="quick-action-card">
+          <div class="quick-action-icon-wrap icon-join" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </div>
+          <div class="quick-action-content">
+            <div class="quick-action-title">Join a Class</div>
+            <div class="quick-action-desc">Enter 6-char course code</div>
+          </div>
+          <svg class="quick-action-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+
+        <a href="#feedbackSessionsSection" class="quick-action-card">
+          <div class="quick-action-icon-wrap icon-feedback" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="quick-action-content">
+            <div class="quick-action-title">Active Feedback</div>
+            <div class="quick-action-desc">Live lecture feedback</div>
+          </div>
+          <svg class="quick-action-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+
+        <a href="#classesSection" class="quick-action-card">
+          <div class="quick-action-icon-wrap icon-classes" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="quick-action-content">
+            <div class="quick-action-title">My Classes</div>
+            <div class="quick-action-desc">Enrolled courses &amp; roster</div>
+          </div>
+          <svg class="quick-action-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+
+        <a href="#academicEnvironmentSection" class="quick-action-card">
+          <div class="quick-action-icon-wrap icon-issues" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="quick-action-content">
+            <div class="quick-action-title">Campus Issues</div>
+            <div class="quick-action-desc">Report lab or room issues</div>
+          </div>
+          <svg class="quick-action-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
     </div>
 
     <!-- Alert / Message Container -->
     <div id="globalAlert" class="alert hidden" role="alert"></div>
 
     <!-- Join a Class Section -->
-    <div class="dashboard-card">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span>🔑</span> Join a Class
-        </h2>
+    <div class="dashboard-card join-class-card-wrap" id="joinClassSection">
+      <div class="student-section-header">
+        <div class="student-section-title-lockup">
+          <div class="student-section-icon icon-cyan" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </div>
+          <h2 class="student-section-title">Join a Class</h2>
+        </div>
       </div>
+      <p class="join-class-instruction">
+        Enroll in semester classes using the unique 6-character code provided by your course faculty during lecture.
+      </p>
 
       <form id="joinClassForm" novalidate>
         <div class="academic-form-grid join-class-grid">
@@ -105,63 +220,79 @@
     </div>
 
     <!-- Active Feedback Sessions Section (Phase 3) -->
-    <div class="dashboard-card" style="border-left: 5px solid #10b981;">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span>📝</span> Active Class Feedback Sessions
-        </h2>
+    <div class="dashboard-card student-feedback-card-wrap" id="feedbackSessionsSection">
+      <div class="student-section-header">
+        <div class="student-section-title-lockup">
+          <div class="student-section-icon icon-emerald" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <h2 class="student-section-title">Active Class Feedback Sessions</h2>
+        </div>
         <span id="sessionCountBadge" class="section-badge">0 Active</span>
       </div>
-      <p style="margin-bottom:1.25rem; font-size:0.875rem; color:var(--text-secondary);">
-        Give your feedback on today's learning topics for your enrolled classes. Feedback is stored to improve teaching and course delivery.
+      <p class="student-section-subtitle">
+        Share timely feedback on today's lecture topics for your enrolled classes. Responses are confidential and aggregated to help instructors tailor pacing and clarity.
       </p>
 
       <div id="studentSessionsGrid" class="classes-grid">
         <!-- Rendered dynamically -->
       </div>
 
-      <div id="emptyStudentSessionsState" class="empty-state hidden">
-        <div class="empty-state-icon">⏳</div>
-        <div class="empty-state-title">No active feedback sessions right now.</div>
-        <div class="empty-state-desc">
-          When your faculty instructor starts a live feedback session for today's lecture, it will appear here.
+      <div id="emptyStudentSessionsState" class="empty-state student-empty-state hidden">
+        <div class="student-empty-icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="student-empty-title">You're all caught up!</div>
+        <div class="student-empty-desc">
+          There are no active feedback sessions waiting for your response right now. When your instructor starts a session during lecture, it will appear here.
         </div>
       </div>
     </div>
 
     <!-- Faculty Improvement Updates Section (Phase 4) -->
-    <div class="dashboard-card" style="border-left: 5px solid #0284c7;">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span>📢</span> Faculty Improvement Updates
-        </h2>
+    <div class="dashboard-card student-improvement-card-wrap" id="improvementUpdatesSection">
+      <div class="student-section-header">
+        <div class="student-section-title-lockup">
+          <div class="student-section-icon icon-cyan" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h2 class="student-section-title">Faculty Improvement Updates</h2>
+        </div>
         <span id="improvementUpdateBadge" class="section-badge">0 Updates</span>
       </div>
-      <p style="margin-bottom:1.25rem; font-size:0.875rem; color:var(--text-secondary);">
-        See how your faculty instructors have responded to class feedback with concrete teaching adjustments, revised explanations, and extra learning support.
+      <p class="student-section-subtitle">
+        See how your course instructors have acted on student feedback with concrete teaching adjustments, clarified explanations, and enhanced learning resources.
       </p>
 
       <div id="improvementUpdatesGrid" class="classes-grid">
         <!-- Rendered dynamically -->
       </div>
 
-      <div id="emptyImprovementUpdatesState" class="empty-state hidden">
-        <div class="empty-state-icon">💡</div>
-        <div class="empty-state-title">No completed improvement updates yet.</div>
-        <div class="empty-state-desc">
-          When faculty members deliver improvements based on your class feedback, their completed actions will appear here.
+      <div id="emptyImprovementUpdatesState" class="empty-state student-empty-state hidden">
+        <div class="student-empty-icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </div>
+        <div class="student-empty-title">No improvement updates yet.</div>
+        <div class="student-empty-desc">
+          When faculty members deliver learning improvements based on your class feedback, their completed actions will appear here.
         </div>
       </div>
     </div>
 
     <!-- My Classes Section -->
-    <div class="dashboard-card">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span>🎓</span> My Classes
-        </h2>
+    <div class="dashboard-card" id="classesSection">
+      <div class="student-section-header">
+        <div class="student-section-title-lockup">
+          <div class="student-section-icon icon-blue" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <h2 class="student-section-title">My Classes</h2>
+        </div>
         <span id="classCountBadge" class="section-badge">0 Enrolled</span>
       </div>
+      <p class="student-section-subtitle">
+        All active semester classes you have joined. Check course details, instructor info, and enrollment status.
+      </p>
 
       <!-- Classes Grid or Empty State -->
       <div id="classesGrid" class="classes-grid">
@@ -169,25 +300,31 @@
       </div>
 
       <!-- Empty State -->
-      <div id="emptyClassesState" class="empty-state hidden">
-        <div class="empty-state-icon">📖</div>
-        <div class="empty-state-title">You haven't joined any classes yet.</div>
-        <div class="empty-state-desc">
+      <div id="emptyClassesState" class="empty-state student-empty-state hidden">
+        <div class="student-empty-icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="student-empty-title">You haven't joined any classes yet.</div>
+        <div class="student-empty-desc">
           Ask your faculty instructor for their 6-character class code and enter it above to join your class.
         </div>
+        <a href="#joinClassSection" class="btn btn-primary btn-sm" style="margin-top:0.5rem;">Join a Class</a>
       </div>
     </div>
 
     <!-- Academic Environment & Infrastructure Section -->
     <div class="dashboard-card" id="academicEnvironmentSection">
-      <div class="section-header">
-        <h2 class="section-title">
-          <span>🏢</span> Academic Environment &amp; Infrastructure
-        </h2>
+      <div class="student-section-header">
+        <div class="student-section-title-lockup">
+          <div class="student-section-icon icon-amber" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h2 class="student-section-title">Academic Environment &amp; Infrastructure</h2>
+        </div>
         <span class="section-badge">Infrastructure Channel</span>
       </div>
-      <p style="margin-bottom:1.5rem; font-size:0.875rem; color:var(--text-secondary);">
-        Report physical infrastructure, lab equipment, network, or classroom condition issues directly to department administration. This channel is independent from class feedback.
+      <p class="student-section-subtitle">
+        Report physical facilities, lab equipment, network, electrical, or classroom condition issues directly to department administration. This channel is independent from class feedback.
       </p>
 
       <!-- Sibling Panels: Submit Report & Reported Issues -->
@@ -198,7 +335,8 @@
           <div class="card-inner-header">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
               <h3 class="card-inner-title" style="margin-bottom:0;">
-                <span>⚠️</span> Submit Infrastructure Report
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Submit Issue Report
               </h3>
               <div class="issue-dept-indicator">
                 <span class="issue-dept-label">Department:</span>
@@ -273,7 +411,7 @@
                 <div class="issue-anon-box">
                   <label class="issue-anon-label">
                     <input type="checkbox" id="issueAnonymousCheck" />
-                    <span>Submit anonymously (Hides your name and email)</span>
+                    <span>Submit anonymously (Hides your name and email from administration)</span>
                   </label>
                 </div>
 
@@ -292,10 +430,11 @@
         <div class="academic-panel academic-history-card">
           <div class="card-inner-header">
             <h3 class="card-inner-title">
-              <span>📋</span> My Reported Issues
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              My Reported Issues
             </h3>
             <p class="card-inner-desc">
-              Track status and resolution progress for issues you have submitted.
+              Track status and resolution progress for issues you have submitted to administration.
             </p>
           </div>
 
@@ -303,10 +442,12 @@
             <!-- Rendered dynamically -->
           </div>
 
-          <div id="emptyStudentIssuesState" class="empty-state hidden">
-            <div class="empty-state-icon">🛠️</div>
-            <div class="empty-state-title">No issues reported yet.</div>
-            <div class="empty-state-desc">
+          <div id="emptyStudentIssuesState" class="empty-state student-empty-state hidden">
+            <div class="student-empty-icon" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div class="student-empty-title">No issues reported yet.</div>
+            <div class="student-empty-desc">
               If you encounter any classroom or lab infrastructure problems, submit a report using the form to notify department administration.
             </div>
           </div>
@@ -315,11 +456,12 @@
       </div>
     </div>
   </main>
+  </div><!-- /.dashboard-app-shell -->
 
   <!-- Give Feedback Modal (Phase 3) -->
   <div id="feedbackModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="feedbackModalTitle">
-    <div class="modal-container" style="max-width: 640px;">
-      <div class="modal-header">
+    <div class="modal-container student-modal-container">
+      <div class="modal-header modal-header-hero">
         <div>
           <h3 id="feedbackModalTitle" style="margin-bottom:0.15rem;">Class Learning Feedback</h3>
           <p id="feedbackModalSubtitle" style="font-size:0.8125rem; color:var(--text-muted); margin-bottom:0;">Loading...</p>
@@ -413,6 +555,12 @@
               rows="3" 
               placeholder="What specifically could be improved, or which concept needs more explanation?"
             ></textarea>
+          </div>
+
+          <!-- Privacy Notice -->
+          <div class="feedback-privacy-notice">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span><strong>Student Privacy Notice:</strong> Feedback is confidential and processed in aggregate to protect student anonymity while helping faculty refine teaching delivery.</span>
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
@@ -1134,6 +1282,55 @@
         setButtonLoading(submitIssueBtn, false, 'Submitting...', 'Submit Issue Report');
       }
     });
+
+    // Mobile Sidebar Drawer Controller
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const dashboardSidebar = document.getElementById('dashboardSidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+    if (sidebarToggleBtn && dashboardSidebar && sidebarBackdrop) {
+      const openSidebar = () => {
+        dashboardSidebar.classList.add('active');
+        sidebarBackdrop.classList.add('active');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeSidebar = () => {
+        dashboardSidebar.classList.remove('active');
+        sidebarBackdrop.classList.remove('active');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      };
+
+      sidebarToggleBtn.addEventListener('click', () => {
+        const isOpen = dashboardSidebar.classList.contains('active');
+        if (isOpen) {
+          closeSidebar();
+        } else {
+          openSidebar();
+        }
+      });
+
+      sidebarBackdrop.addEventListener('click', closeSidebar);
+
+      // Handle nav item clicks: close mobile drawer and maintain active link
+      dashboardSidebar.querySelectorAll('.sidebar-nav-item').forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth < 1024) {
+            closeSidebar();
+          }
+          dashboardSidebar.querySelectorAll('.sidebar-nav-item').forEach(item => item.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dashboardSidebar.classList.contains('active')) {
+          closeSidebar();
+        }
+      });
+    }
   </script>
 </body>
 </html>

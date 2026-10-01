@@ -4,10 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Faculty Portal - CampusPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/faculty.css" />
 </head>
-<body>
+<body class="portal-faculty">
 
   <!-- Route Guard Loading Overlay -->
   <div id="authLoadingOverlay" class="auth-loading-overlay">
@@ -18,18 +23,30 @@
   <!-- Dashboard Top Navbar -->
   <header class="dashboard-header">
     <div class="dashboard-nav">
-      <a href="/" class="brand-badge">
-        <div class="brand-icon" aria-label="CampusPulse">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
-            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+      <div class="nav-brand-group">
+        <button id="sidebarToggleBtn" class="dashboard-sidebar-toggle" type="button" aria-label="Toggle navigation drawer" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
-        </div>
-        <div class="brand-text">
-          <span class="brand-title">CampusPulse</span>
-          <span class="brand-subtitle">Faculty Portal</span>
-        </div>
-      </a>
+        </button>
+        <a href="/" class="brand-badge" aria-label="CampusPulse Home">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+              <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+              <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+              <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+              <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">CampusPulse</span>
+            <span class="brand-subtitle">Faculty Portal</span>
+          </div>
+        </a>
+      </div>
 
       <div class="user-profile-badge">
         <div class="user-details">
@@ -44,41 +61,165 @@
     </div>
   </header>
 
-  <!-- Dashboard Main Content -->
-  <main class="dashboard-container">
+  <!-- Dashboard App Shell -->
+  <div class="dashboard-app-shell">
+    <!-- Off-canvas / persistent Sidebar -->
+    <aside class="dashboard-sidebar" id="dashboardSidebar" aria-label="Faculty Portal Navigation">
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Navigation</span>
+        <a href="#welcomeHeading" class="sidebar-nav-item active">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="#createClassSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Create Class</span>
+        </a>
+        <a href="#myClassesSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>My Classes</span>
+        </a>
+        <a href="#feedbackSessionsSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Feedback Sessions</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-status-pill">
+          <span class="sidebar-status-dot"></span>
+          <span>Faculty Workspace · Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar Backdrop for mobile -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Dashboard Main Content -->
+    <main class="dashboard-container">
     
     <!-- Welcome Header Card -->
-    <div class="dashboard-card dashboard-card-hero">
-      <div class="dashboard-title-row">
-        <div>
-          <h1 id="welcomeHeading" class="dashboard-welcome">Welcome, Faculty Member</h1>
-          <div class="dashboard-role-line" style="display:flex; align-items:center; gap:0.5rem;">
-            <span>Role:</span>
-            <strong>Faculty</strong>
-            <span id="facultyDeptBadge" class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; padding:0.15rem 0.5rem; border-radius:4px; font-size:0.8125rem;">Department</span>
+    <div class="dashboard-card dashboard-card-hero faculty-hero">
+      <div class="faculty-hero-top">
+        <div class="faculty-hero-title-area">
+          <div class="faculty-hero-pretitle">
+            <span class="faculty-portal-tag">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              Academic Teaching Workspace
+            </span>
+            <span class="faculty-live-badge"><span class="faculty-live-dot"></span> Live Portal</span>
+          </div>
+          <h1 id="welcomeHeading" class="dashboard-welcome faculty-welcome-title">Welcome, Faculty Member</h1>
+          <div class="dashboard-role-line faculty-role-pill-row">
+            <span class="faculty-role-label">Role:</span>
+            <span class="role-badge role-badge-faculty">Faculty Instructor</span>
+            <span id="facultyDeptBadge" class="badge faculty-dept-badge">Department</span>
+          </div>
+          <p class="faculty-hero-desc">
+            Drive continuous instructional improvement across your classes. Launch real-time concept feedback sessions, detect comprehension roadblocks with AI diagnostics, and implement verified pedagogical improvement plans.
+          </p>
+        </div>
+      </div>
+
+      <!-- Continuous Teaching Improvement Cycle Banner -->
+      <div class="faculty-cycle-banner" aria-label="Teaching Improvement Lifecycle">
+        <div class="faculty-cycle-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          <span>Continuous Teaching Improvement Loop</span>
+        </div>
+        <div class="faculty-cycle-steps">
+          <div class="cycle-step">
+            <span class="cycle-step-num">1</span>
+            <span class="cycle-step-text">Create Class</span>
+          </div>
+          <div class="cycle-step-arrow">→</div>
+          <div class="cycle-step">
+            <span class="cycle-step-num">2</span>
+            <span class="cycle-step-text">Collect Feedback</span>
+          </div>
+          <div class="cycle-step-arrow">→</div>
+          <div class="cycle-step">
+            <span class="cycle-step-num">3</span>
+            <span class="cycle-step-text">AI Diagnostics</span>
+          </div>
+          <div class="cycle-step-arrow">→</div>
+          <div class="cycle-step">
+            <span class="cycle-step-num">4</span>
+            <span class="cycle-step-text">Take Action</span>
+          </div>
+          <div class="cycle-step-arrow">→</div>
+          <div class="cycle-step">
+            <span class="cycle-step-num">5</span>
+            <span class="cycle-step-text">Follow Up</span>
+          </div>
+          <div class="cycle-step-arrow">→</div>
+          <div class="cycle-step">
+            <span class="cycle-step-num">6</span>
+            <span class="cycle-step-text">Compare Impact</span>
           </div>
         </div>
       </div>
-      <p style="margin-bottom:0; font-size:0.9375rem; color:var(--text-secondary);">
-        Create academic classes, select or add course subjects, generate 6-character enrollment codes, and review enrolled students.
-      </p>
+
+      <!-- Quick Action Navigation Jump Cards -->
+      <div class="faculty-quick-actions" aria-label="Quick Actions">
+        <a href="#createClassSection" class="faculty-quick-card">
+          <div class="quick-card-icon-wrap icon-purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <div class="quick-card-content">
+            <span class="quick-card-label">New Course</span>
+            <span class="quick-card-title">Create Class</span>
+          </div>
+          <span class="quick-card-chevron">→</span>
+        </a>
+
+        <a href="#myClassesSection" class="faculty-quick-card">
+          <div class="quick-card-icon-wrap icon-blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="quick-card-content">
+            <span class="quick-card-label">Rosters & Codes</span>
+            <span class="quick-card-title">My Classes</span>
+          </div>
+          <span class="quick-card-chevron">→</span>
+        </a>
+
+        <a href="#feedbackSessionsSection" class="faculty-quick-card">
+          <div class="quick-card-icon-wrap icon-emerald">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="quick-card-content">
+            <span class="quick-card-label">Live Feedback & AI</span>
+            <span class="quick-card-title">Feedback Sessions</span>
+          </div>
+          <span class="quick-card-chevron">→</span>
+        </a>
+      </div>
     </div>
 
     <!-- Alert / Message Container -->
     <div id="globalAlert" class="alert hidden" role="alert"></div>
 
     <!-- Create Class Section -->
-    <div class="dashboard-card">
+    <div class="dashboard-card" id="createClassSection">
       <div class="section-header">
-        <h2 class="section-title">
-          <span>➕</span> Create a New Class
-        </h2>
+        <div class="section-title-wrap">
+          <div class="section-icon-badge icon-badge-purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <div>
+            <h2 class="section-title">Create a New Class</h2>
+            <p class="section-subtitle">Generate a course section and unique 6-character enrollment code for your students.</p>
+          </div>
+        </div>
       </div>
 
       <!-- Success Notification Card for Created Class -->
       <div id="classCreatedNotification" class="class-created-card hidden">
         <div class="class-created-header">
-          <span>🎉</span> Class Created Successfully
+          <span class="created-check-icon">✓</span>
+          <span>Class Created Successfully</span>
         </div>
         <div class="class-created-meta">
           <div>Subject: <strong id="createdSubjectName">-</strong></div>
@@ -92,7 +233,7 @@
           </div>
         </div>
         <div class="code-share-note">
-          Share this unique 6-character code with your students so they can join this class.
+          Share this unique 6-character code with your students so they can join this class from their student portal.
         </div>
       </div>
 
@@ -186,9 +327,15 @@
     <!-- My Classes Section -->
     <div class="dashboard-card" id="myClassesSection">
       <div class="section-header">
-        <h2 class="section-title">
-          <span>📚</span> My Classes
-        </h2>
+        <div class="section-title-wrap">
+          <div class="section-icon-badge icon-badge-blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div>
+            <h2 class="section-title">My Classes</h2>
+            <p class="section-subtitle">Manage class enrollments, copy join codes, view student rosters, and archive completed courses.</p>
+          </div>
+        </div>
         <span id="classCountBadge" class="section-badge">0 Classes</span>
       </div>
 
@@ -220,11 +367,17 @@
     </div>
 
     <!-- Class Feedback Sessions Section (Phase 3) -->
-    <div class="dashboard-card">
+    <div class="dashboard-card" id="feedbackSessionsSection">
       <div class="section-header">
-        <h2 class="section-title">
-          <span>💬</span> Class Feedback Sessions
-        </h2>
+        <div class="section-title-wrap">
+          <div class="section-icon-badge icon-badge-emerald">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <h2 class="section-title">Class Feedback Sessions</h2>
+            <p class="section-subtitle">Launch live lecture feedback, monitor student participation, inspect AI sentiment analysis, and plan pedagogical improvements.</p>
+          </div>
+        </div>
         <span id="sessionCountBadge" class="section-badge">0 Sessions</span>
       </div>
 
@@ -235,7 +388,7 @@
             <span>🎯</span> Start a Live Feedback Session
           </h3>
           <p class="start-session-desc">
-            Select an active class and enter today's learning topic to launch a feedback session for your students.
+            Select an active class and enter today's learning concept or topic to launch an interactive feedback session for your students.
           </p>
         </div>
         <form id="startSessionForm" class="start-session-form" novalidate>
@@ -289,10 +442,13 @@
         </form>
       </div>
 
-      <!-- Feedback Sessions List -->
-      <h3 style="font-size:1rem; font-weight:700; color:var(--primary-dark); margin-bottom:1rem;">
-        Active & Past Feedback Sessions
-      </h3>
+      <!-- Feedback Sessions List Subheading -->
+      <div class="feedback-sessions-list-header">
+        <h3 class="sessions-list-title">
+          <span>Active & Past Feedback Sessions</span>
+        </h3>
+        <p class="sessions-list-subtitle">Monitor live participation in active sessions, or explore AI analytics, action plans, and Before/After comparisons for closed sessions.</p>
+      </div>
 
       <div id="sessionsGrid" class="classes-grid">
         <!-- Rendered dynamically -->
@@ -308,10 +464,11 @@
       </div>
     </div>
   </main>
+  </div><!-- /.dashboard-app-shell -->
 
   <!-- Enrolled Students Modal -->
   <div id="rosterModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rosterModalTitle">
-    <div class="modal-container">
+    <div class="modal-container faculty-modal-container">
       <div class="modal-header">
         <h3 id="rosterModalTitle">Enrolled Students</h3>
         <button type="button" id="closeModalBtn" class="modal-close-btn" aria-label="Close dialog">&times;</button>
@@ -327,7 +484,7 @@
 
   <!-- Feedback Participation Modal -->
   <div id="participationModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="participationModalTitle">
-    <div class="modal-container" style="max-width: 680px;">
+    <div class="modal-container faculty-modal-container" style="max-width: 680px;">
       <div class="modal-header">
         <div>
           <h3 id="participationModalTitle" style="margin-bottom:0.25rem;">Feedback Participation</h3>
@@ -346,7 +503,7 @@
 
   <!-- Feedback Results Modal (Phase 4) -->
   <div id="resultsModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="resultsModalTitle">
-    <div class="modal-container" style="max-width: 760px;">
+    <div class="modal-container faculty-modal-container" style="max-width: 760px;">
       <div class="modal-header">
         <div>
           <h3 id="resultsModalTitle" style="margin-bottom:0.25rem;">Class Feedback Results</h3>
@@ -365,7 +522,7 @@
 
   <!-- Improvement Action Modal (Phase 4) -->
   <div id="actionModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
-    <div class="modal-container" style="max-width: 680px;">
+    <div class="modal-container faculty-modal-container" style="max-width: 680px;">
       <div class="modal-header">
         <div>
           <h3 id="actionModalTitle" style="margin-bottom:0.25rem;">Faculty Improvement Action</h3>
@@ -384,7 +541,7 @@
 
   <!-- Before / After Improvement Comparison Modal (Phase 4) -->
   <div id="comparisonModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="comparisonModalTitle">
-    <div class="modal-container" style="max-width: 760px;">
+    <div class="modal-container faculty-modal-container" style="max-width: 760px;">
       <div class="modal-header">
         <div>
           <h3 id="comparisonModalTitle" style="margin-bottom:0.25rem;">Before & After Improvement Analysis</h3>
@@ -2512,6 +2669,55 @@
       if (e.target === actionModal) actionModal.classList.add('hidden');
       if (e.target === comparisonModal) comparisonModal.classList.add('hidden');
     });
+
+    // Mobile Sidebar Drawer Controller
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const dashboardSidebar = document.getElementById('dashboardSidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+    if (sidebarToggleBtn && dashboardSidebar && sidebarBackdrop) {
+      const openSidebar = () => {
+        dashboardSidebar.classList.add('active');
+        sidebarBackdrop.classList.add('active');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeSidebar = () => {
+        dashboardSidebar.classList.remove('active');
+        sidebarBackdrop.classList.remove('active');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      };
+
+      sidebarToggleBtn.addEventListener('click', () => {
+        const isOpen = dashboardSidebar.classList.contains('active');
+        if (isOpen) {
+          closeSidebar();
+        } else {
+          openSidebar();
+        }
+      });
+
+      sidebarBackdrop.addEventListener('click', closeSidebar);
+
+      // Handle nav item clicks: close mobile drawer and maintain active link
+      dashboardSidebar.querySelectorAll('.sidebar-nav-item').forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth < 1024) {
+            closeSidebar();
+          }
+          dashboardSidebar.querySelectorAll('.sidebar-nav-item').forEach(item => item.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dashboardSidebar.classList.contains('active')) {
+          closeSidebar();
+        }
+      });
+    }
   </script>
 </body>
 </html>

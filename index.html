@@ -3,86 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusPulse - Student Experience & Campus Intelligence</title>
+  <title>CampusPulse - Student Experience &amp; Campus Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/css/style.css" />
-  <style>
-    .hero-section {
-      text-align: center;
-      padding: 3.5rem 1rem 2.5rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .hero-badge {
-      display: inline-block;
-      padding: 0.35rem 0.85rem;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--primary);
-      background-color: var(--primary-light);
-      border-radius: var(--radius-full);
-      margin-bottom: 1.25rem;
-      letter-spacing: 0.5px;
-    }
-    .hero-title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-      margin-bottom: 1rem;
-      line-height: 1.15;
-    }
-    .hero-desc {
-      font-size: 1.125rem;
-      color: var(--text-secondary);
-      margin-bottom: 2rem;
-      line-height: 1.6;
-    }
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .role-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 3rem;
-    }
-    .role-preview-card {
-      background-color: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1.75rem;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .role-preview-icon {
-      font-size: 1.75rem;
-    }
-    .role-preview-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-    .role-preview-desc {
-      font-size: 0.9375rem;
-      color: var(--text-secondary);
-      flex: 1;
-      margin-bottom: 0;
-    }
-    .phase-badge {
-      display: inline-flex;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      background-color: var(--bg-subtle);
-      padding: 0.2rem 0.5rem;
-      border-radius: var(--radius-sm);
-      align-self: flex-start;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/landing.css" />
 </head>
 <body>
 
@@ -95,12 +22,16 @@
 
   <!-- Global Header -->
   <header class="app-header">
-    <div class="header-container">
-      <a href="/" class="brand-badge">
-        <div class="brand-icon" aria-label="CampusPulse">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
-            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+    <div class="landing-header-container">
+      <!-- Left: Brand Lockup -->
+      <a href="/" class="brand-badge" aria-label="CampusPulse Home">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+            <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+            <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+            <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+            <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
           </svg>
         </div>
         <div class="brand-text">
@@ -108,69 +39,725 @@
           <span class="brand-subtitle">Student Experience &amp; Campus Intelligence</span>
         </div>
       </a>
-      <nav>
-        <ul class="nav-links" id="navLinks">
+
+      <!-- Center: Anchor Navigation -->
+      <nav aria-label="Main Navigation">
+        <ul class="landing-nav-center">
+          <li><a href="#platform">Platform</a></li>
+          <li><a href="#roles">Roles</a></li>
+          <li><a href="#intelligence">Intelligence</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right: Authentication Actions -->
+      <nav aria-label="Account Access">
+        <ul class="landing-nav-right nav-links" id="navLinks">
           <li><a href="/login.html" class="btn btn-secondary btn-sm">Sign In</a></li>
-          <li><a href="/register.html" class="btn btn-primary btn-sm">Register</a></li>
+          <li><a href="/register.html" class="btn btn-primary btn-sm">Get Started</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Main Portal Content -->
-  <main class="main-content">
-    <section class="hero-section">
-      <span class="hero-badge">Secure Campus Experience</span>
-      <h1 class="hero-title">CampusPulse</h1>
-      <p class="hero-desc">
-        Student Experience &amp; Campus Intelligence connecting students, faculty, and department administration to foster continuous academic enhancement.
-      </p>
+  <!-- Main Content -->
+  <main class="landing-main">
 
-      <div class="hero-actions" id="heroActions">
-        <a href="/register.html" class="btn btn-primary">Create Your Account</a>
-        <a href="/login.html" class="btn btn-secondary">Sign In to Portal</a>
+    <!-- 1. HERO SECTION -->
+    <section class="hero-wrapper" aria-label="Platform Overview">
+      <div class="hero-grid">
+        <!-- Left: Headline & Call to Action -->
+        <div class="hero-content">
+          <div class="hero-pill">
+            <span class="hero-pill-dot" aria-hidden="true"></span>
+            <span>Student Experience &amp; Campus Intelligence</span>
+          </div>
+
+          <h1 class="hero-title">
+            Turn Student Voice Into <span class="hero-title-accent">Actionable Campus Intelligence</span>
+          </h1>
+
+          <p class="hero-desc">
+            CampusPulse connects students, faculty, and department administrators by transforming student feedback and campus issue reports into structured insights that support continuous academic and campus enhancement.
+          </p>
+
+          <div class="hero-actions" id="heroActions">
+            <a href="/register.html" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="/login.html" class="btn btn-secondary btn-lg">Sign In</a>
+          </div>
+
+          <div class="hero-meta">
+            <span class="hero-meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Role-Based Access Control
+            </span>
+            <span class="hero-meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+              AI-Assisted Analysis
+            </span>
+            <span class="hero-meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+              Department-Scoped Privacy
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Static Product Intelligence Preview -->
+        <div class="product-preview" aria-label="CampusPulse Intelligence Preview">
+          <div class="preview-card-container">
+            <div class="preview-window-header">
+              <div class="preview-window-dots">
+                <span class="preview-window-dot"></span>
+                <span class="preview-window-dot"></span>
+                <span class="preview-window-dot"></span>
+              </div>
+              <span class="preview-window-title">CampusPulse Intelligence Monitor</span>
+              <div class="preview-window-status">
+                <span class="preview-window-status-dot"></span>
+                <span>Active Term · Online</span>
+              </div>
+            </div>
+
+            <div class="preview-body">
+              <!-- Item 1: Student Feedback & AI Analysis -->
+              <div class="preview-widget">
+                <div class="preview-widget-header">
+                  <span class="preview-widget-label">Student Course Feedback</span>
+                  <span class="preview-badge preview-badge-info">AI Analyzed</span>
+                </div>
+                <div class="preview-title">IECT18 — Database Management Systems</div>
+                <p class="preview-text">
+                  "Lab workstations in Section B require updated query profiling drivers; students cannot benchmark transaction isolation levels on schedule."
+                </p>
+                <div class="preview-tags">
+                  <span class="preview-tag">Sentiment: Constructive</span>
+                  <span class="preview-tag">Category: Lab Equipment</span>
+                  <span class="preview-tag">Severity: Moderate</span>
+                </div>
+              </div>
+
+              <!-- Item 2: Campus Issue Intelligence & Grouping -->
+              <div class="preview-widget">
+                <div class="preview-widget-header">
+                  <span class="preview-widget-label">Campus Issue Intelligence</span>
+                  <span class="preview-badge preview-badge-danger">Escalation Triggered</span>
+                </div>
+                <div class="preview-title">Projector Bulb &amp; HDMI Signal Failure — Room 402</div>
+                <div class="preview-status-strip">
+                  <div class="preview-metric-card">
+                    <span class="preview-metric-kicker">Priority</span>
+                    <span class="preview-metric-val">High (Score: 84)</span>
+                  </div>
+                  <div class="preview-metric-card">
+                    <span class="preview-metric-kicker">Group Size</span>
+                    <span class="preview-metric-val">4 Reports Linked</span>
+                  </div>
+                  <div class="preview-metric-card">
+                    <span class="preview-metric-kicker">Recurrence</span>
+                    <span class="preview-metric-val">14-Day Cycle</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 3: Operational Resolution Stream -->
+              <div class="preview-signal-pill">
+                <span>HOD Action Plan: Assigned to CSIT Facilities · Parts Requisitioned</span>
+                <span class="preview-badge preview-badge-success">In Progress</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- System Roles Overview -->
-    <section class="role-grid">
-      <div class="role-preview-card">
-        <div class="role-preview-icon">🎓</div>
-        <div class="role-preview-title">Student</div>
-        <p class="role-preview-desc">
-          Share feedback on classroom experiences, curriculum delivery, and academic resources to drive student community improvements.
-        </p>
-        <span class="phase-badge">Get Started</span>
-      </div>
+    <!-- 2. TRUST / PRINCIPLES STRIP -->
+    <section class="trust-strip" aria-label="System Principles">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="trust-title">Role-Based Access</h3>
+            <p class="trust-desc">Strictly isolated workflows for Students, Faculty, and Department HODs with Supabase RLS.</p>
+          </div>
+        </div>
 
-      <div class="role-preview-card">
-        <div class="role-preview-icon">👩‍🏫</div>
-        <div class="role-preview-title">Faculty</div>
-        <p class="role-preview-desc">
-          Review academic feedback, gain actionable pedagogical insights, and participate in collaborative course quality enhancement.
-        </p>
-        <span class="phase-badge">Get Started</span>
-      </div>
+        <div class="trust-item">
+          <div class="trust-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="trust-title">PostgreSQL + Supabase</h3>
+            <p class="trust-desc">Relational integrity, atomic RPC operations, and temporal recurrence query triggers.</p>
+          </div>
+        </div>
 
-      <div class="role-preview-card">
-        <div class="role-preview-icon">🏛️</div>
-        <div class="role-preview-title">HOD / Department Admin</div>
-        <p class="role-preview-desc">
-          Oversee department-wide feedback metrics, track systemic issues, and coordinate faculty and student initiatives.
-        </p>
-        <span class="phase-badge">Get Started</span>
+        <div class="trust-item">
+          <div class="trust-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="trust-title">AI-Assisted Analysis</h3>
+            <p class="trust-desc">Google Gemini integration for nuanced sentiment, severity detection, and similarity embeddings.</p>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="trust-title">Department-Scoped Intelligence</h3>
+            <p class="trust-desc">Clustered issue grouping and academic feedback restricted to departmental boundaries.</p>
+          </div>
+        </div>
       </div>
     </section>
+
+    <!-- 3. PLATFORM ARCHITECTURE SECTION -->
+    <section id="platform" class="landing-section platform-section" aria-label="System Architecture">
+      <div class="section-header">
+        <span class="section-eyebrow">Platform Architecture</span>
+        <h2 class="section-title">An End-to-End Institutional Intelligence Engine</h2>
+        <p class="section-desc">
+          How qualitative student voice and facility reports travel through automated AI analysis and deterministic grouping into administrative action.
+        </p>
+      </div>
+
+      <div class="architecture-pipeline">
+        <div class="pipeline-node">
+          <span class="pipeline-step-badge">STEP 01</span>
+          <div class="pipeline-node-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 class="pipeline-node-title">Student Voice</h3>
+          <p class="pipeline-node-desc">Course feedback &amp; campus issues submitted through responsive portals.</p>
+        </div>
+
+        <div class="pipeline-node">
+          <span class="pipeline-step-badge">STEP 02</span>
+          <div class="pipeline-node-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3 class="pipeline-node-title">Secure Ingestion</h3>
+          <p class="pipeline-node-desc">Validated, sanitized, and stored with departmental Row Level Security.</p>
+        </div>
+
+        <div class="pipeline-node">
+          <span class="pipeline-step-badge">STEP 03</span>
+          <div class="pipeline-node-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+              <path d="M12 2a10 10 0 0 1 10 10"/>
+              <path d="m16 8-4 4-2-2"/>
+            </svg>
+          </div>
+          <h3 class="pipeline-node-title">AI Processing</h3>
+          <p class="pipeline-node-desc">Gemini parses sentiment, severity, categories, and vector similarity.</p>
+        </div>
+
+        <div class="pipeline-node">
+          <span class="pipeline-step-badge">STEP 04</span>
+          <div class="pipeline-node-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
+          <h3 class="pipeline-node-title">Intelligence Synthesis</h3>
+          <p class="pipeline-node-desc">Deterministic grouping, temporal recurrence, and priority scoring.</p>
+        </div>
+
+        <div class="pipeline-node">
+          <span class="pipeline-step-badge">STEP 05</span>
+          <div class="pipeline-node-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <h3 class="pipeline-node-title">Action &amp; Oversight</h3>
+          <p class="pipeline-node-desc">Faculty log improvement plans; HODs assign facility resolutions.</p>
+        </div>
+
+        <div class="pipeline-node">
+          <span class="pipeline-step-badge">STEP 06</span>
+          <div class="pipeline-node-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h3 class="pipeline-node-title">Improvement Loop</h3>
+          <p class="pipeline-node-desc">Follow-up rounds verify progress and validate student satisfaction.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ROLES SECTION -->
+    <section id="roles" class="landing-section roles-section" aria-label="Application Roles">
+      <div class="section-header">
+        <span class="section-eyebrow">User Roles</span>
+        <h2 class="section-title">One Platform. Three Perspectives.</h2>
+        <p class="section-desc">
+          Tailored interfaces built for each stakeholder in the institutional ecosystem, enforcing strict separation of duties.
+        </p>
+      </div>
+
+      <div class="roles-grid">
+        <!-- Student Card -->
+        <article class="role-card role-card-student">
+          <span class="role-card-badge">Student Perspective</span>
+          <div class="role-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <h3 class="role-card-title">Student Portal</h3>
+          <p class="role-card-desc">
+            Empowers students to participate directly in academic enhancement and submit real-time campus operational issues.
+          </p>
+
+          <ul class="role-feature-list">
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Join registered classes via secure enrollment codes</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Submit qualitative feedback on course delivery</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Report campus infrastructure &amp; lab malfunctions</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Participate in follow-up feedback rounds post-improvement</span>
+            </li>
+          </ul>
+
+          <a href="/student/index.html" class="btn btn-secondary role-cta-btn">
+            Access Student Portal <span aria-hidden="true">&rarr;</span>
+          </a>
+        </article>
+
+        <!-- Faculty Card -->
+        <article class="role-card role-card-faculty">
+          <span class="role-card-badge">Faculty Perspective</span>
+          <div class="role-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </div>
+          <h3 class="role-card-title">Faculty Portal</h3>
+          <p class="role-card-desc">
+            Equips educators with deep pedagogical insights, sentiment analysis, and structured action tracking.
+          </p>
+
+          <ul class="role-feature-list">
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Create classes and manage enrolled student rosters</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Launch targeted feedback sessions with time windows</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>View AI sentiment, category, and severity breakdown</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Commit to improvement actions and monitor follow-up changes</span>
+            </li>
+          </ul>
+
+          <a href="/faculty/index.html" class="btn btn-secondary role-cta-btn">
+            Access Faculty Portal <span aria-hidden="true">&rarr;</span>
+          </a>
+        </article>
+
+        <!-- HOD Card -->
+        <article class="role-card role-card-hod">
+          <span class="role-card-badge">Department Leadership</span>
+          <div class="role-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+          </div>
+          <h3 class="role-card-title">HOD Workspace</h3>
+          <p class="role-card-desc">
+            Provides department administrators with synthesized issue intelligence, recurrence signals, and resolution oversight.
+          </p>
+
+          <ul class="role-feature-list">
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Monitor aggregated department issue groups in real time</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Inspect AI semantic similarity clusters and related reports</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Detect recurrent issues and proactive early warning alerts</span>
+            </li>
+            <li class="role-feature-item">
+              <svg class="role-feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Track multi-factor priority scores and manage formal resolution</span>
+            </li>
+          </ul>
+
+          <a href="/hod/index.html" class="btn btn-primary role-cta-btn">
+            Enter HOD Workspace <span aria-hidden="true">&rarr;</span>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. HOW IT WORKS SECTION -->
+    <section id="how-it-works" class="landing-section workflow-section" aria-label="System Workflow">
+      <div class="section-header">
+        <span class="section-eyebrow">Operational Methodology</span>
+        <h2 class="section-title">From Student Experience to Institutional Action</h2>
+        <p class="section-desc">
+          A continuous, five-stage cycle ensuring every piece of student feedback drives measurable educational improvement.
+        </p>
+      </div>
+
+      <div class="workflow-grid">
+        <div class="workflow-card">
+          <span class="workflow-number">01</span>
+          <h3 class="workflow-card-title">Experience</h3>
+          <p class="workflow-card-desc">
+            Students share candid feedback regarding courses, pedagogy, and campus facilities in seconds.
+          </p>
+        </div>
+
+        <div class="workflow-card">
+          <span class="workflow-number">02</span>
+          <h3 class="workflow-card-title">Analyze</h3>
+          <p class="workflow-card-desc">
+            AI evaluates submissions for sentiment polarity, pedagogical themes, and operational severity.
+          </p>
+        </div>
+
+        <div class="workflow-card">
+          <span class="workflow-number">03</span>
+          <h3 class="workflow-card-title">Identify</h3>
+          <p class="workflow-card-desc">
+            Deterministic models group related issues, compute priority scores, and flag chronic recurrence.
+          </p>
+        </div>
+
+        <div class="workflow-card">
+          <span class="workflow-number">04</span>
+          <h3 class="workflow-card-title">Act</h3>
+          <p class="workflow-card-desc">
+            Faculty implement curriculum adjustments; HODs assign facility resources to resolved bottlenecks.
+          </p>
+        </div>
+
+        <div class="workflow-card">
+          <span class="workflow-number">05</span>
+          <h3 class="workflow-card-title">Improve</h3>
+          <p class="workflow-card-desc">
+            Follow-up evaluation rounds compare before-and-after metrics, verifying concrete outcomes.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. INTELLIGENCE SECTION -->
+    <section id="intelligence" class="landing-section intelligence-section" aria-label="Intelligence Features">
+      <div class="section-header">
+        <span class="section-eyebrow">Advanced Analytics</span>
+        <h2 class="section-title">More Than Feedback Collection</h2>
+        <p class="section-desc">
+          Traditional surveys dump raw data into static spreadsheets. CampusPulse applies AI semantic understanding and deterministic mathematics across two distinct operational pipelines.
+        </p>
+      </div>
+
+      <div class="intel-grid">
+        <!-- Area 1: Faculty Feedback Intelligence -->
+        <article class="intel-card">
+          <div class="intel-card-header">
+            <div class="intel-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="intel-card-subtitle">Academic Stream</span>
+              <h3 class="intel-card-title">Faculty Feedback Intelligence</h3>
+            </div>
+          </div>
+
+          <p class="intel-card-lead">
+            Transforms subjective course evaluations into constructive pedagogical improvement commitments.
+          </p>
+
+          <div class="intel-item-list">
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Nuanced Sentiment Analysis</h4>
+                <p class="intel-item-desc">Classifies student submissions into positive, neutral, and constructively critical signals with confidence scores.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Automated Classification</h4>
+                <p class="intel-item-desc">Categorizes responses under teaching clarity, pacing, coursework difficulty, and lab resources for focused analysis.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Severity Assessment</h4>
+                <p class="intel-item-desc">Differentiates between minor subjective preferences and critical learning roadblocks requiring pedagogical intervention.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Targeted Improvement Actions</h4>
+                <p class="intel-item-desc">Enables instructors to log concrete action commitments tied directly to identified student concerns.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Follow-Up Impact Comparison</h4>
+                <p class="intel-item-desc">Measures sentiment shifts and resolution efficacy across successive feedback cycles to verify progress.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Area 2: Campus Issue Intelligence -->
+        <article class="intel-card">
+          <div class="intel-card-header">
+            <div class="intel-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="intel-card-subtitle">Operational Stream</span>
+              <h3 class="intel-card-title">Campus Issue Intelligence</h3>
+            </div>
+          </div>
+
+          <p class="intel-card-lead">
+            Eliminates redundant ticket backlogs through automated clustering, recurrence tracking, and proactive early warnings.
+          </p>
+
+          <div class="intel-item-list">
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Similarity &amp; Relationship Detection</h4>
+                <p class="intel-item-desc">Matches duplicate and related issues across different student reports using vector text embeddings.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Automated Issue Grouping</h4>
+                <p class="intel-item-desc">Aggregates duplicate reports into unified parent issue groups with AI-generated titles and operational summaries.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Temporal Recurrence Detection</h4>
+                <p class="intel-item-desc">Database algorithms scan historical time windows to flag chronic issues that recur across weeks or semesters.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Deterministic Priority Scoring</h4>
+                <p class="intel-item-desc">Weights severity, report volume, and temporal spikes into an objective 0–100 operational priority score.</p>
+              </div>
+            </div>
+
+            <div class="intel-item">
+              <span class="intel-item-bullet" aria-hidden="true"></span>
+              <div>
+                <h4 class="intel-item-title">Early Warning Escalation</h4>
+                <p class="intel-item-desc">Triggers proactive warnings for department heads before localized equipment failures become systemic disruptions.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Analytical Principle Callout -->
+      <div class="intel-callout">
+        <div class="intel-callout-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+        </div>
+        <p class="intel-callout-text">
+          <strong>Deterministic Integrity:</strong> CampusPulse uses Google Gemini AI for qualitative interpretation, sentiment understanding, and textual grouping. All analytical thresholds, recurrence intervals, priority scores, and security policies are computed deterministically via PostgreSQL database logic.
+        </p>
+      </div>
+    </section>
+
+    <!-- 7. FINAL CALL-TO-ACTION SECTION -->
+    <section class="final-cta-section" aria-label="Get Started with CampusPulse">
+      <div class="final-cta-container">
+        <h2 class="final-cta-title">Ready to Turn Student Experience Into Meaningful Action?</h2>
+        <p class="final-cta-desc">
+          CampusPulse brings feedback collection, automated issue intelligence, and improvement workflows into one institutional platform.
+        </p>
+
+        <div class="final-cta-actions">
+          <a href="/register.html" class="btn btn-primary btn-lg">Get Started</a>
+          <a href="/login.html" class="btn btn-secondary btn-lg">Sign In</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Global Footer -->
-  <footer class="app-footer">
-    <div class="footer-content">
-      <p><strong>CampusPulse</strong> &bull; Student Experience &amp; Campus Intelligence</p>
-      <p>&copy; 2026 CampusPulse. All rights reserved.</p>
+  <!-- 8. INSTITUTIONAL FOOTER -->
+  <footer class="landing-footer" aria-label="Site Footer">
+    <div class="landing-footer-container">
+      <div class="landing-footer-grid">
+        <!-- Brand Info -->
+        <div class="footer-brand-col">
+          <a href="/" class="brand-badge" aria-label="CampusPulse Home">
+            <div class="brand-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+                <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+                <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+                <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+                <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
+              </svg>
+            </div>
+            <div class="brand-text">
+              <span class="brand-title">CampusPulse</span>
+              <span class="brand-subtitle">Student Experience &amp; Campus Intelligence</span>
+            </div>
+          </a>
+          <p class="footer-brand-desc">
+            An AI-powered academic feedback and campus issue intelligence system engineered to connect students, faculty, and department administration for continuous institutional improvement.
+          </p>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-title">Navigation</h4>
+          <ul class="footer-link-list">
+            <li><a href="#platform">Platform Architecture</a></li>
+            <li><a href="#roles">Role Perspectives</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#intelligence">Intelligence Engine</a></li>
+          </ul>
+        </div>
+
+        <!-- Portals & Access -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-title">Portal Access</h4>
+          <ul class="footer-link-list">
+            <li><a href="/login.html">Sign In</a></li>
+            <li><a href="/register.html">Get Started</a></li>
+            <li><a href="/student/index.html">Student Portal</a></li>
+            <li><a href="/faculty/index.html">Faculty Portal</a></li>
+            <li><a href="/hod/index.html">HOD Workspace</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="landing-footer-bottom">
+        <span>&copy; 2026 CampusPulse. All rights reserved.</span>
+        <span>Student Experience &amp; Campus Intelligence System</span>
+      </div>
     </div>
   </footer>
 
+  <!-- Preserved JavaScript Application Modules & Session Handling -->
   <script type="module">
     import { checkAndRenderConfigBanner } from '/js/utils.js';
     import { getCurrentSession, getUserProfile, getRoleDashboardUrl, signOutUser } from '/js/auth.js';
@@ -188,7 +775,7 @@
         const navLinks = document.getElementById('navLinks');
         if (navLinks) {
           navLinks.innerHTML = `
-            <li><span style="font-size:0.875rem; color:var(--text-secondary);">Logged in as <strong>${escapeHtml(profile.fullName)}</strong></span></li>
+            <li><span style="font-size:0.875rem; color:var(--text-secondary); white-space:nowrap;">Logged in as <strong>${escapeHtml(profile.fullName)}</strong></span></li>
             <li><a href="${dashboardUrl}" class="btn btn-primary btn-sm">My Dashboard</a></li>
             <li><button id="navLogoutBtn" class="btn btn-secondary btn-sm">Log Out</button></li>
           `;
@@ -199,8 +786,8 @@
         const heroActions = document.getElementById('heroActions');
         if (heroActions) {
           heroActions.innerHTML = `
-            <a href="${dashboardUrl}" class="btn btn-primary">Go to ${capitalize(profile.role)} Dashboard</a>
-            <button id="heroLogoutBtn" class="btn btn-secondary">Sign Out</button>
+            <a href="${dashboardUrl}" class="btn btn-primary btn-lg">Go to ${capitalize(profile.role)} Dashboard</a>
+            <button id="heroLogoutBtn" class="btn btn-secondary btn-lg">Sign Out</button>
           `;
           document.getElementById('heroLogoutBtn')?.addEventListener('click', signOutUser);
         }

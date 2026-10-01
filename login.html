@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In - CampusPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/auth.css" />
 </head>
@@ -19,11 +23,14 @@
   <!-- Header -->
   <header class="app-header">
     <div class="header-container">
-      <a href="/" class="brand-badge">
-        <div class="brand-icon" aria-label="CampusPulse">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
-            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+      <a href="/" class="brand-badge" aria-label="CampusPulse Home">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+            <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+            <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+            <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+            <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
           </svg>
         </div>
         <div class="brand-text">
@@ -31,7 +38,7 @@
           <span class="brand-subtitle">Student Experience &amp; Campus Intelligence</span>
         </div>
       </a>
-      <nav>
+      <nav aria-label="Account Navigation">
         <ul class="nav-links">
           <li><a href="/" class="btn btn-secondary btn-sm">Home</a></li>
           <li><a href="/register.html" class="btn btn-primary btn-sm">Register</a></li>
@@ -41,57 +48,136 @@
   </header>
 
   <!-- Login Main -->
-  <main class="auth-container">
-    <div class="auth-card">
-      <div class="auth-header">
-        <h1>Welcome Back</h1>
-        <p>Sign in to access your academic dashboard</p>
-      </div>
+  <main class="auth-page-wrapper">
+    <div class="auth-container">
+      <div class="auth-layout">
+        <!-- Main Form Card -->
+        <div class="auth-card">
+          <div class="auth-header">
+            <div class="auth-eyebrow">
+              <span class="auth-eyebrow-dot" aria-hidden="true"></span>
+              <span>Secure Workspace Access</span>
+            </div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your student, faculty, or department workspace.</p>
+          </div>
 
-      <!-- Alert Notification Area -->
-      <div id="alertBox" class="alert hidden" role="alert"></div>
+          <!-- Alert Notification Area -->
+          <div id="alertBox" class="alert hidden" role="alert"></div>
 
-      <!-- Login Form -->
-      <form id="loginForm" novalidate>
-        <div class="form-group">
-          <label for="email" class="form-label">
-            Email Address <span class="required">*</span>
-          </label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            class="form-control" 
-            placeholder="student@college.edu" 
-            autocomplete="email" 
-            required 
-          />
-          <span id="emailError" class="field-error"></span>
+          <!-- Login Form -->
+          <form id="loginForm" novalidate>
+            <div class="form-group">
+              <label for="email" class="form-label">
+                Email Address <span class="required">*</span>
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-control" 
+                placeholder="user@college.edu" 
+                autocomplete="email" 
+                required 
+              />
+              <span id="emailError" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">
+                Password <span class="required">*</span>
+              </label>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-control" 
+                placeholder="••••••••" 
+                autocomplete="current-password" 
+                required 
+              />
+              <span id="passwordError" class="field-error"></span>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-auth">
+              Sign In
+            </button>
+          </form>
+
+          <div class="auth-footer">
+            Don't have an account? <a href="/register.html">Create an account</a>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="password" class="form-label">
-            Password <span class="required">*</span>
-          </label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            class="form-control" 
-            placeholder="••••••••" 
-            autocomplete="current-password" 
-            required 
-          />
-          <span id="passwordError" class="field-error"></span>
-        </div>
+        <!-- Supporting Desktop Context Panel -->
+        <aside class="auth-side-panel" aria-label="CampusPulse Information">
+          <div>
+            <div class="side-panel-header">
+              <div class="side-panel-brand">
+                <div class="side-panel-brand-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+                    <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+                    <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+                    <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+                    <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
+                  </svg>
+                </div>
+                <span class="side-panel-brand-title">CampusPulse Intelligence</span>
+              </div>
+              <h2 class="side-panel-title">Turn Student Voice Into Campus Intelligence</h2>
+              <p class="side-panel-desc">A unified environment connecting classroom experience, faculty pedagogical action, and department leadership.</p>
+            </div>
 
-        <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-auth">
-          Sign In
-        </button>
-      </form>
+            <div class="side-panel-features">
+              <div class="side-feature-item">
+                <div class="side-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="side-feature-title">Student Experience</h3>
+                  <p class="side-feature-desc">Real-time feedback on coursework and instant reporting for campus equipment or facility issues.</p>
+                </div>
+              </div>
 
-      <div class="auth-footer">
-        Don't have an account? <a href="/register.html">Create an account</a>
+              <div class="side-feature-item">
+                <div class="side-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="side-feature-title">Faculty Pedagogy</h3>
+                  <p class="side-feature-desc">AI-assisted sentiment breakdown and structured improvement actions to elevate teaching quality.</p>
+                </div>
+              </div>
+
+              <div class="side-feature-item">
+                <div class="side-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="side-feature-title">Department Oversight</h3>
+                  <p class="side-feature-desc">Consolidated issue clustering, recurrence tracking, and proactive early warnings for HODs.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-panel-footer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>Role-Based Access Control · PostgreSQL &amp; Supabase Verified</span>
+          </div>
+        </aside>
       </div>
     </div>
   </main>

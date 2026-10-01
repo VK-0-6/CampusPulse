@@ -1,0 +1,737 @@
+/* ==========================================================================
+   CampusPulse — Student Portal Stylesheet (Phase 5)
+   Refined Institutional Student Experience Workspace
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Student Hero & Overview
+   -------------------------------------------------------------------------- */
+.student-hero {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 60%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  box-shadow: 0 4px 16px -2px rgba(14, 165, 233, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.student-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.student-hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.student-hero-content {
+  flex: 1;
+  min-width: 280px;
+}
+
+.student-welcome-title {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: var(--navy-900);
+  line-height: 1.25;
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+}
+
+.student-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.625rem;
+}
+
+.student-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0369a1;
+  background-color: #e0f2fe;
+  border: 1px solid #bae6fd;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.student-roll-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: var(--slate-700);
+  background-color: #ffffff;
+  border: 1px solid var(--slate-200);
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-sm);
+}
+
+.student-hero-desc {
+  font-size: 0.9375rem;
+  color: var(--slate-600);
+  line-height: 1.5;
+  margin-bottom: 0;
+  max-width: 680px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Quick Actions Bar
+   -------------------------------------------------------------------------- */
+.student-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.quick-action-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #93c5fd;
+  text-decoration: none;
+}
+
+.quick-action-card:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+}
+
+.quick-action-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.quick-action-card:hover .quick-action-icon-wrap {
+  transform: scale(1.08);
+}
+
+.quick-action-icon-wrap.icon-join {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.quick-action-icon-wrap.icon-feedback {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.quick-action-icon-wrap.icon-classes {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.quick-action-icon-wrap.icon-issues {
+  background-color: #fff7ed;
+  color: #ea580c;
+}
+
+.quick-action-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-action-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  line-height: 1.25;
+  margin-bottom: 0.15rem;
+}
+
+.quick-action-desc {
+  font-size: 0.75rem;
+  color: var(--slate-500);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0;
+}
+
+.quick-action-chevron {
+  color: var(--slate-400);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.quick-action-card:hover .quick-action-chevron {
+  color: #0284c7;
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   3. Refined Section Headers
+   -------------------------------------------------------------------------- */
+.student-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.student-section-title-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.student-section-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-emerald {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.icon-blue {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.icon-cyan {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.icon-amber {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.student-section-title {
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0;
+  letter-spacing: -0.01em;
+}
+
+.student-section-subtitle {
+  font-size: 0.875rem;
+  color: var(--slate-600);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. Join Class Card Specialization
+   -------------------------------------------------------------------------- */
+.join-class-card-wrap {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid #0284c7;
+}
+
+.join-class-instruction {
+  font-size: 0.875rem;
+  color: var(--slate-600);
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.join-class-grid-compact {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) auto 1fr;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.join-code-helper {
+  font-size: 0.8125rem;
+  color: var(--slate-500);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. Active Feedback Sessions Card Redesign
+   -------------------------------------------------------------------------- */
+.student-feedback-card-wrap {
+  border-left: 4px solid #10b981;
+}
+
+.session-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.session-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #86efac;
+}
+
+.session-card .class-card-header {
+  background-color: #f0fdf4;
+  border-bottom: 1px solid #dcfce7;
+  padding: 1.125rem 1.25rem;
+}
+
+.session-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.71875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.session-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+}
+
+.session-topic-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  line-height: 1.3;
+  margin-bottom: 0.25rem;
+}
+
+.session-unit-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.71875rem;
+  font-weight: 700;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-sm);
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+.badge-submitted {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #047857;
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   6. Faculty Improvement Updates Redesign
+   -------------------------------------------------------------------------- */
+.student-improvement-card-wrap {
+  border-left: 4px solid #0284c7;
+}
+
+.improvement-loop-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0284c7;
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.improvement-update-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  padding: 1.25rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-left: 4px solid #0ea5e9;
+  transition: all var(--transition-fast);
+}
+
+.improvement-update-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #7dd3fc;
+}
+
+.improvement-update-topic {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--navy-900);
+}
+
+.improvement-update-body {
+  font-size: 0.875rem;
+  color: var(--slate-700);
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: var(--radius-sm);
+  padding: 0.875rem 1rem;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   7. Academic Infrastructure & Issues Redesign
+   -------------------------------------------------------------------------- */
+.academic-issues-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) 1fr;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.academic-panel {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-xs);
+}
+
+.academic-report-card {
+  border-top: 3px solid #f97316;
+}
+
+.academic-history-card {
+  border-top: 3px solid #0284c7;
+}
+
+.card-inner-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-inner-title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.issue-anon-box {
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.875rem;
+  transition: all var(--transition-fast);
+}
+
+.issue-anon-box:hover {
+  background-color: #f1f5f9;
+  border-color: var(--slate-300);
+}
+
+.issue-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  padding: 1.125rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.issue-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #cbd5e1;
+}
+
+.issue-category-title {
+  font-family: var(--font-display);
+  font-size: 0.96875rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0.2rem;
+}
+
+.issue-desc-box {
+  font-size: 0.84375rem;
+  color: var(--slate-700);
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.875rem;
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   8. Feedback Modal Elevation
+   -------------------------------------------------------------------------- */
+.student-modal-container {
+  max-width: 640px;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.2), 0 8px 16px -4px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-header-hero {
+  padding: 1.35rem 1.75rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header-hero h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy-900);
+}
+
+.feedback-question-group {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.125rem 1.25rem;
+  margin-bottom: 1rem;
+  transition: border-color var(--transition-fast);
+}
+
+.feedback-question-group:focus-within {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.feedback-question-label {
+  font-size: 0.90625rem;
+  font-weight: 600;
+  color: var(--navy-900);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.feedback-privacy-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  color: var(--slate-600);
+  margin-top: 0.5rem;
+}
+
+.feedback-privacy-notice svg {
+  flex-shrink: 0;
+  color: #0284c7;
+  margin-top: 1px;
+}
+
+/* Rating Buttons in Student Portal */
+.rating-btn {
+  height: 44px;
+  background-color: #ffffff;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--slate-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.rating-btn:hover {
+  border-color: #0ea5e9;
+  color: #0284c7;
+  background-color: #f0f9ff;
+  transform: translateY(-1px);
+}
+
+.rating-btn.active {
+  background-color: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+}
+
+/* Choice Buttons in Student Portal */
+.choice-btn {
+  padding: 0.55rem 1.125rem;
+  background-color: #ffffff;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--slate-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.choice-btn:hover {
+  border-color: #0ea5e9;
+  color: #0284c7;
+  background-color: #f0f9ff;
+}
+
+.choice-btn.active {
+  background-color: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   9. Refined Empty States
+   -------------------------------------------------------------------------- */
+.student-empty-state {
+  text-align: center;
+  padding: 3.25rem 1.75rem;
+  background-color: #f8fafc;
+  border: 1.5px dashed var(--slate-300);
+  border-radius: var(--radius-lg);
+  color: var(--slate-500);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.student-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0284c7;
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 0.5rem;
+}
+
+.student-empty-title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0.2rem;
+}
+
+.student-empty-desc {
+  font-size: 0.875rem;
+  color: var(--slate-600);
+  max-width: 440px;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   10. Responsive Adaptations
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .student-quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .academic-issues-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .student-hero {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .student-welcome-title {
+    font-size: 1.35rem;
+  }
+
+  .join-class-grid-compact {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .student-quick-actions {
+    grid-template-columns: 1fr;
+  }
+}

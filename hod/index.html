@@ -4,11 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Department Intelligence - CampusPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/dashboard.css" />
   <link rel="stylesheet" href="/css/hod.css" />
 </head>
-<body>
+<body class="portal-hod">
 
   <!-- Route Guard Loading Overlay -->
   <div id="authLoadingOverlay" class="auth-loading-overlay">
@@ -19,18 +23,30 @@
   <!-- Dashboard Top Navbar -->
   <header class="dashboard-header">
     <div class="dashboard-nav">
-      <a href="/" class="brand-badge">
-        <div class="brand-icon" aria-label="CampusPulse">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
-            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+      <div class="nav-brand-group">
+        <button id="sidebarToggleBtn" class="dashboard-sidebar-toggle" type="button" aria-label="Toggle navigation drawer" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
-        </div>
-        <div class="brand-text">
-          <span class="brand-title">CampusPulse</span>
-          <span class="brand-subtitle">Department Intelligence</span>
-        </div>
-      </a>
+        </button>
+        <a href="/" class="brand-badge" aria-label="CampusPulse Home">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+              <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+              <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+              <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+              <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">CampusPulse</span>
+            <span class="brand-subtitle">Department Intelligence</span>
+          </div>
+        </a>
+      </div>
 
       <div class="user-profile-badge">
         <div class="user-details">
@@ -45,26 +61,100 @@
     </div>
   </header>
 
-  <!-- Dashboard Main Content -->
-  <main class="dashboard-container">
+  <!-- Dashboard App Shell -->
+  <div class="dashboard-app-shell">
+    <!-- Off-canvas / persistent Sidebar -->
+    <aside class="dashboard-sidebar" id="dashboardSidebar" aria-label="Department Intelligence Navigation">
+      <div class="sidebar-nav-group">
+        <span class="sidebar-group-title">Navigation</span>
+        <a href="#welcomeHeading" class="sidebar-nav-item active">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Overview &amp; Metrics</span>
+        </a>
+        <a href="#hodWorkspaceSection" class="sidebar-nav-item">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <span>Issue Workspace</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-status-pill">
+          <span class="sidebar-status-dot"></span>
+          <span>HOD Workspace · Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar Backdrop for mobile -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Dashboard Main Content -->
+    <main class="dashboard-container">
 
     <!-- Hero / Welcome Section -->
-    <div class="dashboard-card dashboard-card-hero" style="border-left-color: #6b21a8;">
-      <div class="dashboard-title-row">
-        <div>
-          <h1 id="welcomeHeading" class="dashboard-welcome">Department Intelligence</h1>
-          <div class="dashboard-role-line" style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-            <span>Departmental Decision Support Portal &bull; Multi-Signal Campus Analytics</span>
-            <span id="hodDeptBadge" class="badge" style="background:#f3e8ff; color:#6b21a8; font-weight:700; padding:0.2rem 0.6rem; border-radius:4px; font-size:0.8125rem;">Department</span>
+    <div class="dashboard-card dashboard-card-hero hod-hero">
+      <div class="hod-hero-top">
+        <div class="hod-hero-title-area">
+          <div class="hod-hero-pretitle">
+            <span class="hod-portal-tag">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Department Intelligence &amp; Decision Support
+            </span>
+            <span class="hod-live-badge"><span class="hod-live-dot"></span> Live Operations</span>
           </div>
+          <h1 id="welcomeHeading" class="dashboard-welcome hod-welcome-title">Department Intelligence</h1>
+          <div class="dashboard-role-line hod-role-pill-row">
+            <span class="hod-role-label">Role:</span>
+            <span class="role-badge role-badge-hod">Department HOD / Operations Admin</span>
+            <span id="hodDeptBadge" class="badge hod-dept-badge">Department</span>
+          </div>
+          <p class="hod-hero-desc">
+            Synthesizes student facility reports into intelligent issue clusters, computing deterministic priority rankings, recurrence frequencies, and early-warning growth trajectories to drive departmental resolution.
+          </p>
         </div>
-        <button id="refreshBtn" class="btn btn-secondary btn-sm" style="display:flex; align-items:center; gap:0.35rem;">
+        <button id="refreshBtn" class="btn btn-secondary btn-sm hod-refresh-btn" title="Refresh intelligence data">
           <span>🔄</span> Refresh Data
         </button>
       </div>
-      <p style="margin-bottom:0; font-size:0.875rem; color:var(--text-secondary); margin-top:0.5rem;">
-        Synthesizes student reports, severity levels, recurring defect patterns, priority rankings, and early warning growth trajectories into actionable institutional insights.
-      </p>
+
+      <!-- Multi-Signal Issue Intelligence Pipeline Banner -->
+      <div class="hod-pipeline-banner" aria-label="Issue Intelligence Lifecycle">
+        <div class="hod-pipeline-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Multi-Signal Issue Intelligence Loop</span>
+        </div>
+        <div class="hod-pipeline-steps">
+          <div class="pipeline-step">
+            <span class="pipeline-step-num">1</span>
+            <span class="pipeline-step-text">Student Reports</span>
+          </div>
+          <div class="pipeline-step-arrow">→</div>
+          <div class="pipeline-step">
+            <span class="pipeline-step-num">2</span>
+            <span class="pipeline-step-text">AI Grouping</span>
+          </div>
+          <div class="pipeline-step-arrow">→</div>
+          <div class="pipeline-step">
+            <span class="pipeline-step-num">3</span>
+            <span class="pipeline-step-text">Recurrence</span>
+          </div>
+          <div class="pipeline-step-arrow">→</div>
+          <div class="pipeline-step">
+            <span class="pipeline-step-num">4</span>
+            <span class="pipeline-step-text">Priority Score</span>
+          </div>
+          <div class="pipeline-step-arrow">→</div>
+          <div class="pipeline-step">
+            <span class="pipeline-step-num">5</span>
+            <span class="pipeline-step-text">Early Warning</span>
+          </div>
+          <div class="pipeline-step-arrow">→</div>
+          <div class="pipeline-step">
+            <span class="pipeline-step-num">6</span>
+            <span class="pipeline-step-text">HOD Resolution</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Alert Banner -->
@@ -74,31 +164,46 @@
     <section class="hod-section">
       <div class="hod-metrics-grid">
         <div class="hod-metric-card metric-open">
-          <span class="hod-metric-label">Open Issues</span>
+          <div class="hod-metric-header">
+            <span class="hod-metric-label">Open Issues</span>
+            <span class="hod-metric-icon" aria-hidden="true">📂</span>
+          </div>
           <span id="metricOpenCount" class="hod-metric-value">0</span>
-          <span class="hod-metric-subtext">Active defect groups</span>
+          <span class="hod-metric-subtext">Active defect clusters</span>
         </div>
 
         <div class="hod-metric-card metric-high-priority">
-          <span class="hod-metric-label">High Priority</span>
+          <div class="hod-metric-header">
+            <span class="hod-metric-label">High Priority</span>
+            <span class="hod-metric-icon" aria-hidden="true">🔥</span>
+          </div>
           <span id="metricHighPriorityCount" class="hod-metric-value">0</span>
           <span class="hod-metric-subtext">Urgent institutional impact</span>
         </div>
 
         <div class="hod-metric-card metric-recurring">
-          <span class="hod-metric-label">Recurring Issues</span>
+          <div class="hod-metric-header">
+            <span class="hod-metric-label">Recurring Issues</span>
+            <span class="hod-metric-icon" aria-hidden="true">🔁</span>
+          </div>
           <span id="metricRecurringCount" class="hod-metric-value">0</span>
-          <span class="hod-metric-subtext">Repeated issues across dates</span>
+          <span class="hod-metric-subtext">Repeated across dates</span>
         </div>
 
         <div class="hod-metric-card metric-emerging">
-          <span class="hod-metric-label">Emerging / Alert</span>
+          <div class="hod-metric-header">
+            <span class="hod-metric-label">Emerging / Alert</span>
+            <span class="hod-metric-icon" aria-hidden="true">⚠️</span>
+          </div>
           <span id="metricEmergingCount" class="hod-metric-value">0</span>
-          <span class="hod-metric-subtext">Accelerating growth signals</span>
+          <span class="hod-metric-subtext">Accelerating 7d velocity</span>
         </div>
 
         <div class="hod-metric-card metric-resolved">
-          <span class="hod-metric-label">Resolved</span>
+          <div class="hod-metric-header">
+            <span class="hod-metric-label">Resolved</span>
+            <span class="hod-metric-icon" aria-hidden="true">✅</span>
+          </div>
           <span id="metricResolvedCount" class="hod-metric-value">0</span>
           <span class="hod-metric-subtext">Completed resolutions</span>
         </div>
@@ -106,46 +211,64 @@
     </section>
 
     <!-- Department Intelligence Workspace (Unified Approach A) -->
-    <section class="hod-section hod-workspace-section">
+    <section class="hod-section hod-workspace-section" id="hodWorkspaceSection">
       <div class="dashboard-card hod-workspace-card">
         
         <!-- Workspace Header -->
         <div class="hod-workspace-header">
-          <div>
-            <h2 class="hod-workspace-title">
-              <span>📋</span> Department Intelligence Workspace
-            </h2>
-            <p class="hod-workspace-desc">
-              Unified analytical workspace for reviewing, filtering, and resolving department issue groups.
-            </p>
+          <div class="hod-workspace-title-wrap">
+            <div class="section-icon-badge icon-badge-purple" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <div>
+              <h2 class="hod-workspace-title">Department Issue Intelligence</h2>
+              <p class="hod-workspace-desc">
+                Unified analytical workspace for reviewing, filtering, and resolving department issue groups.
+              </p>
+            </div>
           </div>
 
           <div class="hod-workspace-header-actions">
             <span id="totalFilterCountBadge" class="section-badge">0 Groups</span>
             <button type="button" id="conceptGuideBtn" class="concept-guide-btn" aria-expanded="false" aria-controls="conceptGuideDrawer">
-              <span>ℹ️</span> Concept Guide
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span>Concept Guide</span>
             </button>
           </div>
         </div>
 
         <!-- Collapsible Concept Guide -->
         <div id="conceptGuideDrawer" class="concept-guide-drawer hidden">
-          <div class="concept-guide-content">
-            <div class="concept-guide-header">
-              <div class="concept-guide-heading">
-                <span class="concept-guide-icon">💡</span>
-                <strong>Analytical Distinction: Priority vs. Early Warning</strong>
-              </div>
-              <button type="button" id="closeConceptGuideBtn" class="concept-guide-close" aria-label="Close guide">&times;</button>
+          <div class="concept-guide-header">
+            <div class="concept-guide-heading">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span>Analytical Framework: Priority vs. Early Warning vs. Recurrence</span>
             </div>
-            <div class="concept-guide-body">
-              <div class="concept-guide-item">
-                <span class="concept-guide-term">🔥 Priority:</span>
-                <span>Answers <em>"How important is this problem right now?"</em> Evaluates current severity, cumulative report impact, recurrence history, and recency of submissions.</span>
+            <button type="button" id="closeConceptGuideBtn" class="concept-guide-close" aria-label="Close guide">&times;</button>
+          </div>
+          <div class="concept-guide-body">
+            <div class="concept-guide-card">
+              <div class="concept-guide-card-title title-priority">
+                <span>🔥 Priority Score</span>
               </div>
-              <div class="concept-guide-item">
-                <span class="concept-guide-term">⚠️ Early Warning:</span>
-                <span>Answers <em>"Is this problem showing signs of accelerating or escalating?"</em> Compares recent 7-day report volume and growth rate against the previous 7-day window.</span>
+              <div class="concept-guide-card-text">
+                Answers <em>"How important is this problem right now?"</em> Evaluates current severity, cumulative report impact, recurrence history, and recency of submissions (&le;3d).
+              </div>
+            </div>
+            <div class="concept-guide-card">
+              <div class="concept-guide-card-title title-warning">
+                <span>⚠️ Early Warning Signal</span>
+              </div>
+              <div class="concept-guide-card-text">
+                Answers <em>"Is this problem showing signs of accelerating?"</em> Compares recent 7-day report volume and growth rate against the previous 7-day window.
+              </div>
+            </div>
+            <div class="concept-guide-card">
+              <div class="concept-guide-card-title title-recurrence">
+                <span>🔁 Temporal Recurrence</span>
+              </div>
+              <div class="concept-guide-card-text">
+                Answers <em>"Does this problem keep coming back?"</em> Verifies whether reports describing the same defect recur across multiple distinct calendar dates.
               </div>
             </div>
           </div>
@@ -178,7 +301,7 @@
         <!-- Filter Toolbar -->
         <div class="hod-toolbar">
           <div class="form-group" style="margin-bottom:0;">
-            <label for="filterSearchInput" class="form-label" style="font-size:0.75rem;">Search</label>
+            <label for="filterSearchInput" class="form-label" style="font-size:0.75rem; font-weight:700;">Search Issue Clusters</label>
             <input 
               type="text" 
               id="filterSearchInput" 
@@ -188,7 +311,7 @@
           </div>
 
           <div class="form-group" style="margin-bottom:0;">
-            <label for="filterStatusSelect" class="form-label" style="font-size:0.75rem;">Status</label>
+            <label for="filterStatusSelect" class="form-label" style="font-size:0.75rem; font-weight:700;">Resolution Status</label>
             <select id="filterStatusSelect" class="form-control">
               <option value="all">All Statuses</option>
               <option value="open">Open</option>
@@ -198,7 +321,7 @@
           </div>
 
           <div class="form-group" style="margin-bottom:0;">
-            <label for="filterCategorySelect" class="form-label" style="font-size:0.75rem;">Category</label>
+            <label for="filterCategorySelect" class="form-label" style="font-size:0.75rem; font-weight:700;">Facility Category</label>
             <select id="filterCategorySelect" class="form-control">
               <option value="all">All Categories</option>
               <option value="projector">Projector &amp; AV</option>
@@ -241,6 +364,7 @@
     </section>
 
   </main>
+  </div><!-- /.dashboard-app-shell -->
 
   <!-- Issue Group Detail Modal -->
   <div id="detailModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalGroupTitle">
@@ -870,6 +994,55 @@
         saveStatusBtn.disabled = false;
         saveStatusBtn.textContent = 'Save';
       }
+    }
+
+    // Mobile Sidebar Drawer Controller
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const dashboardSidebar = document.getElementById('dashboardSidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+    if (sidebarToggleBtn && dashboardSidebar && sidebarBackdrop) {
+      const openSidebar = () => {
+        dashboardSidebar.classList.add('active');
+        sidebarBackdrop.classList.add('active');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeSidebar = () => {
+        dashboardSidebar.classList.remove('active');
+        sidebarBackdrop.classList.remove('active');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      };
+
+      sidebarToggleBtn.addEventListener('click', () => {
+        const isOpen = dashboardSidebar.classList.contains('active');
+        if (isOpen) {
+          closeSidebar();
+        } else {
+          openSidebar();
+        }
+      });
+
+      sidebarBackdrop.addEventListener('click', closeSidebar);
+
+      // Handle nav item clicks: close mobile drawer and maintain active link
+      dashboardSidebar.querySelectorAll('.sidebar-nav-item').forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth < 1024) {
+            closeSidebar();
+          }
+          dashboardSidebar.querySelectorAll('.sidebar-nav-item').forEach(item => item.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dashboardSidebar.classList.contains('active')) {
+          closeSidebar();
+        }
+      });
     }
   </script>
 </body>

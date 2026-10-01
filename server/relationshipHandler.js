@@ -107,8 +107,8 @@ export function classifyRelationshipFallback(issueA, issueB, options = {}) {
 
   // B. Projector / Display
   if (isProjectorA && isProjectorB) {
-    const isBlankA = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen|no display)\b/i.test(descA);
-    const isBlankB = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen|no display)\b/i.test(descB);
+    const isBlankA = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen|no display|stops displaying|turns off|malfunction|malfunctioning|not working|not working properly)\b/i.test(descA);
+    const isBlankB = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen|no display|stops displaying|turns off|malfunction|malfunctioning|not working|not working properly)\b/i.test(descB);
 
     const isDimA = /\b(dim|very dim|flickering|flicker|blurry|unclear|color distorted|dark)\b/i.test(descA);
     const isDimB = /\b(dim|very dim|flickering|flicker|blurry|unclear|color distorted|dark)\b/i.test(descB);

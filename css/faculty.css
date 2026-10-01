@@ -1,0 +1,703 @@
+/* ==========================================================================
+   CampusPulse — Faculty Portal Stylesheet (Phase 6)
+   Teaching & Feedback Intelligence Workspace
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Faculty Hero & Workspace Overview
+   -------------------------------------------------------------------------- */
+.faculty-hero {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 60%, #e0effe 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  box-shadow: 0 4px 16px -2px rgba(29, 78, 216, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.faculty-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(29, 78, 216, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.faculty-hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.faculty-hero-content {
+  flex: 1;
+  min-width: 280px;
+}
+
+.faculty-welcome-title {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: var(--navy-900);
+  line-height: 1.25;
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+}
+
+.faculty-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.625rem;
+}
+
+.faculty-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  background-color: #dbeafe;
+  border: 1px solid #bfdbfe;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.faculty-dept-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: var(--slate-700);
+  background-color: #ffffff;
+  border: 1px solid var(--slate-200);
+  padding: 0.15rem 0.65rem;
+  border-radius: var(--radius-sm);
+}
+
+.faculty-hero-desc {
+  font-size: 0.9375rem;
+  color: var(--slate-600);
+  line-height: 1.5;
+  margin-bottom: 0;
+  max-width: 720px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Continuous Teaching Improvement Cycle Banner
+   -------------------------------------------------------------------------- */
+.faculty-cycle-banner {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1.25rem;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  overflow-x: auto;
+  box-shadow: var(--shadow-xs);
+}
+
+.cycle-step {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: var(--slate-700);
+  white-space: nowrap;
+}
+
+.cycle-step-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.cycle-arrow {
+  color: var(--slate-300);
+  flex-shrink: 0;
+  font-size: 0.875rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. Quick Actions Grid
+   -------------------------------------------------------------------------- */
+.faculty-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.faculty-action-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+}
+
+.faculty-action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #93c5fd;
+  text-decoration: none;
+}
+
+.faculty-action-card:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+.faculty-action-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.faculty-action-card:hover .faculty-action-icon-wrap {
+  transform: scale(1.08);
+}
+
+.faculty-action-icon-wrap.icon-create {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.faculty-action-icon-wrap.icon-classes {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.faculty-action-icon-wrap.icon-sessions {
+  background-color: #f5f3ff;
+  color: #7c3aed;
+}
+
+.faculty-action-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.faculty-action-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  line-height: 1.25;
+  margin-bottom: 0.15rem;
+}
+
+.faculty-action-desc {
+  font-size: 0.75rem;
+  color: var(--slate-500);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0;
+}
+
+.faculty-action-chevron {
+  color: var(--slate-400);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.faculty-action-card:hover .faculty-action-chevron {
+  color: #1d4ed8;
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   4. Section Headers & Containers
+   -------------------------------------------------------------------------- */
+.faculty-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.faculty-section-title-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.faculty-section-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.faculty-section-icon.icon-blue {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.faculty-section-icon.icon-emerald {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.faculty-section-icon.icon-purple {
+  background-color: #ede9fe;
+  color: #7c3aed;
+}
+
+.faculty-section-title {
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0;
+  letter-spacing: -0.01em;
+}
+
+.faculty-section-subtitle {
+  font-size: 0.875rem;
+  color: var(--slate-600);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. Create Class Card
+   -------------------------------------------------------------------------- */
+.create-class-card-wrap {
+  border-left: 4px solid #1d4ed8;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.class-created-card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1.5px solid #6ee7b7;
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.class-created-header {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #065f46;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.code-display-box {
+  background-color: #ffffff;
+  border: 2px dashed #059669;
+  border-radius: var(--radius-md);
+  padding: 0.35rem 0.85rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.code-display-text {
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #065f46;
+  letter-spacing: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Classes Grid & Cards
+   -------------------------------------------------------------------------- */
+.classes-card-wrap {
+  border-left: 4px solid #0284c7;
+}
+
+.class-card {
+  transition: all var(--transition-fast);
+}
+
+.class-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #93c5fd;
+}
+
+.class-card-header {
+  padding: 1.25rem 1.25rem 0.85rem;
+}
+
+.class-subject-title {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--navy-900);
+}
+
+.class-code-badge {
+  background-color: #f0f7ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   7. Start Session & Sessions List
+   -------------------------------------------------------------------------- */
+.feedback-sessions-card-wrap {
+  border-left: 4px solid #7c3aed;
+}
+
+.start-session-panel {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.35rem 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.start-session-title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.session-card {
+  transition: all var(--transition-fast);
+}
+
+.session-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #c4b5fd;
+}
+
+.session-topic-title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--navy-900);
+}
+
+/* --------------------------------------------------------------------------
+   8. Participation & Roster Modal
+   -------------------------------------------------------------------------- */
+.participation-summary-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.participation-stat {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.participation-stat strong {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.roster-table {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.roster-table th {
+  background-color: #f1f5f9;
+  font-weight: 700;
+  color: var(--navy-900);
+  font-size: 0.8125rem;
+}
+
+.badge-submitted {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+}
+
+.badge-not-submitted {
+  background-color: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   9. Feedback Results Modal & AI Insights Styling
+   -------------------------------------------------------------------------- */
+.faculty-modal-container {
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.25), 0 8px 16px -4px rgba(15, 23, 42, 0.08);
+}
+
+.results-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.results-metric-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.125rem 0.75rem;
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+}
+
+.results-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.results-metric-value {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.results-metric-label {
+  font-size: 0.71875rem;
+  font-weight: 700;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Distribution Bars */
+.distribution-group {
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.125rem;
+}
+
+.distribution-group-title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0.75rem;
+}
+
+.distribution-bar-track {
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: var(--radius-full);
+}
+
+.distribution-bar-fill {
+  background-color: #1d4ed8;
+}
+
+/* Anonymous Comments Box */
+.anonymous-comments-box {
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  max-height: 220px;
+}
+
+.anonymous-comment-item {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid #1d4ed8;
+  box-shadow: var(--shadow-xs);
+}
+
+/* --------------------------------------------------------------------------
+   10. Action & Comparison Modals
+   -------------------------------------------------------------------------- */
+.comparison-table {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.comparison-table th {
+  background-color: #f1f5f9;
+  font-weight: 700;
+  color: var(--navy-900);
+}
+
+.comparison-diff-badge.diff-positive {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.comparison-diff-badge.diff-neutral {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.comparison-diff-badge.diff-negative {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* --------------------------------------------------------------------------
+   11. Refined Empty States
+   -------------------------------------------------------------------------- */
+.faculty-empty-state {
+  text-align: center;
+  padding: 3.25rem 1.75rem;
+  background-color: #f8fafc;
+  border: 1.5px dashed var(--slate-300);
+  border-radius: var(--radius-lg);
+  color: var(--slate-500);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.faculty-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1d4ed8;
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 0.5rem;
+}
+
+.faculty-empty-title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0.2rem;
+}
+
+.faculty-empty-desc {
+  font-size: 0.875rem;
+  color: var(--slate-600);
+  max-width: 440px;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   12. Responsive Adaptations
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .results-metric-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .faculty-quick-actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .participation-summary-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .faculty-hero {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .faculty-welcome-title {
+    font-size: 1.35rem;
+  }
+
+  .results-metric-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .faculty-cycle-banner {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-metric-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .participation-summary-bar {
+    grid-template-columns: 1fr;
+  }
+}

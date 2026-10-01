@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register - CampusPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/auth.css" />
 </head>
@@ -19,11 +23,14 @@
   <!-- Header -->
   <header class="app-header">
     <div class="header-container">
-      <a href="/" class="brand-badge">
-        <div class="brand-icon" aria-label="CampusPulse">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5V6l-8-4z" />
-            <path d="M8 12.5h1.5l1.5-3 2 6 1.5-3h1.5" />
+      <a href="/" class="brand-badge" aria-label="CampusPulse Home">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+            <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+            <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+            <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+            <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
           </svg>
         </div>
         <div class="brand-text">
@@ -31,7 +38,7 @@
           <span class="brand-subtitle">Student Experience &amp; Campus Intelligence</span>
         </div>
       </a>
-      <nav>
+      <nav aria-label="Account Navigation">
         <ul class="nav-links">
           <li><a href="/" class="btn btn-secondary btn-sm">Home</a></li>
           <li><a href="/login.html" class="btn btn-secondary btn-sm">Sign In</a></li>
@@ -41,152 +48,250 @@
   </header>
 
   <!-- Register Main -->
-  <main class="auth-container">
-    <div class="auth-card auth-card-wide">
-      <div class="auth-header">
-        <h1>Create an Account</h1>
-        <p>Join the community improvement feedback network</p>
-      </div>
-
-      <!-- Alert Notification Area -->
-      <div id="alertBox" class="alert hidden" role="alert"></div>
-
-      <!-- Registration Form -->
-      <form id="registerForm" novalidate>
-        <!-- Full Name -->
-        <div class="form-group">
-          <label for="fullName" class="form-label">
-            Full Name <span class="required">*</span>
-          </label>
-          <input 
-            type="text" 
-            id="fullName" 
-            name="fullName" 
-            class="form-control" 
-            placeholder="Dr. Jane Doe / Alex Smith" 
-            autocomplete="name" 
-            required 
-          />
-          <span id="nameError" class="field-error"></span>
-        </div>
-
-        <!-- Email Address -->
-        <div class="form-group">
-          <label for="email" class="form-label">
-            Email Address <span class="required">*</span>
-          </label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            class="form-control" 
-            placeholder="user@college.edu" 
-            autocomplete="email" 
-            required 
-          />
-          <span id="emailError" class="field-error"></span>
-        </div>
-
-        <!-- Role Selection -->
-        <div class="form-group">
-          <label class="form-label">
-            Select Your Role <span class="required">*</span>
-          </label>
-          <div class="role-options" role="radiogroup" aria-label="Select your role">
-            <label class="role-card selected" id="roleLabelStudent">
-              <input type="radio" name="role" value="student" checked />
-              <span class="role-title">Student</span>
-              <span class="role-desc">Enrolled student</span>
-            </label>
-
-            <label class="role-card" id="roleLabelFaculty">
-              <input type="radio" name="role" value="faculty" />
-              <span class="role-title">Faculty</span>
-              <span class="role-desc">Teaching staff</span>
-            </label>
-
-            <label class="role-card" id="roleLabelHod">
-              <input type="radio" name="role" value="hod" />
-              <span class="role-title">HOD</span>
-              <span class="role-desc">Dept Admin</span>
-            </label>
+  <main class="auth-page-wrapper">
+    <div class="auth-container">
+      <div class="auth-layout">
+        <!-- Main Registration Form Card -->
+        <div class="auth-card auth-card-wide">
+          <div class="auth-header">
+            <div class="auth-eyebrow">
+              <span class="auth-eyebrow-dot" aria-hidden="true"></span>
+              <span>New Account Enrollment</span>
+            </div>
+            <h1>Create an Account</h1>
+            <p>Set up your profile to participate in the student experience and campus intelligence workflow.</p>
           </div>
-          <span id="roleError" class="field-error"></span>
+
+          <!-- Alert Notification Area -->
+          <div id="alertBox" class="alert hidden" role="alert"></div>
+
+          <!-- Registration Form -->
+          <form id="registerForm" novalidate>
+            <!-- Full Name -->
+            <div class="form-group">
+              <label for="fullName" class="form-label">
+                Full Name <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="fullName" 
+                name="fullName" 
+                class="form-control" 
+                placeholder="Dr. Jane Doe / Alex Smith" 
+                autocomplete="name" 
+                required 
+              />
+              <span id="nameError" class="field-error"></span>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-group">
+              <label for="email" class="form-label">
+                Email Address <span class="required">*</span>
+              </label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-control" 
+                placeholder="user@college.edu" 
+                autocomplete="email" 
+                required 
+              />
+              <span id="emailError" class="field-error"></span>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="form-group">
+              <label class="form-label">
+                Select Your Role <span class="required">*</span>
+              </label>
+              <div class="role-options" role="radiogroup" aria-label="Select your role">
+                <label class="role-card selected" id="roleLabelStudent">
+                  <input type="radio" name="role" value="student" checked />
+                  <div class="role-card-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                  </div>
+                  <span class="role-title">Student</span>
+                  <span class="role-desc">Enrolled student</span>
+                </label>
+
+                <label class="role-card" id="roleLabelFaculty">
+                  <input type="radio" name="role" value="faculty" />
+                  <div class="role-card-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                  </div>
+                  <span class="role-title">Faculty</span>
+                  <span class="role-desc">Teaching staff</span>
+                </label>
+
+                <label class="role-card" id="roleLabelHod">
+                  <input type="radio" name="role" value="hod" />
+                  <div class="role-card-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                  </div>
+                  <span class="role-title">HOD</span>
+                  <span class="role-desc">Dept Admin</span>
+                </label>
+              </div>
+              <span id="roleError" class="field-error"></span>
+            </div>
+
+            <!-- Department (Required for All Roles) -->
+            <div class="form-group" id="departmentGroup">
+              <label for="departmentSelect" class="form-label">
+                Department <span class="required">*</span>
+              </label>
+              <select id="departmentSelect" name="department" class="form-control" required>
+                <option value="">-- Choose Your Department --</option>
+              </select>
+              <span class="field-hint">Select your affiliated academic department.</span>
+              <span id="departmentError" class="field-error"></span>
+            </div>
+
+            <!-- Roll Number (Required for Students) -->
+            <div class="form-group" id="rollNumberGroup">
+              <label for="rollNumber" class="form-label">
+                Roll Number <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="rollNumber" 
+                name="rollNumber" 
+                class="form-control" 
+                placeholder="e.g. 24331A0767" 
+                autocomplete="off" 
+                spellcheck="false" 
+                style="text-transform:uppercase;" 
+              />
+              <span class="field-hint">College roll number (e.g. 24331A0767).</span>
+              <span id="rollNumberError" class="field-error"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="password" class="form-label">
+                Password <span class="required">*</span>
+              </label>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-control" 
+                placeholder="At least 6 characters" 
+                autocomplete="new-password" 
+                required 
+              />
+              <span class="field-hint">Must contain at least 6 characters.</span>
+              <span id="passwordError" class="field-error"></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label for="confirmPassword" class="form-label">
+                Confirm Password <span class="required">*</span>
+              </label>
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                name="confirmPassword" 
+                class="form-control" 
+                placeholder="Re-enter your password" 
+                autocomplete="new-password" 
+                required 
+              />
+              <span id="confirmPasswordError" class="field-error"></span>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-auth">
+              Create Account
+            </button>
+          </form>
+
+          <div class="auth-footer">
+            Already have an account? <a href="/login.html">Sign In</a>
+          </div>
         </div>
 
-        <!-- Department (Required for All Roles) -->
-        <div class="form-group" id="departmentGroup">
-          <label for="departmentSelect" class="form-label">
-            Department <span class="required">*</span>
-          </label>
-          <select id="departmentSelect" name="department" class="form-control" required>
-            <option value="">-- Choose Your Department --</option>
-          </select>
-          <span class="field-hint">Select your affiliated academic department.</span>
-          <span id="departmentError" class="field-error"></span>
-        </div>
+        <!-- Supporting Desktop Context Panel -->
+        <aside class="auth-side-panel" aria-label="CampusPulse Overview">
+          <div>
+            <div class="side-panel-header">
+              <div class="side-panel-brand">
+                <div class="side-panel-brand-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.5 20 C4.5 12.5 7.8 8 12 8 C16.2 8 19.5 12.5 19.5 20" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="1.75" stroke-linecap="round" />
+                    <path d="M7 19.5 C7 14 9.2 11 12 11 C14.8 11 17 14 17 19.5" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+                    <path d="M9.5 19 C10.1 16.5 11 14.8 12 14.8 C13 14.8 13.9 16.5 14.5 19" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+                    <circle cx="12" cy="5" r="1.8" fill="#38bdf8" />
+                    <circle cx="12" cy="5" r="0.8" fill="#ffffff" />
+                  </svg>
+                </div>
+                <span class="side-panel-brand-title">CampusPulse Intelligence</span>
+              </div>
+              <h2 class="side-panel-title">Institutional Feedback, Upgraded</h2>
+              <p class="side-panel-desc">Join your campus community to provide constructive feedback, identify operational issues, and track verified enhancements.</p>
+            </div>
 
-        <!-- Roll Number (Required for Students) -->
-        <div class="form-group" id="rollNumberGroup">
-          <label for="rollNumber" class="form-label">
-            Roll Number <span class="required">*</span>
-          </label>
-          <input 
-            type="text" 
-            id="rollNumber" 
-            name="rollNumber" 
-            class="form-control" 
-            placeholder="e.g. 24331A0767" 
-            autocomplete="off" 
-            spellcheck="false" 
-            style="text-transform:uppercase;" 
-          />
-          <span class="field-hint">College roll number (e.g. 24331A0767).</span>
-          <span id="rollNumberError" class="field-error"></span>
-        </div>
+            <div class="side-panel-features">
+              <div class="side-feature-item">
+                <div class="side-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="m9 12 2 2 4-4"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="side-feature-title">Anonymous &amp; Constructive</h3>
+                  <p class="side-feature-desc">Student feedback is collected constructively to improve course quality without fear of bias.</p>
+                </div>
+              </div>
 
-        <!-- Password -->
-        <div class="form-group">
-          <label for="password" class="form-label">
-            Password <span class="required">*</span>
-          </label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            class="form-control" 
-            placeholder="At least 6 characters" 
-            autocomplete="new-password" 
-            required 
-          />
-          <span class="field-hint">Must contain at least 6 characters.</span>
-          <span id="passwordError" class="field-error"></span>
-        </div>
+              <div class="side-feature-item">
+                <div class="side-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="side-feature-title">AI Semantic Clustering</h3>
+                  <p class="side-feature-desc">Natural language models group related reports so departments can act on systemic patterns.</p>
+                </div>
+              </div>
 
-        <!-- Confirm Password -->
-        <div class="form-group">
-          <label for="confirmPassword" class="form-label">
-            Confirm Password <span class="required">*</span>
-          </label>
-          <input 
-            type="password" 
-            id="confirmPassword" 
-            name="confirmPassword" 
-            class="form-control" 
-            placeholder="Re-enter your password" 
-            autocomplete="new-password" 
-            required 
-          />
-          <span id="confirmPasswordError" class="field-error"></span>
-        </div>
+              <div class="side-feature-item">
+                <div class="side-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="side-feature-title">Targeted Remediation</h3>
+                  <p class="side-feature-desc">Faculty and HODs log verifiable action plans with closed-loop follow-up verification rounds.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-auth">
-          Create Account
-        </button>
-      </form>
-
-      <div class="auth-footer">
-        Already have an account? <a href="/login.html">Sign In</a>
+          <div class="side-panel-footer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>Department-Scoped Security · Protected via Row Level Security</span>
+          </div>
+        </aside>
       </div>
     </div>
   </main>

@@ -103,8 +103,8 @@ export function analyzeSimilarityFallback(issueA, issueB) {
 
   // B. Projector / Display: Blank / no display vs other
   if (isProjectorA && isProjectorB) {
-    const isBlankA = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen)\b/i.test(descA);
-    const isBlankB = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen)\b/i.test(descB);
+    const isBlankA = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen|flicker|flickering|stops displaying|turns off|malfunction|malfunctioning|not working)\b/i.test(descA);
+    const isBlankB = /\b(not displaying|blank|black screen|no signal|does not display anything|completely blank|won t display|nothing on screen|flicker|flickering|stops displaying|turns off|malfunction|malfunctioning|not working)\b/i.test(descB);
 
     if (isBlankA && isBlankB) {
       // Check location match if available
